@@ -21,3 +21,7 @@ These kind of programming models have his shortcomings, as is necessary to use s
 We have developed TaskMiner as a tool to automate the performance of these tasks. Through the implementation of a static analysis that derives memory access bounds from source code, it infers the size of memory regions in C and C++ programs. With these bounds, it is capable of inserting data copy directives in the original source code. These directives provide a compatible compiler with information on which data must be used in each portion of the program. Given the source code of a program as input, our tool can then provide the user with a modified version containing directives with a mapping of regions that are attractive to paralelize, proper their memory bounds specified, all without any further intervention from the user, effectively freeing developers from the burdensome task of manual code modification. 
 
 We implemented TaskMiner as a collection of compiler modules, or passes, for the LLVM compiler infrastructure, whose code is available in this repository.
+
+## Functionality
+
+### Compiler Directive Standards
