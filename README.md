@@ -26,4 +26,21 @@ We implemented TaskMiner as a collection of compiler modules, or passes, for the
 
 ### Compiler Directive Standards
 
+Compiler directive-oriented programming standards are some of the newest developments in features for parallel programming. These standards aim to simplify the creation of parallel programs by providing an interface for programmers to indicate specific regions in source code to be run as parallel. Parallel execution has application in several different hardware settings, such as multiple processors in a multicore architecture, or offloading to a separate device in a heterogeneous system. Compilers that support these standards can check for the presence of directives (also known as pragmas) in the source code, and generate parallel code for the specific regions annotated, so they can be run on a specified target device. TaskMiner currently supports OpenMP standard, but it can easily be extended to support others. You can read more on the subject in the links below:
+
+[OpenACC MP](http://openmp.org/openmp-faq.html)
+
+In order to use this standard to offload execution to accelerators, it is necessary to compile the modified source code with a compiler that supports the given directive standard (OpenMP 4.0 or OpenACC). In our internal testing environment, we use Portland Group's C Compiler for OpenACC support. You can find out more about it in the following link:
+
+[Portland Group](http://www.pgroup.com/index.htm)
+
+There are other compilers that provide support for OpenMP 4.0, either as fully-supported features or as experimental implementations. Below is a small list of such compilers:
+
+[OpenMP Clang](http://openmp.llvm.org/) - The OpenMP runtime Clang implementation has been officially moved to an LLVM subproject. Currently supports offloading to accelerators using OpenMP 4.0 directives.
+
+[GCC 5+](https://gcc.gnu.org/wiki/openmp) - Starting from version 5.0, GCC provides support for computation offloading through OpenMP 4.0 directives.
+
+[Pathscale](http://www.pathscale.com/) - Pathscale's EKOPath compiler suite supposedly supports offloading with OpenMP 4.0+, as well as other annotation standards.
+
+Note that, since most implementations are premiliminary and tend to change considerably, the annotation syntax inserted by TaskMiner, while standard compliant, might not be fully compatible with each compiler's implementation. If you attempt to use a compiler that provides support for these standards but does not compile the annotation format TaskMiner uses, we would appreciate knowing about it!
 
