@@ -42,3 +42,5 @@ In order to use this standard to offload execution to accelerators, it is necess
 
 Note that, since most implementations are premiliminary and tend to change considerably, the annotation syntax inserted by TaskMiner, while standard compliant, might not be fully compatible with each compiler's implementation. If you attempt to use a compiler that provides support for these standards but does not compile the annotation format TaskMiner uses, we would appreciate knowing about it!
 
+## Installation
+
