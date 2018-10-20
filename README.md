@@ -142,7 +142,7 @@ Below, a summary of each part where it is necessary to change text:
 
 - path-to-llvm-build-bin-folder : A reference to the location of the llvm-3.7 binaries. 
 
-- TaskMiner/lib : A reference to the location of the DawnCC libraries (.so files). 
+- TaskMiner/lib : A reference to the location of the TaskMiner libraries (.so files). 
 
 - Source Code : The input file that will be used to run the analyses. 
 
