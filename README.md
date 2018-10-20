@@ -8,7 +8,7 @@
 
 ### Motivation
 
-Nowadays, the high performance of computers and smartphones is one of the most important aspects to users. On the other hand, the demands of information are growing day by day and, consequently, the programs need to process larger sets of data. The problem is that people would like to process more data using less time than before, and the industry cannot improve more the hardware as before. One of the most promises solutions to solve this kind of problem is use more CPU cores, trying to spend less time processing different pieces of data at the same time.
+Nowadays, the high performance of computers and smartphones is one of the most important aspects to users. On the other hand, the demands of information are growing day by day and, consequently, the programs need to process larger sets of data. The problem is that people would like to process more data using less time, and the industry cannot improve more the hardware as before. One of the most promises solutions to solve this kind of problem is use more CPU cores, trying to spend less time processing different pieces of data at the same time.
 
 Unfortunately, a large portion of the apps and programs that people use each day was not structurized to use all the processing power available. People have powerful equipments, but they cannot obtain a large speedup, due the major part of the programers are not friendly with the required specificities to process data in parallel. 
 
