@@ -14,7 +14,7 @@ Unfortunately, a large portion of the apps and programs that people use each day
 
 Recently, programmers have an important ally, some metalanguages as OpenACC and OpenMP. These metalanguages can simplify the steps to write high performance programs, as they provide some level of abstraction, and helps to structurize the correct execution order of functions in programs. Even though this kind of abstraction, programmers still needing to define the parallel regions, and their data dependences, directive-based models don't find data dependences, they just organize them.
 
-These kind of programming models have his shortcomings, as is necessary to use specific libraries to write programs that sectorize the data and process them concurrently. And, even if the programmer is adapted to explore the computer especificities and its aspects, identify the data dependencies in the program is a hard task, subject to errors. 
+These types of programming models have his shortcomings, as is necessary to use specific libraries to write programs that sectorize the data and process them concurrently. And, even if the programmer is adapted to explore the computer especificities and its aspects, identify the data dependencies in the program is a hard task, subject to errors. 
 
 ### Implementation
 
