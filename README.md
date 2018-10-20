@@ -86,4 +86,69 @@ You can download and build it by downloading [LLVM](http://llvm.org/releases/3.7
      	make
     	cd -
 
+
 ## How to run a code
+
+To run TaskMiner, you can run the run.sh bash script, passing as arguments the directory which llvm-build and TaskMiner are located and a directory containing source files to be processed. Arguments can be passed in command line to change behaviour of the script.
+    
+    ./run.sh -d <root folder> -src <folder with files to be processed> 
+
+Or you can run TaskMiner by copying and pasting the text below into a shell script file. You will have to change text between pointy brackets, e.g., *< like this >* to adapt the script to your environment.
+
+ 	LLVM_PATH="<root folder>/llvm-build/bin"
+
+ 	export CLANG="$LLVM_PATH/clang"
+ 	export CLANGFORM="$LLVM_PATH/clang-format"
+ 	export OPT="$LLVM_PATH/opt"
+	export LINKER="$LLVM_PATH/llvm-link"
+	export DIS="$LLVM_PATH/llvm-dis"
+
+	export SCOPEFIND="$LLVM_PATH/../lib/scope-finder.so"
+
+ 	export BUILD=< TaskMiner/lib >
+
+ 	export PRA="$BUILD/PtrRangeAnalysis/libLLVMPtrRangeAnalysis.so"
+ 	export AI="$BUILD/AliasInstrumentation/libLLVMAliasInstrumentation.so"
+ 	export DPLA="$BUILD/DepBasedParallelLoopAnalysis/libParallelLoopAnalysis.so"
+	export DLM="$BUILD/DivergentLoopMetadata/libDivergentLoopMetadata.so"
+ 	export CP="$BUILD/CanParallelize/libCanParallelize.so"
+	export PLM="$BUILD/ParallelLoopMetadata/libParallelLoopMetadata.so"
+ 	export WAI="$BUILD/ArrayInference/libLLVMArrayInference.so"
+	export CDA="$BUILD/ControlDivergenceAnalysis/libControlDivergenceAnalysis.so"
+ 	export ST="$BUILD/ScopeTree/libLLVMScopeTree.so"
+	export WTM="$BUILD/libLLVMTaskFinder.so"
+
+	export XCL="-Xclang -load -Xclang"
+	export FLAGS="-mem2reg -tbaa -scoped-noalias -basicaa -functionattrs -gvn -loop-rotate
+ 	-instcombine -licm"
+ 	export FLAGSAI="-mem2reg -loop-rotate"
+
+ 	rm result.bc result2.bc
+
+ 	$CLANGFORM -style="{BasedOnStyle: llvm, IndentWidth: 2}" -i < Source Code File(s) (.c/.cc/.cpp)>
+
+ 	$CLANG -Xclang -load -Xclang $SCOPEFIND -Xclang -add-plugin -Xclang -find-scope -g -O0 -c -fsyntax-only < Source Code File(s) (.c/.cc/.cpp)>
+
+ 	$CLANG $OMP -g -S -emit-llvm < Source Code > -o result.bc 
+
+ 	$OPT -load $ST -instnamer -mem2reg -scopeTree result.bc 
+
+ 	$OPT -load $ST -load $WTM -load $WAI -instnamer -mem2reg -loop-simplify -writeInFile -Run-Mode=true \
+             -RUNTIME_COST=<op1> <op2> <op3> -S result.bc -o result2.bc
+
+ 	$CLANGFORM -style="{BasedOnStyle: llvm, IndentWidth: 2}" -i < Source Code Files (.c/.cc/.cpp) >
+
+Below, a summary of each part where it is necessary to change text:
+
+- path-to-llvm-build-bin-folder : A reference to the location of the llvm-3.7 binaries. 
+
+- TaskMiner/lib : A reference to the location of the DawnCC libraries (.so files). 
+
+- Source Code : The input file that will be used to run the analyses. 
+
+- op1 => An integer that defines the acceptable runtime cost.
+  
+- op2 => Flag "-debug-only=print-tasks": Flag used to print tasks, if necessary (Optional).
+
+- op3 => Flag "-stats": Flag necessary to debug the analyze (Optional).
+    
