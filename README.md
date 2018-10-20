@@ -34,9 +34,7 @@ In order to use this standard to offload execution to accelerators, it is necess
 
 [GCC 5+](https://gcc.gnu.org/wiki/openmp) - Starting from version 5.0, GCC provides support for computation offloading through OpenMP 4.0 directives.
 
-[Portland Group](http://www.pgroup.com/index.htm)
-
-There are other compilers that provide support for OpenMP 4.0, either as fully-supported features or as experimental implementations. Below is a small list of such compilers:
+[Portland Group](http://www.pgroup.com/index.htm) - There are other compilers that provide support for OpenMP 4.0, either as fully-supported features or as experimental implementations. Below is a small list of such compilers:
 
 [OpenMP Clang](http://openmp.llvm.org/) - The OpenMP runtime Clang implementation has been officially moved to an LLVM subproject. Currently supports offloading to accelerators using OpenMP 4.0 directives.
 
