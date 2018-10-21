@@ -22,7 +22,7 @@ llvm
 2. Extract [Clang](http://llvm.org/releases/3.7.0/cfe-3.7.0.src.tar.xz) into
 llvm/tools/clang.
 
-3. Download the TaskMiner source code.
+3. Download the [TaskMiner](https://github.com/gleisonsdm/TaskMiner) source code.
 
 4. Apply the patch "llvm-patch.diff" (located at 'taskminer/ArrayInference/llvm-patch.diff') to your LLVM source directory.
 
@@ -63,11 +63,18 @@ llvm/tools/clang.
 
 ## Running
 
-To run TaskMiner, you can run the run.sh bash script, passing as arguments the directory which llvm-build and TaskMiner are located and a directory containing source files to be processed. Arguments can be passed in command line to change behaviour of the script.
+The best way to run the TaskMiner is to adapt the script below to your
+environment.
+This script receives two arguments:
+* the directory with the llvm-build and TaskMiner are located
+* a directory containing source files to be processed.
+
+To run it, do:
     
     ./run.sh -d <root folder> -src <folder with files to be processed> 
 
-Or you can run TaskMiner by copying and pasting the text below into a shell script file. You will have to change text between pointy brackets, e.g., *< like this >* to adapt the script to your environment.
+You will have to change text between pointy brackets, e.g., *< like this >* to
+adapt the script to your environment:
 
  	LLVM_PATH="<root folder>/llvm-build/bin"
 
@@ -112,17 +119,11 @@ Or you can run TaskMiner by copying and pasting the text below into a shell scri
 
  	$CLANGFORM -style="{BasedOnStyle: llvm, IndentWidth: 2}" -i < Source Code Files (.c/.cc/.cpp) >
 
-Below, a summary of each part where it is necessary to change text:
+The following changes will be necessary:
 
-- path-to-llvm-build-bin-folder : A reference to the location of the llvm-3.7 binaries. 
-
-- TaskMiner/lib : A reference to the location of the TaskMiner libraries (.so files). 
-
-- Source Code : The input file that will be used to run the analyses. 
-
-- op1 => An integer that defines the acceptable runtime cost.
-  
-- op2 => Flag "-debug-only=print-tasks": Flag used to print tasks, if necessary (Optional).
-
-- op3 => Flag "-stats": Flag necessary to debug the analyze (Optional).
-    
+* path-to-llvm-build-bin-folder : A reference to the location of the llvm-3.7 binaries. 
+* TaskMiner/lib : A reference to the location of the TaskMiner libraries (.so files). 
+* Source Code : The input file that will be used to run the analyses. 
+* op1 => An integer that defines the acceptable runtime cost.
+* op2 => Flag "-debug-only=print-tasks": Flag used to print tasks, if necessary (Optional).
+* op3 => Flag "-stats": Flag necessary to debug the analyze (Optional).
