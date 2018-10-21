@@ -4,6 +4,10 @@
 
 [Code Repository](https://github.com/gleisonsdm/TaskMiner/)
 
+## Description
+
+[TaskMiner](http://cuda.dcc.ufmg.br/taskminer/) is a tool that annotates C programs with OpenMP directives to support task parallelism. Details of this tool are available in the paper  "Automatic Identification of Tasks in Structured Programs". This tool is implemented in C++, on top of LLVM 3.7.
+
 ## Introduction
 
 ### Motivation
@@ -87,7 +91,7 @@ You can download and build it by downloading [LLVM](http://llvm.org/releases/3.7
     	cd -
 
 
-## How to run a code
+## Running
 
 To run TaskMiner, you can run the run.sh bash script, passing as arguments the directory which llvm-build and TaskMiner are located and a directory containing source files to be processed. Arguments can be passed in command line to change behaviour of the script.
     
