@@ -1,4 +1,4 @@
-# TaskMiner - A Source to Source Compiler for Parallelizing Irregular C/C++ Programs with Code Annotation
+# TaskMiner - Automatic Annotation of C Programs with OpenMP
 
 [Project Webpage](http://cuda.dcc.ufmg.br/taskminer/)
 
@@ -6,7 +6,11 @@
 
 ## Description
 
-[TaskMiner](http://cuda.dcc.ufmg.br/taskminer/) is a tool that annotates C programs with OpenMP directives to support task parallelism. Details of this tool are available in the paper  "Automatic Identification of Tasks in Structured Programs". This tool is implemented in C++, on top of LLVM 3.7.
+[TaskMiner](http://cuda.dcc.ufmg.br/taskminer/) is a tool that annotates C
+programs with OpenMP directives to support task parallelism.
+Details are available in the paper [Automatic Identification of Tasks in
+Structured Programs](http://homepages.dcc.ufmg.br/~fernando/publications/papers/PACT18.pdf). This tool is implemented in C++, on top of LLVM 3.7, and it is
+publicly available through an [on-line interface](http://cuda.dcc.ufmg.br/taskminer/).
 
 ## Introduction
 
