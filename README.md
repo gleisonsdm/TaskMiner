@@ -1,4 +1,4 @@
-# TaskMiner - Automatic Annotation of C Programs with OpenMP
+# TaskMiner - Automatic Annotation of C with OpenMP
 
 ## Description
 
