@@ -119,11 +119,11 @@ adapt the script to your environment:
 
  	$CLANGFORM -style="{BasedOnStyle: llvm, IndentWidth: 2}" -i < Source Code Files (.c/.cc/.cpp) >
 
-The following changes will be necessary:
+To use the script above, change the following parameters:
 
-* path-to-llvm-build-bin-folder : A reference to the location of the llvm-3.7 binaries. 
-* TaskMiner/lib : A reference to the location of the TaskMiner libraries (.so files). 
-* Source Code : The input file that will be used to run the analyses. 
-* op1 => An integer that defines the acceptable runtime cost.
-* op2 => Flag "-debug-only=print-tasks": Flag used to print tasks, if necessary (Optional).
-* op3 => Flag "-stats": Flag necessary to debug the analyze (Optional).
+* path-to-llvm-build-bin-folder: location of the llvm-3.7 binaries. 
+* TaskMiner/lib: location of the TaskMiner libraries (.so files). 
+* Source Code: input files that will be analyzed. 
+* op1: integer specifying the acceptable runtime cost.
+* op2: flag "-debug-only=print-tasks", used to print tasks (optional).
+* op3: flag "-stats", used to debug the analysis (optional).
