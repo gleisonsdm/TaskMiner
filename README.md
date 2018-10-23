@@ -63,18 +63,16 @@ llvm/tools/clang.
 
 ## Running
 
-The best way to run the TaskMiner is to use the script below, setting flags to run it in your
-environment.
-
-To run it, do:
-    
+We have written a [script](https://github.com/gleisonsdm/TaskMiner/blob/master/src/run.sh) to run TaskMiner.
+To use it, adjust its flags to your environment, and then do:
+ 
   	./run.sh <path-to-llvm-build-bin-folder> <TaskMiner/lib> <Source_Code> <op1> <op2> <op3>
 
-To use the script above, change the following parameters:
+The following parameters are customizable:
 
 * path-to-llvm-build-bin-folder: location of the llvm-3.7 binaries. 
 * TaskMiner/lib: location of the TaskMiner libraries (.so files). 
-* Source_Code: input files that will be analyzed. 
+* Source-Code: input files that will be analyzed. 
 * op1: integer specifying the acceptable runtime cost.
 * op2: flag "-debug-only=print-tasks", used to print tasks (optional).
 * op3: flag "-stats", used to debug the analysis (optional).
