@@ -63,67 +63,16 @@ llvm/tools/clang.
 
 ## Running
 
-The best way to run the TaskMiner is to adapt the script below to your
-environment.
-This script receives two arguments:
-* the directory with the llvm-build and TaskMiner are located
-* a directory containing source files to be processed.
+We have written a [script](https://github.com/gleisonsdm/TaskMiner/blob/master/src/run.sh) to run TaskMiner.
+To use it, adjust its flags to your environment, and then do:
+ 
+  	./run.sh <path-to-llvm-build-bin-folder> <TaskMiner/lib> <Source_Code> <op1> <op2> <op3>
 
-To run it, do:
-    
-    ./run.sh -d <root folder> -src <folder with files to be processed> 
-
-You will have to change text between pointy brackets, e.g., *< like this >* to
-adapt the script to your environment:
-
- 	LLVM_PATH="<root folder>/llvm-build/bin"
-
- 	export CLANG="$LLVM_PATH/clang"
- 	export CLANGFORM="$LLVM_PATH/clang-format"
- 	export OPT="$LLVM_PATH/opt"
-	export LINKER="$LLVM_PATH/llvm-link"
-	export DIS="$LLVM_PATH/llvm-dis"
-
-	export SCOPEFIND="$LLVM_PATH/../lib/scope-finder.so"
-
- 	export BUILD=< TaskMiner/lib >
-
- 	export PRA="$BUILD/PtrRangeAnalysis/libLLVMPtrRangeAnalysis.so"
- 	export AI="$BUILD/AliasInstrumentation/libLLVMAliasInstrumentation.so"
- 	export DPLA="$BUILD/DepBasedParallelLoopAnalysis/libParallelLoopAnalysis.so"
-	export DLM="$BUILD/DivergentLoopMetadata/libDivergentLoopMetadata.so"
- 	export CP="$BUILD/CanParallelize/libCanParallelize.so"
-	export PLM="$BUILD/ParallelLoopMetadata/libParallelLoopMetadata.so"
- 	export WAI="$BUILD/ArrayInference/libLLVMArrayInference.so"
-	export CDA="$BUILD/ControlDivergenceAnalysis/libControlDivergenceAnalysis.so"
- 	export ST="$BUILD/ScopeTree/libLLVMScopeTree.so"
-	export WTM="$BUILD/libLLVMTaskFinder.so"
-
-	export XCL="-Xclang -load -Xclang"
-	export FLAGS="-mem2reg -tbaa -scoped-noalias -basicaa -functionattrs -gvn -loop-rotate
- 	-instcombine -licm"
- 	export FLAGSAI="-mem2reg -loop-rotate"
-
- 	rm result.bc result2.bc
-
- 	$CLANGFORM -style="{BasedOnStyle: llvm, IndentWidth: 2}" -i < Source Code File(s) (.c/.cc/.cpp)>
-
- 	$CLANG -Xclang -load -Xclang $SCOPEFIND -Xclang -add-plugin -Xclang -find-scope -g -O0 -c -fsyntax-only < Source Code File(s) (.c/.cc/.cpp)>
-
- 	$CLANG $OMP -g -S -emit-llvm < Source Code > -o result.bc 
-
- 	$OPT -load $ST -instnamer -mem2reg -scopeTree result.bc 
-
- 	$OPT -load $ST -load $WTM -load $WAI -instnamer -mem2reg -loop-simplify -writeInFile -Run-Mode=true \
-             -RUNTIME_COST=<op1> <op2> <op3> -S result.bc -o result2.bc
-
- 	$CLANGFORM -style="{BasedOnStyle: llvm, IndentWidth: 2}" -i < Source Code Files (.c/.cc/.cpp) >
-
-To use the script above, change the following parameters:
+The following parameters are customizable:
 
 * path-to-llvm-build-bin-folder: location of the llvm-3.7 binaries. 
 * TaskMiner/lib: location of the TaskMiner libraries (.so files). 
-* Source Code: input files that will be analyzed. 
+* Source-Code: input files that will be analyzed. 
 * op1: integer specifying the acceptable runtime cost.
 * op2: flag "-debug-only=print-tasks", used to print tasks (optional).
 * op3: flag "-stats", used to debug the analysis (optional).
