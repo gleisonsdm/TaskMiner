@@ -191,6 +191,11 @@ Value *PtrRRangeAnalysis::getBaseGlobalPtr(Value *V,
       break;
     }
   }
+  if ((V->getType()->getTypeID() != Type::PointerTyID)) {
+    errs() << "Dump:\n";
+    V->dump();
+    return V;
+  }
   APInt AI = APInt(64, 0, true);
   Type *Ty = V->getType()->getPointerElementType();
   Value *Val = Constant::getIntegerValue(Type::getInt64Ty(Ty->getContext()), AI);
