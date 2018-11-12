@@ -192,8 +192,6 @@ Value *PtrRRangeAnalysis::getBaseGlobalPtr(Value *V,
     }
   }
   if ((V->getType()->getTypeID() != Type::PointerTyID)) {
-    errs() << "Dump:\n";
-    V->dump();
     return V;
   }
   APInt AI = APInt(64, 0, true);

@@ -80,7 +80,7 @@ class SCEVRangeBuilder : private SCEVExpander {
     this->ArtificialBECounts = ArtificialBECounts;
   }
 
-  Value *findStep(const SCEVAddRecExpr *Expr, bool Upper);
+  Value *findStep(const SCEVAddRecExpr *Expr, Value *Ptr, bool Upper);
 
   // If the caller doesn't specify which bound to compute, we assume the same of
   // the last expanded expression. Usually called by methods defined in
@@ -219,9 +219,10 @@ public:
   Value *getUpperBound(const SCEV *S) { return expand(S, /*Upper*/ true); }
 
   Value *findStep(Loop *L, Value *Ptr, bool Upper) {
-                 return findStep(getScevTo(L, Ptr), Upper); }
+                 return findStep(getScevTo(L, Ptr), Ptr, Upper); }
 
-  Value *findStep(Loop *L, bool Upper) { return findStep(getScevTo(L), Upper); }
+  Value *findStep(Loop *L, bool Upper) { return findStep(getScevTo(L),
+                                   L->getCanonicalInductionVariable(), Upper); }
 
   Value *getAddRectULowerOrUpperBound(std::vector<const SCEVAddRecExpr*> vct,
          bool Upper);

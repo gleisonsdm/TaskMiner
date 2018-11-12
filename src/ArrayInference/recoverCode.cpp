@@ -707,8 +707,6 @@ std::string RecoverCode::getAccessString (Value *V, std::string ptrName,
     errs() << "NULL PTR USED!\n";
     setValidFalse();
   }
-  if (V)
-    V->dump();
   if (!isValid()) {
     return std::string();
   }

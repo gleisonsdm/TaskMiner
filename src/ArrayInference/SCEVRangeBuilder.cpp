@@ -254,14 +254,31 @@ Value *SCEVRangeBuilder::visitUDivExpr(const SCEVUDivExpr *Expr, bool Upper) {
   return InsertBinop(Instruction::UDiv, Lhs, Rhs);
 }
 
-Value *SCEVRangeBuilder::findStep(const SCEVAddRecExpr *Expr, bool Upper) {
+Value *SCEVRangeBuilder::findStep(const SCEVAddRecExpr *Expr, Value *Ptr, bool Upper) {
   if (!Expr)
     return nullptr;
   Type *OpTy = SE->getEffectiveSCEVType(Expr->getStart()->getType());
   const SCEV *StepSCEV =
     SE->getTruncateOrSignExtend(Expr->getStepRecurrence(*SE), OpTy);
+  const SCEV *StartSCEV = SE->getTruncateOrSignExtend(Expr->getStart(), OpTy);
+  Value *Start = expand(StartSCEV, Upper);
   Value *Step = expand(StepSCEV, Upper);
   Step = InsertNoopCastOfTo(Step, OpTy);
+  Start = InsertNoopCastOfTo(Start, OpTy);
+  if (Constant *C = dyn_cast<Constant>(Start))
+    if (C->isZeroValue()) {
+      Type *Ty = Ptr->getType();
+      if (Ty->getTypeID() == Type::PointerTyID)
+        Ty = Ty->getPointerElementType();
+      if (Ty->getTypeID() == Type::VectorTyID)
+        Ty = Ty->getVectorElementType();
+      if (Ty->getTypeID() == Type::ArrayTyID)
+        Ty = Ty->getArrayElementType();
+      int val = ((Ty->getPrimitiveSizeInBits() + 7) / 8);
+      Type *tyy = Type::getInt32Ty(Ptr->getContext());
+      Constant *C2 = ConstantInt::get(tyy, APInt(32,val,false));
+      Step = InsertBinop(Instruction::Mul, C2, Step);
+    }
   return Step;
 }
 
@@ -396,7 +413,7 @@ Value *SCEVRangeBuilder::visitAddRecExpr(const SCEVAddRecExpr *Expr,
   Loop *L = const_cast<Loop*>(Expr->getLoop());
 //  Expr->dump();
   if (PPtr)
-  addLExpr(L, PPtr, Expr);
+    addLExpr(L, PPtr, Expr);
   if (getInductionVariable(L))
     addLExpr(L, getInductionVariable(L), Expr);
   //lExpr[L] = Expr;
