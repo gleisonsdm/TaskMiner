@@ -55,6 +55,15 @@ cl::Hidden, cl::desc("Analyse just 'GPU__' functions."));
 static cl::opt<bool> ClRun("Run-Mode",
 cl::Hidden, cl::desc("Annotate parallel loops or tasks"));
 
+static cl::opt<int> ClRUNTIME("RUNTIME_COST",
+cl::Hidden, cl::desc("Annotate parallel loops or tasks"));
+
+static cl::opt<int> ClNUM_THREADS("NUM_THREADS",
+cl::Hidden, cl::desc("Annotate parallel loops or tasks"));
+
+static cl::opt<int> ClTHRESHOLD("THRESHOLD",
+cl::Hidden, cl::desc("Annotate parallel loops or tasks"));
+
 StringRef WriteInFile::getFileName(Instruction *I) {
   MDNode *Var = I->getMetadata("dbg");
   if (Var)
@@ -237,9 +246,9 @@ for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
     this->re = &getAnalysis<RecoverExpressions>(*F);
     this->re->setTasksList(tasksList);
     this->re->setTasksCalls(tasksCall);
-    this->re->N_WORKERS = this->tm->N_WORKERS;
-    this->re->RUNTIME_COST = this->tm->RUNTIME_COST;
-    this->re->THRESHOLD = this->tm->THRESHOLD;
+    this->re->N_WORKERS = ClNUM_THREADS;
+    this->re->RUNTIME_COST = ClRUNTIME;
+    this->re->THRESHOLD = ClTHRESHOLD;
     this->re->Comments.erase(this->re->Comments.begin(), this->re->Comments.end());
     this->re = &getAnalysis<RecoverExpressions>(*F);
     copyComments(this->re->Comments);

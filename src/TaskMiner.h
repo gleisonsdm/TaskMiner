@@ -7,7 +7,7 @@
 #include "RegionTree.h"
 #include "Graph.hpp"
 #include "Task.h"
-#include "CostModel.h"
+//include "CostModel.h"
 #include "TaskMinerUtils.h"
 
 namespace llvm
@@ -44,9 +44,9 @@ namespace llvm
 
 	public:
 		static char ID;
-		static uint32_t N_WORKERS; //NUMBER OF THREADS
-		static uint32_t RUNTIME_COST; //RUNTIME COST
-		static const uint32_t THRESHOLD = 1; //THRESHOLD	
+//		static uint32_t N_WORKERS; //NUMBER OF THREADS
+//		static uint32_t RUNTIME_COST; //RUNTIME COST
+//		static const uint32_t THRESHOLD = 1; //THRESHOLD	
 
 		TaskMiner() : ModulePass(ID) {}
 		~TaskMiner() { /*delete taskGraph;*/ }
@@ -64,7 +64,7 @@ namespace llvm
 		void resolvePrivateValues();
 		void computeCosts();
 		void computeStats(Module &M);
-		void computeTotalCost();
+		//void computeTotalCost();
 		void determineTopLevelRecursiveCalls(Module &M);
 		bool isRecursive(Function &F, CallGraph &CG);
 		void updateCoveredFunctions(std::set<Function*> &set);

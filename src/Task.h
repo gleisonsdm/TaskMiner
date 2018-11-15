@@ -11,7 +11,7 @@
 #include "llvm/Analysis/RegionInfo.h"
 
 //Local imports
-#include "CostModel.h"
+//include "CostModel.h"
 
 #include <set>
 #include <stack>
@@ -52,7 +52,7 @@ namespace llvm
 		std::set<Value*> getLiveOUT() const;
 		std::set<Value*> getLiveINOUT() const;
 		std::set<BasicBlock*> getbbs() const;
-		CostModel getCost() const { return CM; }
+		//CostModel getCost() const { return CM; }
 		std::set<Value*> getPrivateValues() { return privateValues; };
 		void addPrivateValue(Value* V) { privateValues.insert(V); };
 		std::set<Value*> getSharedValues() { return sharedValues; };
@@ -62,7 +62,7 @@ namespace llvm
 		//Methods
 		virtual bool resolveInsAndOutsSets() { return false; }
 		virtual void resolvePrivateValues();
-		virtual CostModel computeCost() { return CM; }
+	  //	virtual CostModel computeCost() { return CM; }
 		void addBasicBlock(BasicBlock* bb) { bbs.insert(bb); }
 		bool hasLoadInstructionInDependence() const;
 		virtual bool hasSyncBarrier() const {return false; }
@@ -79,7 +79,7 @@ namespace llvm
 
 	protected:
 		//Cost model
-		CostModel CM;
+		//CostModel CM;
 
 		//Content:
 		std::set<BasicBlock*> bbs;
@@ -104,7 +104,7 @@ namespace llvm
 		~FunctionCallTask() {}
 		CallInst* getFunctionCall() const;
 		bool resolveInsAndOutsSets() override;
-		CostModel computeCost() override;
+		//CostModel computeCost() override;
 		raw_ostream& print(raw_ostream& os) const override;
 		static bool classof(const Task* T) { return T->getKind() == FCALL_TASK; }
 		bool hasSyncBarrier() const override;
@@ -123,7 +123,7 @@ namespace llvm
 			{ level = 0; }
 		~RegionTask() {}
 		bool resolveInsAndOutsSets() override;
-		CostModel computeCost() override;
+		//CostModel computeCost() override;
 		raw_ostream& print(raw_ostream& os) const override;
 		void resolvePrivateValues() override;
 		static bool classof(const Task* T) { return T->getKind() == REGION_TASK; }
@@ -142,7 +142,7 @@ namespace llvm
 		~RecursiveTask() {}
 		CallInst* getRecursiveCall() const;
 		bool resolveInsAndOutsSets() override;
-		CostModel computeCost() override;
+		//CostModel computeCost() override;
 		raw_ostream& print(raw_ostream& os) const override;
 		void resolvePrivateValues() override;
 		static bool classof(const Task* T) { return T->getKind() == RECURSIVE_TASK; }		

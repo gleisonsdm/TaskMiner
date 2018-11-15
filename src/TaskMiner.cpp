@@ -15,8 +15,8 @@ using namespace llvm;
 char TaskMiner::ID = 0;
 static RegisterPass<TaskMiner> E("taskminer", "Run the TaskMiner algorithm on a Module", false, false);
 
-uint32_t TaskMiner::N_WORKERS = 12; //NUMBER OF THREADS
-uint32_t TaskMiner::RUNTIME_COST = 500;
+//uint32_t TaskMiner::N_WORKERS = 12; //NUMBER OF THREADS
+//uint32_t TaskMiner::RUNTIME_COST = 500;
 
 static cl::opt<bool, false> printTaskGraph("print-task-graph",
   cl::desc("Print dot file containing the TASKGRAPH"), cl::NotHidden);
@@ -33,11 +33,11 @@ static cl::opt<bool, true> MINE_REGIONTASKS("MINE_REGIONTASKS",
 static cl::opt<bool, true> MINE_LOOPTASKS("MINE_LOOPTASKS",
   cl::desc("Enable the mining of Loop Tasks"), cl::Hidden);
 
-static cl::opt<int> NUMBER_OF_THREADS("N_THREADS",
-  cl::desc("Number of threads in the runtime"), cl::NotHidden);
+//static cl::opt<int> NUMBER_OF_THREADS("N_THREADS",
+//  cl::desc("Number of threads in the runtime"), cl::NotHidden);
 
-static cl::opt<int> RUNTIME_COST("RUNTIME_COST",
-  cl::desc("Minimum cost per task (in instructions) in the runtime"), cl::NotHidden);
+//static cl::opt<int> RUNTIME_COST("RUNTIME_COST",
+//  cl::desc("Minimum cost per task (in instructions) in the runtime"), cl::NotHidden);
 
 static cl::opt<bool, false> ALLOW_NONVOID("ALLOW_NONVOID",
   cl::desc("Allow non-void function calls to be turned into tasks."), cl::NotHidden);
@@ -91,7 +91,7 @@ bool TaskMiner::runOnModule(Module &M)
 
 	//STEP6: COMPUTE THE COSTS OF EACH TASK.
 	errs() << "STEP 6: Estimating the cost for region tasks.\n";
-	computeCosts();
+	//computeCosts();
 
 	//STEP7: GIVE IT OUT TO THE ANNOTATOR.
 	errs() << "STEP 7: Infering Source Code information to Annotate the Tasks.\n";
@@ -570,11 +570,11 @@ void TaskMiner::computeCosts()
 	{
 		if (task->getKind() == Task::TaskKind::RECURSIVE_TASK)
 			continue;
-		task->computeCost();
+		//task->computeCost();
 	}
 }
 
-void TaskMiner::computeTotalCost()
+/*void TaskMiner::computeTotalCost()
 {
 	NOUTDEPS = 0;
 	NINDEPS = 0;
@@ -582,17 +582,17 @@ void TaskMiner::computeTotalCost()
 
 	for (auto task : tasks)
 	{
-		auto cost = task->getCost();
+		//auto cost = task->getCost();
 		NINSTSTASKS += cost.getNInsts();
 		NINDEPS += cost.getNInDeps();
 		NOUTDEPS += cost.getNOutDeps();
 	}
-}
+}*/
 
 void TaskMiner::computeStats(Module &M)
 {
 	//Compute total cost
-	computeTotalCost();
+	//computeTotalCost();
 
 	//Compute total number of instructions
 	for (Module::iterator F = M.begin(); F != M.end(); ++F)

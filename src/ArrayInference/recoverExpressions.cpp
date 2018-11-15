@@ -576,8 +576,9 @@ std::string RecoverExpressions::calculateLoopRangeCost(Loop *L,
     Instruction *I = rangeBuilder.getInductionVariable(L);
     const SCEV* Limit = se->getSCEVAtScope(I, L);
     ExprList.push_back(Limit);
-    if (!I)
+    if (!I) {
       return exp;
+    }
     if (!rangeBuilder.canComputeBoundsFor(Limit)) {
       return std::string();
     }
@@ -642,8 +643,9 @@ std::string RecoverExpressions::getUniqueString(
   std::vector<bool> nc(smbexp.size(), false);
   std::queue<int> q;
   // Insert all computed values in a queue structure.
-  for (auto I = smbexp.begin(), IE = smbexp.end(); I != IE; I++)
+  for (auto I = smbexp.begin(), IE = smbexp.end(); I != IE; I++) {
     q.push(I->first);    
+  }
   // Iterate, and for each case, try to find one of the possible solutions:
   while (!q.empty()) {
     int id = q.front();
@@ -684,16 +686,12 @@ std::string RecoverExpressions::calculateTopLoopCost(Loop *L,
   std::map<int, std::string> mexp;
   std::map<int, std::vector<int> > ref;
   int id = lid;
-  for (Loop *SubLoop : L->getSubLoops()) {
-    exp += " + tmc" + std::to_string(calculateLoopCost(SubLoop, mexp, ref, rst));
-  }
+  exp += " + tmc" + std::to_string(calculateLoopCost(L, mexp, ref, rst));
   exp += ");\n";
   std::string solexp = getUniqueString(mexp, ref); 
   exp = rst + solexp + exp;
   comp = exp;
-  ////L->dump();
- /// errs() << comp << "\n";
-  return ("tm_cost" + std::to_string(id));
+  return ("tm_cost" + std::to_string(lid));
 }
 
 int RecoverExpressions::calculateLoopCost(Loop *L, std::map<int,
@@ -961,9 +959,10 @@ bool RecoverExpressions::analyzeLoop (Loop* L, int Line, int LastLine,
     }
   }
   std::string output = "{\n";
-  int thld = ((RUNTIME_COST * THRESHOLD) * N_WORKERS);
+  int thld = (N_WORKERS * RUNTIME_COST * THRESHOLD);
   std::string cmpadd = std::string();
-  std::string cmpif = " final(" + calculateTopLoopCost(L, cmpadd);
+  std::string topLoopCost = calculateTopLoopCost(L, cmpadd);
+  std::string cmpif = "final(" + topLoopCost;
   cmpif += " > " + std::to_string(thld) + ")";// + std::to_string(thld) + ")";
   output += cmpadd;
  
@@ -985,7 +984,8 @@ bool RecoverExpressions::analyzeLoop (Loop* L, int Line, int LastLine,
   output += priv + " ";
   output += cmpif + "\n{\n";
   addCommentToLine(output, Line);
-  addCommentToLine("}\n}\n", LastLine); 
+  std::string output2 = "}\n}\n";
+  addCommentToLine(output2, LastLine); 
   //annotateExternalLoop((L->getHeader()->begin()));
   return true;
 }

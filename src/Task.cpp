@@ -210,7 +210,7 @@ raw_ostream& FunctionCallTask::print(raw_ostream& os) const
 	functionCall->print(os);
 	printLiveSets(os);
 	printPrivateValues(os);
-	CM.print(os);
+	//CM.print(os);
 	os << "\nHas sync barrier?\n";
 	os << this->hasSyncBarrier();
 	// this->outerMost->print(os);
@@ -287,7 +287,7 @@ bool FunctionCallTask::resolveInsAndOutsSets()
 
 CallInst* FunctionCallTask::getFunctionCall() const { return functionCall; }
 
-CostModel FunctionCallTask::computeCost()
+/*CostModel FunctionCallTask::computeCost()
 {
 	uint32_t n_insts = 0;
 	uint32_t n_indeps = liveIN.size();
@@ -316,7 +316,7 @@ CostModel FunctionCallTask::computeCost()
 	CM.setData(n_insts, n_indeps, n_outdeps);
 
 	return CM;
-}
+}*/
 
 
 bool FunctionCallTask::hasSyncBarrier() const
@@ -425,7 +425,7 @@ raw_ostream& RecursiveTask::print(raw_ostream& os) const
 	os << "\n";
 	printLiveSets(os);
 	printPrivateValues(os);
-	CM.print(os);
+	//CM.print(os);
 	os << "Total Insts: " << getBaseCaseCost() << "\n";
 	os << "Is safe for annotation? ";
 	if (isSafeForAnnotation())
@@ -436,7 +436,7 @@ raw_ostream& RecursiveTask::print(raw_ostream& os) const
 	return os;	
 }
 
-CostModel RecursiveTask::computeCost()
+/*CostModel RecursiveTask::computeCost()
 {
 	uint32_t n_insts = 0;
 	uint32_t n_indeps = liveIN.size();
@@ -450,7 +450,7 @@ CostModel RecursiveTask::computeCost()
 	CM.setData(n_insts, n_indeps, n_outdeps);
 
 	return CM;
-}
+}*/
 
 bool RecursiveTask::hasSyncBarrier() const
 { 
@@ -622,7 +622,7 @@ raw_ostream& RegionTask::print(raw_ostream& os) const
 		os << " " << bb->getName();
 	printLiveSets(os);
 	printPrivateValues(os);
-	CM.print(os);
+	//CM.print(os);
 	os << "\nEntry BB:" << header->getName() << "\n";
 	os << "Is safe for annotation? ";
 	if (isSafeForAnnotation())
@@ -633,7 +633,7 @@ raw_ostream& RegionTask::print(raw_ostream& os) const
 	return os;	
 }
 
-CostModel RegionTask::computeCost()
+/*CostModel RegionTask::computeCost()
 {
 	uint32_t n_insts = 0;
 	uint32_t n_indeps = liveIN.size();
@@ -646,4 +646,4 @@ CostModel RegionTask::computeCost()
 	CM.setData(n_insts, n_indeps, n_outdeps);
 
 	return CM;
-}
+}*/
