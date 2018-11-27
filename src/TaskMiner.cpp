@@ -166,7 +166,8 @@ std::map<Function*, RegionTree*> TaskMiner::getAllRegionTrees(Module &M)
 	std::map<Function*, RegionTree*> RTs;
 	for (Module::iterator F = M.begin(); F != M.end(); ++F)
 	{
-		if (F->empty())
+		if (!F || F->isDeclaration() || F->isIntrinsic() ||
+        F->hasAvailableExternallyLinkage())
 			continue;
 		DepAnalysis* DP = &(getAnalysis<DepAnalysis>(*F));
 		RTs[F] = std::move((DP->getRegionTree()));
@@ -192,7 +193,7 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 {
 	//0: Get all region graphs for each function.
 	taskGraph = new RegionTree();
-	if (RTs.empty())
+	if (RTs.empty()) 
 		RTs = getAllRegionTrees(M);
 
 	//1: Merge all the region graphs into a single one 
@@ -234,12 +235,15 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 	for (Module::iterator F = M.begin(); F != M.end(); ++F)
 	{
 		// F->dump();
-		if (F->empty())
+		if (F->isDeclaration() || F->isIntrinsic() ||
+        F->hasAvailableExternallyLinkage())
 		{
 			// errs() << "function with no body.\n";
 			continue;
 		}
+    errs() << "Trying to: "<< F->getName() << "\n";
 		RegionInfoPass* RIP = &(getAnalysis<RegionInfoPass>(*F));
+    errs() << "Done!\n"; 
 		RegionInfo* RI = &(RIP->getRegionInfo());
 		for (Function::iterator BB = F->begin(); BB != F->end(); ++BB)
 		{
@@ -248,7 +252,9 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 				if (CallInst* CI = dyn_cast<CallInst>(I))
 				{
 					Function* calledF = CI->getCalledFunction();
-					if ((calledF != F) && (!calledF->empty()))
+					if ((calledF) && (calledF != F) && 
+             (!(calledF->isDeclaration() || calledF->isIntrinsic() ||
+                calledF->hasAvailableExternallyLinkage())))
 					{
 						Region* R = RI->getRegionFor(CI->getParent());
 						Node<RegionWrapper*>* src = 
@@ -392,9 +398,10 @@ void TaskMiner::mineRecursiveTasks()
 				if (CallInst* CI = dyn_cast<CallInst>(I))
 				{
 					Function* calledF = CI->getCalledFunction();
-					if (calledF != F)
+					if (!calledF || (calledF != F))
 						continue;
-
+          
+          errs() << "Mining " << calledF->getName() << "\n";
 					if (rec_calls_aux.find(CI) != rec_calls_aux.end())
 						continue;
 

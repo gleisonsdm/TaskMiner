@@ -1,6 +1,5 @@
 #include "llvm/Analysis/LoopInfo.h" 
 #include "llvm/IR/Instructions.h"
-
 #include "Task.h"
 
 #include <stack>
@@ -39,14 +38,14 @@ bool Task::isGlobal(Value* I) const
 		return isGlobal(SI->getPointerOperand());
 	else if (GetElementPtrInst* GEPI = dyn_cast<GetElementPtrInst>(I))
 		return isGlobal(GEPI->getPointerOperand());
-	else if (PHINode* phi = dyn_cast<PHINode>(I))
+/*	else if (PHINode* phi = dyn_cast<PHINode>(I))
 	{
 		bool phiOperands = true;
 		for (int i = 0; i < phi->getNumOperands(); i++)
 			phiOperands |= isGlobal(phi->getOperand(i));
 
 		return phiOperands;
-	}
+	}*/
 
 	return false;
 }
@@ -329,8 +328,9 @@ void FunctionCallTask::resolvePrivateValues()
 	Task::resolvePrivateValues();
 	for (auto &arg : functionCall->arg_operands())
 	{
-		if (isPointerValue(arg) && isa<AllocaInst>(arg))
-			sharedValues.insert(arg);
+		if (isPointerValue(arg) && isa<AllocaInst>(arg)) {
+ 			sharedValues.insert(arg);
+    }
 	}
 }
 
@@ -575,7 +575,7 @@ bool RegionTask::resolveInsAndOutsSets()
 void RegionTask::resolvePrivateValues()
 {
 	Task::resolvePrivateValues();
-	for (BasicBlock::iterator i = header->begin(); i != header->end(); ++i)
+  for (BasicBlock::iterator i = header->begin(); i != header->end(); ++i)
 	{
 		for (auto u : i->users())
 		{

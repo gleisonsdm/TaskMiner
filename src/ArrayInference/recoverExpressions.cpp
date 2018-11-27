@@ -91,6 +91,33 @@ void RecoverExpressions::findRecursiveTasks() {
   }
 }
 
+PHINode *RecoverExpressions::getInductionVariable(Loop *L, ScalarEvolution *SE) {
+   PHINode *InnerIndexVar = L->getCanonicalInductionVariable();
+   if (InnerIndexVar)
+     return InnerIndexVar;
+   if (L->getLoopLatch() == nullptr || L->getLoopPredecessor() == nullptr)
+     return nullptr;
+   for (BasicBlock::iterator I = L->getHeader()->begin(); isa<PHINode>(I); ++I) {
+     PHINode *PhiVar = cast<PHINode>(I);
+     Type *PhiTy = PhiVar->getType();
+     if (!PhiTy->isIntegerTy() && !PhiTy->isFloatingPointTy() &&
+        !PhiTy->isPointerTy())
+       return nullptr;
+     const SCEVAddRecExpr *AddRec =
+         dyn_cast<SCEVAddRecExpr>(SE->getSCEV(PhiVar));
+     if (!AddRec || !AddRec->isAffine())
+       continue;
+     const SCEV *Step = AddRec->getStepRecurrence(*SE);
+     if (!isa<SCEVConstant>(Step))
+       continue;
+     // Found the induction variable.
+     // FIXME: Handle loops with more than one induction variable. Note that,
+     // currently, legality makes sure we have only one induction variable.
+     return PhiVar;
+   }
+   return nullptr;
+}
+
 void RecoverExpressions::insertCutoff(Function *F) {
   int start = st->getMinLineFunction(F) + 1;
   int end = getLastBranchLine(F);
@@ -682,6 +709,7 @@ std::string RecoverExpressions::calculateTopLoopCost(Loop *L,
   std::string exp = std::string();
   std::string rst = std::string();
   int inst = getStatitcLoopCost(L);
+  int tlid = lid;
   exp += "int tm_cost" + std::to_string(lid) + " = (" + std::to_string(inst); 
   std::map<int, std::string> mexp;
   std::map<int, std::vector<int> > ref;
@@ -691,7 +719,7 @@ std::string RecoverExpressions::calculateTopLoopCost(Loop *L,
   std::string solexp = getUniqueString(mexp, ref); 
   exp = rst + solexp + exp;
   comp = exp;
-  return ("tm_cost" + std::to_string(lid));
+  return ("tm_cost" + std::to_string(tlid));
 }
 
 int RecoverExpressions::calculateLoopCost(Loop *L, std::map<int,
@@ -777,12 +805,15 @@ std::string RecoverExpressions::getPrivateStr(std::set<Value*> V) {
   std::string str = " firstprivate(";
   Instruction *I = nullptr;
   for (auto &It : V) {
-    if (isa<Instruction>(It))
-      I = cast<Instruction>(It);
+    if (It) {
+      if (isa<Instruction>(It)) {
+        I = cast<Instruction>(It);
+        break;
+      }
+    }
   }
-  if (I == nullptr) {
+  if (!I)
     return std::string();
-  }
   Module *M = I->getParent()->getParent()->getParent();
   const DataLayout DT = DataLayout(M); 
   RecoverPointerMD RPM;
@@ -792,6 +823,10 @@ std::string RecoverExpressions::getPrivateStr(std::set<Value*> V) {
   RPM.initializeNewVars();
   int i = 0;
   for (auto &It : V) {
+    if (It)
+      It->dump();
+    else
+      errs() << "NULLPTR\n";
     std::string strtmp = analyzeValue(It, &DT, &RPM); 
     i++;
     if (strtmp == std::string())
@@ -1058,7 +1093,9 @@ void RecoverExpressions::getTaskRegions() {
         mapped[L] = true;
         int start = this->st->getStartRegionLoops(R).first;
         int end = this->st->getEndRegionLoops(R).first;
-        std::string priv = getPrivateStr(I->getPrivateValues());
+        std::set<Value*> privateDep;                                    
+        privateDep.insert(getInductionVariable(L, this->se));
+        std::string priv = getPrivateStr(privateDep);
         analyzeTopLoop(L, start, end, this->ptrRa, this->rp, this->aa, this->se,
                     this->li, this->dt, priv);
     }

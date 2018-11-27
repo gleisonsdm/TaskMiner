@@ -170,6 +170,9 @@ class RecoverExpressions : public FunctionPass {
                         std::map<int, std::vector<int> > & ref,
                         std::string & rst);
 
+  // Function to find induction variables:
+  PHINode *getInductionVariable(Loop *L, ScalarEvolution *SE);
+
 public:
 
   //===---------------------------------------------------------------------===

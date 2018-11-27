@@ -19,5 +19,6 @@ add_library(LLVMArrayInference MODULE
   recoverPointerMD.cpp
   extractSourceData.cpp
   PtrRelativeRangeAnalysis.cpp
+  raceConditionIdent.cpp
 )
 
