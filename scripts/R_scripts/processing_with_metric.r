@@ -8,5 +8,4 @@ BENCH <- runtime_data[,1]
 BENCH <- cbind(BENCH,(runtime_data[,6:9] / runtime_data[,2:5]))
 metric = gather(BENCH, key='id', value='value', 2, 3, 4, 5)
 p = ggplot() + geom_boxplot(data= metric, aes(BENCH, value), colour='blue')
-p = ggplot() + geom_boxplot(data= metric, aes(BENCH, value), colour='blue')
 p + ggsave('Downloads/boxplot.png', height = 50, width = 50, device = 'png', limitsize = FALSE)
