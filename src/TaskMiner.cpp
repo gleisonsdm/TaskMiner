@@ -164,15 +164,13 @@ bool TaskMiner::isRecursive(Function &F, CallGraph &CG)
 std::map<Function*, RegionTree*> TaskMiner::getAllRegionTrees(Module &M)
 {
 	std::map<Function*, RegionTree*> RTs;
-	for (Module::iterator F = M.begin(); F != M.end(); ++F)
-	{
+	for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
 		if (!F || F->isDeclaration() || F->isIntrinsic() ||
         F->hasAvailableExternallyLinkage())
 			continue;
 		DepAnalysis* DP = &(getAnalysis<DepAnalysis>(*F));
 		RTs[F] = std::move((DP->getRegionTree()));
 	}
-
 	return RTs;
 }
 
@@ -198,9 +196,8 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 
 	//1: Merge all the region graphs into a single one 
 	//that will be our task graph
-	for (auto rt = RTs.begin(); rt != RTs.end(); rt++)
-	{
-		taskGraph->mergeWith(rt->second);
+	for (auto RT = RTs.begin(), RTE = RTs.end(); RT != RTE; RT++) {
+		taskGraph->mergeWith(RT->second);
 	}
 
 	//2: GET ALL RECURSIVE EDGES AND COPY A HUB FOR EACH.
@@ -208,8 +205,7 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 	//FOR EACH EDGE->SRC() WE'LL CONNECT THEM TO THE TOP LEVEL OF THE HUB (GET TOP LEVEL() REGION TREE METHOD)
 	//THAT'S IT. 
 	std::map<Edge<RegionWrapper*, EdgeDepType>*, RegionTree*> recToHub;
-	for (auto e : taskGraph->getEdges())
-	{
+	for (auto e : taskGraph->getEdges()) {
 		if (e->getType() == EdgeDepType::RECURSIVE)
 		{
 			Function *F = e->getDst()->getItem()->F;
@@ -236,36 +232,31 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 	{
 		// F->dump();
 		if (F->isDeclaration() || F->isIntrinsic() ||
-        F->hasAvailableExternallyLinkage())
-		{
+        F->hasAvailableExternallyLinkage()) {
 			// errs() << "function with no body.\n";
 			continue;
 		}
-    errs() << "Trying to: "<< F->getName() << "\n";
-		RegionInfoPass* RIP = &(getAnalysis<RegionInfoPass>(*F));
-    errs() << "Done!\n"; 
-		RegionInfo* RI = &(RIP->getRegionInfo());
-		for (Function::iterator BB = F->begin(); BB != F->end(); ++BB)
+		RegionInfo* RI = &(getAnalysis<RegionInfoPass>(*F).getRegionInfo());
+		for (Function::iterator BB = F->begin(), BE = F->end(); BB != BE; BB++)
 		{
-			for (BasicBlock::iterator I = BB->begin(); I != BB->end(); ++I)
+			for (BasicBlock::iterator I = BB->begin(), IE = BB->end(); I != IE; I++)
 			{
-				if (CallInst* CI = dyn_cast<CallInst>(I))
-				{
-					Function* calledF = CI->getCalledFunction();
-					if ((calledF) && (calledF != F) && 
-             (!(calledF->isDeclaration() || calledF->isIntrinsic() ||
-                calledF->hasAvailableExternallyLinkage())))
-					{
-						Region* R = RI->getRegionFor(CI->getParent());
-						Node<RegionWrapper*>* src = 
-							taskGraph->getNode(R->getEntry(), R->getExit(), R->isTopLevelRegion());
-						Node<RegionWrapper*>* dst = 
-							taskGraph->getTopLevelRegionNode(calledF);
+        if (!isa<CallInst>(I))
+          continue;
+				CallInst* CI = cast<CallInst>(I);
+				Function* calledF = CI->getCalledFunction();
+				if ((calledF) && (calledF != F) && 
+            (!(calledF->isDeclaration() || calledF->isIntrinsic() ||
+            calledF->hasAvailableExternallyLinkage()))) {
+				  Region* R = RI->getRegionFor(CI->getParent());
+				  Node<RegionWrapper*>* src = 
+						taskGraph->getNode(R->getEntry(), R->getExit(), R->isTopLevelRegion());
+				  Node<RegionWrapper*>* dst = 
+						taskGraph->getTopLevelRegionNode(calledF);
 
-						auto e_ =	taskGraph->addEdge(src, dst, EdgeDepType::FCALL);
-						//add to the map Edge -> CallInst
-						callInsts[e_] = CI;
-					}					
+				  auto e_ =	taskGraph->addEdge(src, dst, EdgeDepType::FCALL);
+				  //add to the map Edge -> CallInst
+				  callInsts[e_] = CI;					
 				}
 			}
 		}
@@ -277,10 +268,9 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 		auto F = pair.first->getSrc()->getItem()->F;
 		auto dst = pair.second->getTopLevelRegionNode(F, true);
 		auto dstHub = taskGraph->getNode(dst->getItem());
-		if (dstHub)
-		{
-			taskGraph->addEdge(pair.first->getSrc(), dstHub, EdgeDepType::FCALL);
-		}
+		if (!dstHub)
+		  continue;
+		taskGraph->addEdge(pair.first->getSrc(), dstHub, EdgeDepType::FCALL);
 	}
 
 	return taskGraph;
@@ -319,10 +309,10 @@ void	TaskMiner::mineFunctionCallTasks()
 			if (!CI)
 				continue;			
 
-			if (function_tasks.find(CI->getParent()->getParent()) != function_tasks.end())
+			if (function_tasks.count(CI->getParent()->getParent()) != 0)
 				continue;
 
-			if (topLevelRecCalls.find(CI) != topLevelRecCalls.end())
+			if (topLevelRecCalls.count(CI) != 0)
 				continue;
 		
 			if (!CI->getCalledFunction()->getReturnType()->isVoidTy())
@@ -402,7 +392,7 @@ void TaskMiner::mineRecursiveTasks()
 						continue;
           
           errs() << "Mining " << calledF->getName() << "\n";
-					if (rec_calls_aux.find(CI) != rec_calls_aux.end())
+					if (rec_calls_aux.count(CI) != 0)
 						continue;
 
 					rec_calls_aux.insert(CI);
@@ -423,8 +413,7 @@ void TaskMiner::mineRecursiveTasks()
 		prev = nullptr;
 		isInsideLoop = false;
 		func = pair.first;
-		LoopInfoWrapperPass *LIWP = &(getAnalysis<LoopInfoWrapperPass>(*func));
-		LoopInfo* LI = &(LIWP->getLoopInfo());
+		LoopInfo* LI = &(getAnalysis<LoopInfoWrapperPass>(*func).getLoopInfo());
 		auto bb = (*pair.second.begin())->getParent();
 		if (LI->getLoopFor(bb)) //the fcall is inside loop
 		{
@@ -461,18 +450,22 @@ void TaskMiner::mineRegionTasks(Module &M)
 	std::set<BasicBlock*> entryBlocks;
 
 
-	for (Module::iterator f = M.begin(); f != M.end(); ++f)
+	for (Module::iterator FI = M.begin(), FE = M.end(); FI != FE; FI++)
 	{
-		if (f->empty() || (function_tasks.find(f) != function_tasks.end()))
+		if (FI->empty() || (function_tasks.count(FI) != 0)) {
+      errs() << "Bug\n";
 			continue;
+    }
 
-		Function* F = f;
-		LoopInfoWrapperPass* LIWP = &(getAnalysis<LoopInfoWrapperPass>(*F));
-		LoopInfo* LI = &(LIWP->getLoopInfo());
+    errs() << "LoopInfo to " << FI->getName() << "\n";
+		LoopInfo* LI = &(getAnalysis<LoopInfoWrapperPass>(*FI).getLoopInfo());
 
-		errs() << "\nAnalyizing function " << F->getName() << "\n";
+		errs() << "\nAnalyizing function " << FI->getName() << "\n";
+    std::vector<Loop*> loops = TMU.getLoopsInPreorder(LI);
+    if (loops.size() == 0)
+      continue;
 
-		for (auto l : TMU.getLoopsInPreorder(LI))
+		for (auto l : loops)
 		{
 			errs() << "\n\n";
 			l->dump();
@@ -491,7 +484,7 @@ void TaskMiner::mineRegionTasks(Module &M)
 				}
 				//HERE: check if there already exists a task whose entry bb is the same as l->getHeader().
 				//If this shit happens, ignore next one.
-				if (entryBlocks.find(l->getHeader()) != entryBlocks.end())
+				if (entryBlocks.count(l->getHeader()) != 0)
 				{
 					delete TASK;
 					continue;
@@ -503,7 +496,9 @@ void TaskMiner::mineRegionTasks(Module &M)
 				NREGIONTASKS++;
 			}
 		}
+    errs() << "OK\n";
 	}
+  errs() << "Finished\n";
 }
 
 

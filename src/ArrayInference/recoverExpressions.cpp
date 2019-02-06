@@ -77,6 +77,27 @@ void RecoverExpressions::copyComments (std::map <unsigned int, std::string>
   }
 } 
 
+Value *RecoverExpressions::getBasePtr(Value *V) {
+  if (LoadInst *LD = dyn_cast<LoadInst>(V))
+    return getBasePtr(LD->getPointerOperand());
+  else if (StoreInst *ST = dyn_cast<StoreInst>(V))
+    return getBasePtr(ST->getPointerOperand());
+  else if (GetElementPtrInst *GEP = dyn_cast<GetElementPtrInst>(V))
+    return getBasePtr(GEP->getPointerOperand());
+  else if (CallInst *CI = dyn_cast<CallInst>(V)) 
+    return CI;
+  else if (AllocaInst *AI = dyn_cast<AllocaInst>(V))
+    return AI;
+  else if (GlobalValue *GV = dyn_cast<GlobalValue>(V))
+    return GV;
+  else if (Argument *Arg = dyn_cast<Argument>(V))
+    return Arg;
+  else if (Instruction *I = dyn_cast<Instruction>(V))
+    return getBasePtr(I->getOperand(0));
+  return V;
+}
+
+
 void RecoverExpressions::findRecursiveTasks() {
   for (auto &I: this->tasksList) {
     if (!I->isSafeForAnnotation()) 
@@ -92,7 +113,40 @@ void RecoverExpressions::findRecursiveTasks() {
 }
 
 PHINode *RecoverExpressions::getInductionVariable(Loop *L, ScalarEvolution *SE) {
-   PHINode *InnerIndexVar = L->getCanonicalInductionVariable();
+  if (!L)
+    return nullptr;
+
+  BasicBlock *H = L->getHeader();
+   
+  BasicBlock *Incoming = nullptr, *Backedge = nullptr;
+  pred_iterator PI = pred_begin(H);
+  Backedge = *PI++;
+  if (PI == pred_end(H))
+    return nullptr; // dead loop
+  Incoming = *PI++;
+  if (PI != pred_end(H))
+    return nullptr; // multiple backedges?  
+  if (L->contains(Incoming)) {
+    if (L->contains(Backedge))
+      return nullptr;
+    std::swap(Incoming, Backedge);
+  } else if (!L->contains(Backedge))
+    return nullptr;
+ 
+  // Loop over all of the PHI nodes, looking for a canonical indvar.
+  for (BasicBlock::iterator I = H->begin(); isa<PHINode>(I); ++I) {
+    PHINode *PN = cast<PHINode>(I);
+    if (ConstantInt *CI =
+        dyn_cast<ConstantInt>(PN->getIncomingValueForBlock(Incoming)))
+        if (Instruction *Inc =
+            dyn_cast<Instruction>(PN->getIncomingValueForBlock(Backedge)))
+         if (Inc->getOpcode() == Instruction::Add && Inc->getOperand(0) == PN)
+           if (ConstantInt *CI = dyn_cast<ConstantInt>(Inc->getOperand(1)))
+               return PN;
+  }
+  return nullptr;
+
+/*   PHINode *InnerIndexVar = L->getCanonicalInductionVariable();
    if (InnerIndexVar)
      return InnerIndexVar;
    if (L->getLoopLatch() == nullptr || L->getLoopPredecessor() == nullptr)
@@ -115,7 +169,7 @@ PHINode *RecoverExpressions::getInductionVariable(Loop *L, ScalarEvolution *SE) 
      // currently, legality makes sure we have only one induction variable.
      return PhiVar;
    }
-   return nullptr;
+   return nullptr;*/
 }
 
 void RecoverExpressions::insertCutoff(Function *F) {
@@ -180,7 +234,6 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
   
   rfc.annotataFunctionCall(CI, ptrRa, rp, aa, se, li, dt);*/
   Value *V = CI->getCalledValue();
-  
   if (!isa<Function>(V)) { 
     return std::string();
   }
@@ -203,9 +256,6 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
   bool isInsideLoop = true;
   Loop *L1 = nullptr;
   Loop *L2 = nullptr;
-  this->liveIN.erase(this->liveIN.begin(), this->liveIN.end());
-  this->liveOUT.erase(this->liveOUT.begin(), this->liveOUT.end());
-  this->liveINOUT.erase(this->liveINOUT.begin(), this->liveINOUT.end());
   for (auto &I: this->tasksCalls) {
     if (CallInst *CII = dyn_cast<CallInst>(I)) {
       if (CI == CII) {
@@ -218,6 +268,7 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
       }
     }
   }
+  bool annotateExternal = false;
   if (isTask == false)
   for (auto &I: this->tasksList) {
      if (!I->isSafeForAnnotation())
@@ -226,17 +277,15 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
 //      continue;
     if (FunctionCallTask *FCT = dyn_cast<FunctionCallTask>(I)) {
       if (FCT->getFunctionCall() == CI) {
-        this->liveIN = FCT->getLiveIN();
-        this->liveOUT = FCT->getLiveOUT();
-        this->liveINOUT = FCT->getLiveINOUT();
         if (FCT->hasSyncBarrier()) {
-          L1 = this->li->getLoopFor(CI->getParent());
+          Region *RR = this->rp->getRegionInfo().getRegionFor(CI->getParent());
+          L1 = this->li->getLoopFor(RR->getEntry());
           L2 = L1;
           while (L2->getParentLoop()) {
             L2 = L2->getParentLoop();
           }
         }
-        annotateExternalLoop(CI);
+        annotateExternal = true;
         if (!isValidPrivateStr(I->getPrivateValues()))
           isTask = false;
         if (!isValidSharedStr(I->getSharedValues()))
@@ -252,9 +301,6 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
     if (RecursiveTask *RT = dyn_cast<RecursiveTask>(I)) {
 
       if (RT->getRecursiveCall() == CI) {
-        this->liveIN = RT->getLiveIN();
-        this->liveOUT = RT->getLiveOUT();
-        this->liveINOUT = RT->getLiveINOUT();
         isTask = true;
         hasTaskWait = RT->hasSyncBarrier();
         isInsideLoop = RT->insideLoop();
@@ -287,6 +333,10 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
     return "\n\n[UNDEF\nVALUE]\n\n";
   }
   std::map<Value*, std::string> strVal;
+  std::map<Value*, char> accessTy;
+  std::vector<std::string> valuesIn;
+  std::vector<std::string> valuesOut;
+  std::vector<std::string> valuesInOut;
   for (unsigned int i = 0; i < CI->getNumArgOperands(); i++) {
     if (!isa<LoadInst>(CI->getArgOperand(i)) &&
         !isa<StoreInst>(CI->getArgOperand(i)) &&
@@ -297,48 +347,44 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
         !isa<BitCastInst>(CI->getArgOperand(i))) {
       continue;
     }
-     
+    Value *basePtr = getBasePtr(CI->getArgOperand(i));
     std::string str = analyzeValue(CI->getArgOperand(i), DT, RPM);
     if (str == std::string() || str == "0") {
       return std::string();
     }
-    strVal[CI->getArgOperand(i)] = str;
+    char acessTy = 0;
+    if (accessType.count(basePtr) > 0)
+      acessTy = accessType[basePtr];
+    if (acessTy == 1)
+      valuesIn.push_back(str);
+    else if (acessTy == 2)
+      valuesOut.push_back(str);
+    else if ((acessTy == 3) || (acessTy == 0))
+      valuesInOut.push_back(str);
+  //   strVal[CI->getArgOperand(i)] = str;
   }
-  annotateExternalLoop(CI, L1, L2);
-  if (this->liveIN.size() != 0) {
-    output += " depend(in:";
-    bool isused = false;
-    for (auto J = this->liveIN.begin(), JE = this->liveIN.end(); J != JE; J++) {
-      if (isused)
-        output += ",";
-      isused = true;
-      output += strVal[*J];
-    }
+  if (annotateExternal == true)
+    if (annotateExternalLoop(CI, L1, L2) == false)
+      return std::string();
+  if (valuesIn.size() > 0) {
+    output += " depend(in:" + valuesIn[0];
+    for (int i = 1, ie = valuesIn.size(); i < ie; i++)
+      output += "," + valuesIn[i]; 
     output += ")";
   }
-  if (this->liveOUT.size() != 0) {
-    output += " depend(out:";
-    bool isused = false;
-    for (auto J = this->liveOUT.begin(), JE = this->liveOUT.end(); J != JE; J++) {
-      if (isused)
-        output += ",";
-      isused = true;
-      output += strVal[*J];
-    }
+  if (valuesOut.size() > 0) {
+    output += " depend(out:" + valuesOut[0];
+    for (int i = 1, ie = valuesOut.size(); i < ie; i++)
+      output += "," + valuesOut[i]; 
     output += ")";
   }
-  if (this->liveINOUT.size() != 0) {
-    output += " depend(inout:";
-    bool isused = false;
-    for (auto J = this->liveINOUT.begin(), JE = this->liveINOUT.end(); J != JE;
-      J++) {
-      if (isused)
-        output += ",";
-      isused = true;
-      output += strVal[*J];
-    } 
+  if (valuesInOut.size() > 0) {
+    output += " depend(inout:" + valuesInOut[0];
+    for (int i = 1, ie = valuesInOut.size(); i < ie; i++)
+      output += "," + valuesInOut[i]; 
     output += ")";
-  }
+ }
+ errs() << "OUTPUT = " << output << "\n";
   if (hasTaskWait) {
     std::string wait = "#pragma omp taskwait\n";
     int line = getLineNo(CI);
@@ -358,6 +404,12 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
   }
   output += priv;
   output += shar;
+  output += "\n{";
+  std::string out2 = "}\n";
+  int line = getLineNo(CI);
+  line++;
+  addCommentToLine(out2, line);  
+ 
   return output;
 }
 
@@ -472,18 +524,22 @@ RecoverPointerMD *RPM) {
   }
 }
 
-void RecoverExpressions::annotateExternalLoop(Instruction *I, Loop *L1,
+bool RecoverExpressions::annotateExternalLoop(Instruction *I, Loop *L1,
                                               Loop *L2) {
-  /*if (!L1 && !L2) {
-    annotateExternalLoop(I);
-    return;
-  }*/
+  if (!L1 || !L2) {
+    return false;
+  }
+  PHINode *phiL1 = getInductionVariable(L1, this->se);
+  PHINode *phiL2 = getInductionVariable(L2, this->se);
+  bool failL2 = false;
+  if (!phiL1 || !phiL2)
+    return false;
   if (L2) {
     Region *R = rp->getRegionInfo().getRegionFor(I->getParent());
     if (L2->getHeader())
       R = rp->getRegionInfo().getRegionFor(L2->getHeader()); 
     if (!st->isSafetlyRegionLoops(R))
-      return;
+      return false;
     int line = st->getStartRegionLoops(R).first;  
     std::string output = std::string();
     output += "#pragma omp parallel\n#pragma omp single\n";
@@ -494,13 +550,14 @@ void RecoverExpressions::annotateExternalLoop(Instruction *I, Loop *L1,
     if (L1->getHeader())
       R = rp->getRegionInfo().getRegionFor(L1->getHeader()); 
     if (!st->isSafetlyRegionLoops(R))
-      return;
+      return false;
     int line = st->getEndRegionLoops(R).first;  
     line++;
     std::string output = std::string();
     output += "#pragma omp taskwait\n";
     addCommentToLine(output, line);
   }
+  return true;
 }
 
 void RecoverExpressions::annotateExternalLoop(Instruction *I) {
@@ -525,7 +582,11 @@ void RecoverExpressions::analyzeFunction(Function *F) {
   std::map<Loop*, bool> loops;
   for (auto BB = F->begin(), BE = F->end(); BB != BE; BB++) {
     for (auto I = BB->begin(), IE = BB->end(); I != IE; I++) {
-      if (isa<CallInst>(I)) {
+      if (CallInst *CI = dyn_cast<CallInst>(I)) {
+        Loop *L = this->li->getLoopFor(I->getParent());
+        if ((isFCall.count(CI) == 0) || (L && haveEqualFlowEachIt(L))) {
+          continue;
+        }
         valid = true;
         RecoverPointerMD RPM;
         std::string computationName = "TM" + std::to_string(getNewIndex());
@@ -547,7 +608,6 @@ void RecoverExpressions::analyzeFunction(Function *F) {
           }
           std::string prag = "cutoff_test = (taskminer_depth_cutoff < DEPTH_CUTOFF);\n";
           int line = getLineNo(I);
-          addCommentToBLine(prag, line);
           if (isRecursive.count(I->getParent()->getParent()) > 0)
             check = " final(cutoff_test)";
           if (result != "\n\n[UNDEF\nVALUE]\n\n") {
@@ -557,9 +617,9 @@ void RecoverExpressions::analyzeFunction(Function *F) {
           else
             output += "#pragma omp task untied default(shared)" + check + "\n";
           Region *R = rp->getRegionInfo().getRegionFor(BB);
-          Loop *L = this->li->getLoopFor(I->getParent());
           if (L)
             annotateExternalLoop(I);
+          output = prag + output;
           /*Loop *L = this->li->getLoopFor(I->getParent());
           if (!isUniqueinLine(I)) {
             errs() << "Bug 1\n";
@@ -570,7 +630,11 @@ void RecoverExpressions::analyzeFunction(Function *F) {
             loops[L] = true;
           }*/
           //if(st->isSafetlyRegionLoops(R)) {
+            output = "{\n" + output;
             addCommentToLine(output, line);
+            int lineEnd = line + 1;
+            std::string outputEnd = "}\n";
+            addCommentToLine(outputEnd, lineEnd);
           //}
         }
       }
@@ -1025,6 +1089,46 @@ bool RecoverExpressions::analyzeLoop (Loop* L, int Line, int LastLine,
   return true;
 }
 
+bool RecoverExpressions::containsOperand(Value *V, std::map<Value*, bool> & used,
+                                         Value *target) {
+  if (used.count(V) > 0)
+    return false;
+  used[V] = true;
+  if (V == target)
+    return true;
+  if (V)
+  if (Instruction *I = dyn_cast<Instruction>(V)) {
+    for (int i = 0; i < I->getNumOperands(); i++) {
+      if (containsOperand(I->getOperand(i), used, target))
+        return true;
+    }
+  }
+  return false;
+}
+
+bool RecoverExpressions::haveEqualFlowEachIt(Loop *L) {
+  Value *IndVar = getInductionVariable(L, this->se);
+  if (!IndVar) {
+    for (BasicBlock::iterator I = L->getHeader()->begin(); isa<PHINode>(I); ++I)
+      IndVar = I;
+  }
+  int numBranchs = 0;
+  for (auto BB = L->block_begin(), BE = L->block_end(); BB != BE; BB++) {
+    for (auto II = (*BB)->begin(), IE = (*BB)->end(); II != IE; II++) {
+      if (BranchInst *BI = dyn_cast<BranchInst>(II)) {
+        if (BI->isConditional()) {
+          Value *Cond = BI->getCondition();
+          std::map<Value*, bool> used;
+          if (containsOperand(Cond, used, IndVar)) {
+            numBranchs++;
+          }
+        }
+      }
+    }
+  }  
+  return (numBranchs!=1);
+}
+
 bool RecoverExpressions::analyzeTopLoop (Loop* L, int Line, int LastLine,
                                         PtrRangeAnalysis *ptrRA, 
                                         RegionInfoPass *rp, AliasAnalysis *aa,
@@ -1053,7 +1157,8 @@ bool RecoverExpressions::analyzeTopLoop (Loop* L, int Line, int LastLine,
   //L->dump();
   for (Loop *SubLoop : L->getSubLoops()) {
     Region *R = this->rp->getRegionInfo().getRegionFor(SubLoop->getHeader());
-      if (!R)
+      PHINode *phi = getInductionVariable(SubLoop, this->se);
+      if (!R || !phi)
         continue;
 
       if (mapped.count(SubLoop) > 0)

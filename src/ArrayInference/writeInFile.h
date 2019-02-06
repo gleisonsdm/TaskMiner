@@ -44,6 +44,8 @@
 #include "writeExpressions.h"
 #include "recoverExpressions.h"
 
+#include "../PtrAccessType/ptrAccessTypeAnalysis.h"
+
 using namespace lge;
 
 namespace llvm {
@@ -121,12 +123,16 @@ class WriteInFile : public ModulePass {
   virtual void getAnalysisUsage(AnalysisUsage &AU) const {
 //    AU.addRequired<WriteExpressions>();
     AU.addRequired<RecoverExpressions>();
+    AU.addRequired<PtrAccessTypeAnalysis>(); 
     AU.addRequired<TaskMiner>();
     AU.setPreservesAll();
   }
   
   // Pass that will insert comments in source file.
   WriteExpressions *we;
+
+  // Interprocedural Analysis to find the access type.
+  PtrAccessTypeAnalysis *ptrATy;
 
   // Insert tasks into the source file.
   RecoverExpressions *re;

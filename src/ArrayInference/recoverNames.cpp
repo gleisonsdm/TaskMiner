@@ -98,18 +98,19 @@ const Function *RecoverNames::findEnclosingFunc(const Value *V) {
 }
 
 const DILocalVariable *RecoverNames::findVar(const Value *V, const Function *F) {
+  const DILocalVariable *tmpRet = nullptr;
   for (auto Iter = inst_begin(F), End = inst_end(F); Iter != End; ++Iter) {
     const Instruction *I = &*Iter;
     if (const DbgDeclareInst *DbgDeclare = dyn_cast<DbgDeclareInst>(I)) {
       if (DbgDeclare->getAddress() == V)
-        return DbgDeclare->getVariable();
+        tmpRet = DbgDeclare->getVariable();
 
     }
     else if (const DbgValueInst *DbgValue = dyn_cast<DbgValueInst>(I))
       if (DbgValue->getValue() == V)
-        return DbgValue->getVariable();
+        tmpRet = DbgValue->getVariable();
   }
-  return NULL;
+  return tmpRet;
 }
 
 StringRef RecoverNames::getOriginalName(const Value *V) {

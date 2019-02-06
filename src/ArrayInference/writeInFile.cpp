@@ -191,6 +191,10 @@ for (auto F = M.begin(), FE = M.end(); F != FE; ++F)
       if(!InputFile.empty())
         return true;
     }
+  if (M.begin() ==  M.end()) {
+    InputFile = M.getName();
+    return true;
+  }
 return false;
 }
 
@@ -206,8 +210,9 @@ return false;
 
 bool WriteInFile::runOnModule (Module &M) {
 if (!findModuleFileName(M))
-  return true;
+  return false;
 
+this->ptrATy = &getAnalysis<PtrAccessTypeAnalysis>();
 std::list<Task*> tasksList;
 std::set<CallInst*> tasksCall;
 if (ClRun) {
@@ -250,6 +255,15 @@ for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
     this->re->RUNTIME_COST = ClRUNTIME;
     this->re->THRESHOLD = ClTHRESHOLD;
     this->re->Comments.erase(this->re->Comments.begin(), this->re->Comments.end());
+    this->re->accessType.erase(this->re->accessType.begin(), this->re->accessType.end());
+    for (std::map<Function*, std::map<Value*, char> >::iterator I =
+         this->ptrATy->accessType.begin(), IE = this->ptrATy->accessType.end();
+         I != IE; I++) {
+      for (std::map<Value*, char>::iterator J = I->second.begin(),
+           JE = I->second.end(); J != JE; J++) {
+        this->re->accessType[J->first] = J->second;
+      }
+    }
     this->re = &getAnalysis<RecoverExpressions>(*F);
     copyComments(this->re->Comments);
   }

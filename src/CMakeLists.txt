@@ -49,7 +49,7 @@ add_library( LLVMTaskFinder MODULE
     RegionTree.cpp
     CostModel.cpp
     PDG.cpp
-    Task.cpp
+    Task.cpp 
 )
 
 add_subdirectory(ArrayInference)
@@ -59,3 +59,4 @@ add_subdirectory(ParallelLoopMetadata)
 add_subdirectory(PtrRangeAnalysis)
 add_subdirectory(ScopeTree)
 add_subdirectory(CostTaskModel)
+add_subdirectory(PtrAccessType)

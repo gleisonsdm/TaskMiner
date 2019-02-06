@@ -70,14 +70,17 @@ private:
 	//This map stores all the incoming edges to node of type T
 	std::map<Node<NodeT>*, std::set<Edge<NodeT, EdgeT>*> > inEdges;
 	bool stronglyConnected=true;
+  int nVisited;
 
 	bool nodeReachesEveryNode(Node<NodeT> *node)
 	{
+    nVisited = 0;
 		std::map<const Node<NodeT> *, bool> visited;
 		for (const auto n : nodesList)
 			visited[n] = false;
 		visit(node, visited);
-		for (const auto v : visited)
+    return (visited.size() == nVisited);
+/*		for (const auto v : visited)
 		{
 			if (v.second == false)
 			{
@@ -85,20 +88,18 @@ private:
 			}
 		}
 
-		return true;
+		return true;*/
 	}
 
 	void visit(Node<NodeT> *node, std::map<const Node<NodeT>*, bool> &visited)
 	{
-		if (!visited[node])
-		{
-			visited[node] = true;
-			for (const auto &e : getOutEdges(node))
-			{
-				visit(e->getDst(), visited);
-			}			
+		if (visited[node])
+      return;
+		visited[node] = true;
+    nVisited++;
+		for (const auto &e : getOutEdges(node)) {
+		  visit(e->getDst(), visited);
 		}
-		else return;
 	}
 
 	void updateStronglyConnectedStatus()
@@ -119,7 +120,7 @@ public:
 
 	Node<NodeT> *addNode(NodeT item)
 	{
-		if (nodes.find(item) == nodes.end())
+		if (nodes.count(item) == 0)
 		{
 			Node<NodeT> *node = new Node<NodeT>(item);
 			nodes[item] = std::make_pair<int,  Node<NodeT>* >(nextIntKey, std::move(node));
@@ -139,10 +140,9 @@ public:
 	Node<NodeT> *getNode(NodeT item)
 	{
 		auto pair_ = nodes.find(item);
-		if (pair_ == std::end(nodes))
+		if (nodes.count(item) == 0)
 			return addNode(item);
-		else
-			return pair_->second.second;
+		return nodes.find(item)->second.second;
 	}
 
 	Node<NodeT> *getNodeByIndex(const int index) const
@@ -159,10 +159,9 @@ public:
 
 	int getNodeIndex(NodeT item) const
 	{
-		auto pair_ = nodes.find(item);
-		if (pair_ == nodes.end())
+		if (nodes.count(item) == 0)
 			return -1;
-		return pair_->second.first;
+		return nodes.find(item)->second.first;
 	}
 
 	int getNodeIndex(Node<NodeT> *node) const
@@ -218,17 +217,14 @@ public:
 	std::set<Edge<NodeT, EdgeT>*> getOutEdges(Node<NodeT> *node) 
 	{
 		std::set<Edge<NodeT, EdgeT>*> outEdges_;
-		if (outEdges.find(node) != outEdges.end())
-			outEdges_ = outEdges[node];
-		
+		if (outEdges.count(node) != 0)
+			return outEdges[node];
 		return outEdges_;
 	}
 
 	std::set<Edge<NodeT, EdgeT>*> getOutEdges(NodeT item)
-	{
-		Node<NodeT> *node = getNode(item);
-		
-		return getOutEdges(node);
+	{	
+		return getOutEdges(getNode(item));
 	}
 
 	Edge<NodeT, EdgeT> *checkEdge(NodeT src, NodeT dst, EdgeT type) const

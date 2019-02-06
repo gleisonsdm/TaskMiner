@@ -103,7 +103,7 @@ class RecoverExpressions : public FunctionPass {
 
   // Annotate the pragmas before a loop, case necessary.
   void annotateExternalLoop(Instruction *I);
-  void annotateExternalLoop(Instruction *I, Loop *L1, Loop *L2);
+  bool annotateExternalLoop(Instruction *I, Loop *L1, Loop *L2);
 
   // Return the line number for Value V.
   int getLineNo (Value *V);
@@ -141,6 +141,10 @@ class RecoverExpressions : public FunctionPass {
 
   bool isValidSharedStr (std::set<Value*> V);
 
+  bool containsOperand(Value *V, std::map<Value*, bool> & used, Value *target);
+
+  bool haveEqualFlowEachIt(Loop *L);
+
   bool analyzeTopLoop (Loop* L, int Line, int LastLine, PtrRangeAnalysis *ptrRA,
                     RegionInfoPass *rp, AliasAnalysis *aa, ScalarEvolution *se,
                     LoopInfo *li, DominatorTree *dt, std::string priv);
@@ -173,6 +177,9 @@ class RecoverExpressions : public FunctionPass {
   // Function to find induction variables:
   PHINode *getInductionVariable(Loop *L, ScalarEvolution *SE);
 
+  // Return the base pointer of a value:
+  Value *getBasePtr(Value *V);
+
 public:
 
   //===---------------------------------------------------------------------===
@@ -183,6 +190,8 @@ public:
    uint32_t N_WORKERS; //NUMBER OF THREADS                          
    uint32_t RUNTIME_COST; //RUNTIME COST                            
    uint32_t THRESHOLD = 1; //THRESHOLD
+
+  std::map<Value*, char> accessType;
   //===---------------------------------------------------------------------===
 
   static char ID;

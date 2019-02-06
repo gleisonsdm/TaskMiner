@@ -153,6 +153,10 @@ class RecoverCode {
   std::string getIndextoGEP (GetElementPtrInst*  GEP, std::string name, int *var,
                 const DataLayout* DT);
 
+  // Return the Index to sum to based pointer of GetElementPtrInst.
+  std::string getIndextoGEP2 (GetElementPtrInst*  GEP, std::string name, int *var,
+                const DataLayout* DT);
+
   // Return if is possible recover the static size to the Pointer "V":
   bool isPointerMD(Value *V);
 

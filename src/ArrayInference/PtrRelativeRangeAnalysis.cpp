@@ -34,7 +34,7 @@ using namespace std;
 using namespace lge;
 
 bool PtrRRangeAnalysis::canSelectInfo(Loop *L) {
-  if (info.count(L))
+  if (info.count(L) && (hasFullSideEffectInfo.count(L) == 0))
     return true;
   return false;
 }
@@ -43,7 +43,7 @@ PtrRRangeAnalysis::ptrData PtrRRangeAnalysis::selectInfo(Loop *L) {
   if (info.count(L))
     return info[L];
   std::map<Value *, PtrLoopInfo> ptr;
-  // HERE
+  hasFullSideEffectInfo[L] = false;
   return ptr;
 }
 
@@ -90,8 +90,8 @@ bool PtrRRangeAnalysis::isValidPtr (Value *V) {
   if (isa<Argument>(V) || isa<Instruction>(V) || isa<AllocaInst>(V))
     return true;
   if (GlobalValue *GV = dyn_cast<GlobalValue>(V)) {
-    if ((GV->getType()->getTypeID() == Type::PointerTyID) &&
-        (GV->getType()->getPointerElementType()->getTypeID() == Type::ArrayTyID)) 
+    if ((GV->getType()->getTypeID() != Type::PointerTyID) &&
+        (GV->getType()->getPointerElementType()->getTypeID() != Type::ArrayTyID)) 
       return false;
   }
   return true;
@@ -100,13 +100,17 @@ bool PtrRRangeAnalysis::isValidPtr (Value *V) {
 std::pair<Value *, Value *> PtrRRangeAnalysis::findLoopItRange(Loop *L,
                                                                SCEVRangeBuilder *rangeBuilder) {
   PHINode *PHI = rangeBuilder->getInductionVariable(L);
-  if (!PHI)
+  if (!PHI) {
+    hasFullSideEffectInfo[L] = false;
     return std::make_pair(nullptr, nullptr);
+  }
   const SCEV *Limit = se->getSCEVAtScope(PHI, L);
   std::vector<const SCEV *> ExprList;
   ExprList.push_back(Limit);
-  if (!rangeBuilder->canComputeBoundsFor(Limit))
+  if (!rangeBuilder->canComputeBoundsFor(Limit)) {
+    hasFullSideEffectInfo[L] = false;
     return std::make_pair(nullptr, nullptr);
+  }
 
   Value *low = rangeBuilder->getULowerBound(ExprList);
   Value *up = rangeBuilder->getUUpperBound(ExprList);
@@ -121,8 +125,10 @@ void PtrRRangeAnalysis::findBounds(Loop *L) {
   Region *r = rp->getRegionInfo().getRegionFor(L->getLoopPreheader());
   if (!ptrRa->RegionsRangeData[r].HasFullSideEffectInfo)
     r = rp->getRegionInfo().getRegionFor(L->getHeader());
-  if (!ptrRa->RegionsRangeData[r].HasFullSideEffectInfo)
+  if (!ptrRa->RegionsRangeData[r].HasFullSideEffectInfo) {
+    hasFullSideEffectInfo[L] = false;
     return;
+  }
 
   Instruction *insertPt = L->getHeader()->getTerminator();
 
@@ -132,8 +138,10 @@ void PtrRRangeAnalysis::findBounds(Loop *L) {
   for (auto &pair : ptrRa->RegionsRangeData[r].BasePtrsData) {
     //if (RPM.pointerDclInsideLoop(L,pair.first))
     //  continue;
-    if (!isValidPtr(pair.first))
+    if (!isValidPtr(pair.first)) {
+      hasFullSideEffectInfo[L] = false;
       return;
+    }
     rangeBuilder.setPPtr(pair.first);
     rangeBuilder.setRelAnalysisMode(true);
     Value *low = rangeBuilder.getULowerBound(pair.second.AccessFunctions);
@@ -210,9 +218,10 @@ Value *PtrRRangeAnalysis::getBaseGlobalPtr(Value *V,
 
 Value *PtrRRangeAnalysis::convertToInt(Value *V,
                                        SCEVRangeBuilder *rangeBuilder) {
-  if (!V)
+  if (!V) {
     return V;
-  
+  }  
+
   V = getBaseGlobalPtr(V, rangeBuilder);
   if (V->getType()->getTypeID() == Type::PointerTyID) {
       return rangeBuilder->InsertCast(Instruction::PtrToInt, V, 
@@ -240,6 +249,7 @@ void PtrRRangeAnalysis::calculatePtrRangeToLoop(Loop *L, Value *Ptr,
   Value *PHILower = ptr[Ptr].itRange.first;
   Value *PHI = rangeBuilder->getInductionVariable(L);
   if (!PHI || !ptr[Ptr].step.first) {
+    hasFullSideEffectInfo[L] = false;
     return;
   } 
   Type *Ty = Type::getInt64Ty(PHI->getContext());
@@ -248,6 +258,7 @@ void PtrRRangeAnalysis::calculatePtrRangeToLoop(Loop *L, Value *Ptr,
   Value *CUB = ptr[Ptr].constBounds.second;
 
   if (!CLB || !CUB || !Step) {
+    hasFullSideEffectInfo[L] = false;
     return;
   }
   if (Step->getType()->getPrimitiveSizeInBits() > Ty->getPrimitiveSizeInBits()) {
@@ -264,13 +275,19 @@ void PtrRRangeAnalysis::calculatePtrRangeToLoop(Loop *L, Value *Ptr,
   Value *Window = rangeBuilder->InsertBinop(Instruction::Sub, CUB, CLB);
   ptr[Ptr].window = Window;
   std::vector<const SCEVAddRecExpr *> vct = rangeBuilder->getAllExpr(L, Ptr);
-  if (vct.size() == 0)
+  if (vct.size() == 0) {
+    hasFullSideEffectInfo[L] = false;
     return;
+  }
   Value *Min = rangeBuilder->getAddRectULowerOrUpperBound(vct, false);
   //Min = rangeBuilder->InsertCast(Instruction::PtrToInt, Min, Step->getType());
   Value *Max = rangeBuilder->getAddRectULowerOrUpperBound(vct, true);
   //Max = rangeBuilder->InsertCast(Instruction::PtrToInt, Max, Step->getType());
 
+  if (!Min || !Max) {
+    hasFullSideEffectInfo[L] = false;
+    return;
+  }
 
   // Getting the correct size step by step:
   if (PHI->getType() != Ty) {
@@ -282,7 +299,6 @@ void PtrRRangeAnalysis::calculatePtrRangeToLoop(Loop *L, Value *Ptr,
   if (Step->getType() != Ty) {
     Step = rangeBuilder->InsertCast(Instruction::SExt, Step, Ty);
   }
-
   Value *Start = rangeBuilder->InsertBinop(Instruction::Sub, PHI, PHILower);
 
   // Lower = PHI - PHILower + Min
@@ -295,7 +311,6 @@ void PtrRRangeAnalysis::calculatePtrRangeToLoop(Loop *L, Value *Ptr,
   Value *Lower = rangeBuilder->InsertBinop(Instruction::Mul, Start, Step);
 //  Value *Lower = rangeBuilder->InsertBinop(Instruction::Mul, Lower, Step);
   Lower = rangeBuilder->InsertBinop(Instruction::Add, Lower, CLB);
-
   // Upper = PHI - PHILower + Max
   Max = convertToInt(Max, rangeBuilder);
   if (Max->getType() != Ty)

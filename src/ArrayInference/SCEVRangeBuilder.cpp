@@ -631,7 +631,6 @@ Value *SCEVRangeBuilder::InsertNoopCastOfTo(Value *V, Type *Ty) {
     Result =
         CastInst::Create(Op, Result, Ty, Result->getName(), getInsertPoint());
   }
-
   return Result;
 }
 
@@ -738,8 +737,12 @@ Value *SCEVRangeBuilder::getAddRectULowerOrUpperBound(
 
   ++It;
 
-  if (!BestBound)
+  if (!BestBound || (BestBound == DUMMY_VAL))
     return nullptr;
+
+  if (BestBound->getType()->getTypeID() == Type::PointerTyID)
+    return nullptr;
+ 
 
   while (It != ExprList->end()) {
     Expr = *It;
@@ -752,11 +755,16 @@ Value *SCEVRangeBuilder::getAddRectULowerOrUpperBound(
 
     Value *Cmp;
 
-    if (!NewBound)
+    if (!NewBound || (NewBound == DUMMY_VAL))
       return nullptr;
     // The old bound is promoted on type conflicts.
-    if (BestBound->getType() != NewBound->getType())
+    if (BestBound->getType() != NewBound->getType()) {
+      BestBound->getType()->dump();
+      NewBound->getType()->dump();
+      if (NewBound->getType()->getTypeID() == Type::PointerTyID)
+        return nullptr;
       NewBound = InsertNoopCastOfTo(NewBound, BestBound->getType());
+    }
 
     if (Upper)
       Cmp = InsertICmp(ICmpInst::ICMP_UGT, NewBound, BestBound);

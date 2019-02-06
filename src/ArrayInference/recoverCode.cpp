@@ -974,6 +974,14 @@ std::string RecoverCode::getIndextoGEP (GetElementPtrInst*  GEP,
   return exp;
 }
 
+// Generate a index to GEP Instruction, this method will calculate the index to
+// referenced array of this GEP.
+std::string RecoverCode::getIndextoGEP2 (GetElementPtrInst*  GEP,
+                                std::string name,
+                                int* var, const DataLayout* DT) { 
+  return std::string();
+}
+
 // Return the subType to the type named "tpy", if possible.
 // If not, return the same type of "tpy"
 Type* RecoverCode::getInternalType (Type *tpy, int position,
