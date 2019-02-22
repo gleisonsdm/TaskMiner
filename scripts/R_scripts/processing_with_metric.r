@@ -28,5 +28,5 @@ agg1 <- agg1[order(agg1$value$Speedup),]
                   
 p = ggplot() + geom_boxplot(data=agg1, aes(x = agg1$BENCH, ymin = value$Min, ymax = value$Max, lower = value$Speedup - value$Sd, upper = value$Speedup + value$Sd, middle = value$Speedup), stat = "identity") + coord_flip()  +
   theme(axis.text.y = element_text(lineheight = 0.5
-                                   , size = 6)) + labs(x = "Benchmarks ordered by speedup", y = "Log (Parallel divided / Sequential)")
+                                   , size = 6)) + labs(x = "Benchmarks ordered by speedup", y = "log (Parallel / Sequential)")
 ggsave("boxplot.pdf", path="Desktop/TaskMiner/scripts/R_scripts", plot = p, device="pdf", limitsize = FALSE)
