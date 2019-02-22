@@ -5,40 +5,20 @@ library(readr)
 library(tidyr)
 runtime_data_tmp <- read.csv("Desktop/TaskMiner/scripts/R_scripts/data.csv")
 runtime_data <- runtime_data_tmp[order(runtime_data_tmp$Speedup),]
-BENCH <- runtime_data[1:21,1]
-BENCH <- cbind(BENCH,(runtime_data[1:21,7:11] / runtime_data[1:21,2:6]))
-metric = gather(BENCH, key='id', value='value', 2, 3, 4, 5)
-p = ggplot() + geom_boxplot(data= metric, aes(BENCH, log(value)), colour='black') + coord_flip()
-p + ggsave('Downloads/boxplot_group1.pdf', height = 50, width = 50, device = 'pdf', limitsize = FALSE)
-
-BENCH <- runtime_data[22:42,1]
-BENCH <- cbind(BENCH,(runtime_data[22:42,7:11] / runtime_data[22:42,2:6]))
-metric = gather(BENCH, key='id', value='value', 2, 3, 4, 5)
-p = ggplot() + geom_boxplot(data= metric, aes(BENCH, log(value)), colour='black') + coord_flip()
-p + ggsave('Downloads/boxplot_group2.pdf', height = 50, width = 50, device = 'pdf', limitsize = FALSE)
-
-BENCH <- runtime_data[43:63,1]
-BENCH <- cbind(BENCH,(runtime_data[43:63,7:11] / runtime_data[43:63,2:6]))
-metric = gather(BENCH, key='id', value='value', 2, 3, 4, 5)
-p = ggplot() + geom_boxplot(data= metric, aes(BENCH, log(value)), colour='black') + coord_flip()
-p + ggsave('Downloads/boxplot_group3.pdf', height = 50, width = 50, device = 'pdf', limitsize = FALSE)
-
-BENCH <- runtime_data[64:83,1]
-BENCH <- cbind(BENCH,(runtime_data[64:83,7:11] / runtime_data[64:83,2:6]))
-metric = gather(BENCH, key='id', value='value', 2, 3, 4, 5)
-p = ggplot() + geom_boxplot(data= metric, aes(BENCH, log(value)), colour='black') + coord_flip()
-p + ggsave('Downloads/boxplot_group4.pdf', height = 50, width = 50, device = 'pdf', limitsize = FALSE)
+indexS <- paste("S", seq(1,5), sep = "")
+indexP <- paste("P", seq(1,5), sep = "")
 
 BENCH <- runtime_data[,1]
-BENCH <- cbind(BENCH,(runtime_data[,7:11] / runtime_data[,2:6]))
-metric = gather(BENCH, key='id', value='value', 2, 3, 4, 5)
-p = ggplot() + geom_boxplot(data= metric, aes(BENCH, log(value)), colour='black') + coord_flip()  +
-  theme(text=element_text(size=8,  family="Comic Sans MS"))
-p + ggsave('Downloads/boxplot.pdf', height = 50, width = 50, device = 'pdf', limitsize = FALSE) 
+BENCH <- cbind(BENCH,log(runtime_data[,indexP] / runtime_data[,indexS]))
+metric = gather(BENCH, key='id', value='value', 2, 3, 4, 5, 6)
+agg1 <- aggregate(value ~ BENCH, metric, function (x) c(Mean=mean(x), Sd=sd(x), Min=min(x), Max=max(x)))
+agg1 <- cbind(agg1, runtime_data[,"Speedup"])
+agg1$value = as.data.frame(agg1$value)
+colnames(agg1)[length(colnames(agg1))] <- "Speedup"
+p = ggplot() + geom_boxplot(data=agg1, aes(x = BENCH, ymin = value$Min, ymax = value$Max, lower = Speedup - value$Sd, upper = Speedup + value$Sd, middle = Speedup), stat = "identity") + coord_flip()  +
+  theme(axis.text.y = element_text(lineheight = 0.5
+                                   , size = 6))
+ggsave("boxplot.pdf", path="Downloads", plot = p, device="pdf", limitsize = FALSE)
 
-BENCH <- runtime_data[,1]
-BENCH <- cbind(BENCH,(runtime_data[,7:11] / runtime_data[,2:6]))
-metric = gather(BENCH, key='id', value='value', 2, 3, 4, 5)
-p = ggplot() + geom_boxplot(data= metric, aes(BENCH, log(value)), colour='black') + 
-  theme(text=element_text(size=8,  family="Comic Sans MS"))
-p + ggsave('Downloads/boxplot2.pdf', height = 50, width = 50, device = 'pdf', limitsize = FALSE) 
+                  
+                  
