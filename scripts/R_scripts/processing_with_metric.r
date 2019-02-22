@@ -18,7 +18,7 @@ colnames(agg1)[length(colnames(agg1))] <- "Speedup"
 p = ggplot() + geom_boxplot(data=agg1, aes(x = BENCH, ymin = value$Min, ymax = value$Max, lower = Speedup - value$Sd, upper = Speedup + value$Sd, middle = Speedup), stat = "identity") + coord_flip()  +
   theme(axis.text.y = element_text(lineheight = 0.5
                                    , size = 6))
-ggsave("boxplot.pdf", path="Downloads", plot = p, device="pdf", limitsize = FALSE)
+ggsave("boxplot.pdf", path="Desktop/TaskMiner/scripts/R_scripts", plot = p, device="pdf", limitsize = FALSE)
 
                   
                   
