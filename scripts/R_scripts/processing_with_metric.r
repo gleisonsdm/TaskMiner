@@ -4,18 +4,20 @@ library(tibble)
 library(readr)
 library(tidyr)
 runtime_data_tmp <- read.csv("Desktop/TaskMiner/scripts/R_scripts/data.csv")
-runtime_data <- runtime_data_tmp[order(runtime_data_tmp$Speedup),]
+runtime_data_tmp2 <- runtime_data_tmp[which(runtime_data_tmp[,2] > 0.05),]
+runtime_data <- runtime_data_tmp2[order(runtime_data_tmp2$Speedup),]
 indexS <- paste("S", seq(1,5), sep = "")
 indexP <- paste("P", seq(1,5), sep = "")
 
 BENCH <- c()
-for (i in 1:83) {
+for (i in 1:nrow(runtime_data)) {
     tmp <- format(i)
     while(nchar(tmp) < 3){
       tmp <- paste("0", tmp, sep="")
     }
     BENCH <- c(BENCH, paste(tmp, runtime_data[i,1], sep=" - "))
 }
+
 BENCH <- cbind(BENCH,log(runtime_data[,indexP] / runtime_data[,indexS]))
 BENCH <- cbind(BENCH,log(runtime_data[,"Speedup"]))
 colnames(BENCH)[length(colnames(BENCH))] <- "Speedup"
