@@ -26,7 +26,7 @@ llvm/tools/clang.
 
 4. Apply the patch "llvm-patch.diff" (located at '/src/ArrayInference/llvm-patch.diff') to your LLVM source directory.
 
-    patch -p1 < "${TASKMINER_PATH}/src/ArrayInference/llvm-patch.diff"
+        patch -p1 < "${TASKMINER_PATH}/src/ArrayInference/llvm-patch.diff"
 
 5. Compile  a fresh LLVM+Clang 3.7 build:
 
