@@ -40,7 +40,7 @@ llvm/tools/clang.
     	cd ${LLVM_SRC}/../llvm-build
 
     	#Setup clang plugins to be compiled alongside LLVM and Clang
-    	${REPO}/src/ScopeFinder/setup.sh
+    	${REPO}/src/ScopeFinder/setup.sh ${LLVM_SRC}
 
     	#Create build setup for LLVM+Clang using CMake
     	cmake -DCMAKE_BUILD_TYPE=debug -DBUILD_SHARED_LIBS=ON ${LLVM_SRC}
