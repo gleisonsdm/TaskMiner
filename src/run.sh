@@ -22,6 +22,7 @@ export WAI="$BUILD/ArrayInference/libLLVMArrayInference.so"
 export CDA="$BUILD/ControlDivergenceAnalysis/libControlDivergenceAnalysis.so"
 export ST="$BUILD/ScopeTree/libLLVMScopeTree.so"
 export WTM="$BUILD/libLLVMTaskFinder.so"
+export PTRA="$BUILD/PtrAccessType/libLLVMPtrAccessTypeAnalysis.so" 
 
 export XCL="-Xclang -load -Xclang"
 export FLAGS="-mem2reg -tbaa -scoped-noalias -basicaa -functionattrs
@@ -40,7 +41,7 @@ $CLANG $OMP -g -S -emit-llvm "${3}" -o result.bc
 
 $OPT -load $ST -instnamer -mem2reg -scopeTree result.bc
 
-$OPT -load $ST -load $WTM -load $WAI -instnamer -mem2reg
+$OPT -load $PTRA $ST -load $WTM -load $WAI -instnamer -mem2reg
 -loop-simplify -writeInFile -Run-Mode=true \
          -RUNTIME_COST="${4}" "${5}" "${6}" -S result.bc -o result2.bc
 
