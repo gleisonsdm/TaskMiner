@@ -41,7 +41,7 @@ $CLANG $OMP -g -S -emit-llvm "${3}" -o result.bc
 
 $OPT -load $ST -instnamer -mem2reg -scopeTree result.bc
 
-$OPT -load $PTRA $ST -load $WTM -load $WAI -instnamer -mem2reg
+$OPT -load $PTRA -load $ST -load $WTM -load $WAI -instnamer -mem2reg
 -loop-simplify -writeInFile -Run-Mode=true \
          -RUNTIME_COST="${4}" "${5}" "${6}" -S result.bc -o result2.bc
 
