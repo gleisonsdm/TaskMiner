@@ -36,7 +36,9 @@ using namespace lge;
 #define DEBUG_TYPE "recoverExpressions"
 #define ERROR_VALUE -1
 
-STATISTIC(numRA , "Number of regions annotated"); 
+STATISTIC(numRA, "Number of regions annotated"); 
+STATISTIC(numFA, "Number of functions annotated");
+STATISTIC(numPI, "Number of pragmas inserted");
 
 void RecoverExpressions::setTasksList(std::list<Task*> taskList) {
   this->tasksList = taskList;
@@ -140,7 +142,8 @@ PHINode *RecoverExpressions::getInductionVariable(Loop *L, ScalarEvolution *SE) 
         dyn_cast<ConstantInt>(PN->getIncomingValueForBlock(Incoming)))
         if (Instruction *Inc =
             dyn_cast<Instruction>(PN->getIncomingValueForBlock(Backedge)))
-         if (Inc->getOpcode() == Instruction::Add && Inc->getOperand(0) == PN)
+         if (((Inc->getOpcode() == Instruction::Add) || 
+              (Inc->getOpcode() == Instruction::Sub)) && Inc->getOperand(0) == PN)
            if (ConstantInt *CI = dyn_cast<ConstantInt>(Inc->getOperand(1)))
                return PN;
   }
@@ -177,6 +180,7 @@ void RecoverExpressions::insertCutoff(Function *F) {
   int end = getLastBranchLine(F);
   addCommentToLine("#pragma omp critical\ntaskminer_depth_cutoff++;\n", start);
   addCommentToLine("#pragma omp critical\ntaskminer_depth_cutoff--;\n", end);
+  numPI = numPI + 2;
 }
 
 int RecoverExpressions::getLineNo (Value *V) {
@@ -195,7 +199,7 @@ int RecoverExpressions::getLastBranchLine(Function *F) {
   int line = 0;
   for (auto B = F->begin(), BE = F->end(); B != BE; B++)
     for (auto II = B->begin(), IE = B->end(); II != IE; II++)
-      if (isa<BranchInst>(&(*II))) {
+      if (isa<BranchInst>(&(*II)) || isa<ReturnInst>(&(*II))) {
         int l = getLineNo(II);
         if (l > line)
           line = l;
@@ -204,6 +208,9 @@ int RecoverExpressions::getLastBranchLine(Function *F) {
 }
 
 bool RecoverExpressions::isUniqueinLine(Instruction *I) {
+  // TODO : REMOVE THIS, I AM JUST TESTING TM:
+  return true;
+
   Function *F = I->getParent()->getParent();
   int line = getLineNo(I);
   for (auto B = F->begin(), BE = F->end(); B != BE; B++)
@@ -215,8 +222,11 @@ bool RecoverExpressions::isUniqueinLine(Instruction *I) {
             if (!isa<Function>(V))
               return false;
             Function *FF = cast<Function>(V);
-            if (F->getName() == "llvm.dbg.declare")
-              continue;
+            if (FF->getName() == "llvm.dbg.declare" ||
+              FF->getName() == "llvm.dbg.value" || 
+              FF->getName() == "llvm.memcpy.p0i8.p0i8.i32" || 
+              FF->getName() == "llvm.memcpy.p0i8.p0i8.i64") 
+                continue;
           }
           return false;
         }
@@ -262,6 +272,7 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
         std::string prag = "#pragma omp parallel\n";
         prag += "#pragma omp single\n";
         int line = getLineNo(CI);
+        numPI = numPI + 2;
         addCommentToBLine(prag, line);
         isTask = true;
         break;
@@ -304,7 +315,6 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
         isTask = true;
         hasTaskWait = RT->hasSyncBarrier();
         isInsideLoop = RT->insideLoop();
-        insertCutoff(CI->getCalledFunction());
         if (!isValidPrivateStr(I->getPrivateValues()))
           isTask = false;
         if (!isValidSharedStr(I->getSharedValues()))
@@ -324,6 +334,7 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
       }
     }
   }
+ 
   if (isTask == false) {
     return output;
   }
@@ -348,6 +359,22 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
       continue;
     }
     Value *basePtr = getBasePtr(CI->getArgOperand(i));
+    basePtr->dump();
+    basePtr->getType()->dump();
+    if ((basePtr->getType()->getTypeID() == Type::HalfTyID) ||
+        (basePtr->getType()->getTypeID() == Type::FloatTyID) ||
+        (basePtr->getType()->getTypeID() == Type::DoubleTyID) ||
+        (basePtr->getType()->getTypeID() == Type::X86_FP80TyID) ||
+        (basePtr->getType()->getTypeID() == Type::FP128TyID) ||
+        (basePtr->getType()->getTypeID() == Type::PPC_FP128TyID) ||
+        (basePtr->getType()->getTypeID() == Type::IntegerTyID)) {
+      continue;
+    }
+    if (AllocaInst *AInst = dyn_cast<AllocaInst>(basePtr)) {
+      if (AInst->isStaticAlloca() && (!AInst->isArrayAllocation()))
+        continue;
+    }
+    CI->getArgOperand(i)->dump();
     std::string str = analyzeValue(CI->getArgOperand(i), DT, RPM);
     if (str == std::string() || str == "0") {
       return std::string();
@@ -385,14 +412,15 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
     output += ")";
  }
  errs() << "OUTPUT = " << output << "\n";
-  if (hasTaskWait) {
-    std::string wait = "#pragma omp taskwait\n";
-    int line = getLineNo(CI);
-    line++;
-    addCommentToLine(wait, line);  
-  }
   // HERE
   if (output == std::string()) {
+    if (hasTaskWait) {
+      std::string wait = "#pragma omp taskwait\n";
+      int line = getLineNo(CI);
+      line++;
+      addCommentToLine(wait, line);  
+    }
+ 
     if ((priv != std::string()) && (shar != std::string()))
       return priv + shar;
     if (priv != std::string())
@@ -409,7 +437,13 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
   int line = getLineNo(CI);
   line++;
   addCommentToLine(out2, line);  
- 
+
+  if (hasTaskWait) {
+    std::string wait = "#pragma omp taskwait\n";
+    int line = getLineNo(CI);
+    line++;
+    addCommentToLine(wait, line);  
+  }
   return output;
 }
 
@@ -543,6 +577,7 @@ bool RecoverExpressions::annotateExternalLoop(Instruction *I, Loop *L1,
     int line = st->getStartRegionLoops(R).first;  
     std::string output = std::string();
     output += "#pragma omp parallel\n#pragma omp single\n";
+    numPI = numPI + 2;
     addCommentToLine(output, line);
   }  
   if (L1) {
@@ -554,6 +589,7 @@ bool RecoverExpressions::annotateExternalLoop(Instruction *I, Loop *L1,
     int line = st->getEndRegionLoops(R).first;  
     line++;
     std::string output = std::string();
+    numPI = numPI + 1;
     output += "#pragma omp taskwait\n";
     addCommentToLine(output, line);
   }
@@ -573,6 +609,7 @@ void RecoverExpressions::annotateExternalLoop(Instruction *I) {
   int line = getLineNo(L->getHeader()->getFirstNonPHIOrDbg());
   std::string output = std::string();
   output += "#pragma omp parallel\n#pragma omp single\n";
+  numPI = numPI + 2;
   addCommentToLine(output, line);
 }
 
@@ -583,6 +620,9 @@ void RecoverExpressions::analyzeFunction(Function *F) {
   for (auto BB = F->begin(), BE = F->end(); BB != BE; BB++) {
     for (auto I = BB->begin(), IE = BB->end(); I != IE; I++) {
       if (CallInst *CI = dyn_cast<CallInst>(I)) {
+        if (!isUniqueinLine(I)) {
+          continue;
+        }
         Loop *L = this->li->getLoopFor(I->getParent());
         if ((isFCall.count(CI) == 0) || (L && haveEqualFlowEachIt(L))) {
           continue;
@@ -608,11 +648,14 @@ void RecoverExpressions::analyzeFunction(Function *F) {
           }
           std::string prag = "cutoff_test = (taskminer_depth_cutoff < DEPTH_CUTOFF);\n";
           int line = getLineNo(I);
+          bool twiceBrac = false;
           if (isRecursive.count(I->getParent()->getParent()) > 0)
             check = " final(cutoff_test)";
           if (result != "\n\n[UNDEF\nVALUE]\n\n") {
+            twiceBrac = true;
+            result.erase((result.size() - 2), result.size());
             output += "#pragma omp task untied default(shared)" + result;
-            output += check + "\n";
+            output += check + "\n{\n";
           }
           else
             output += "#pragma omp task untied default(shared)" + check + "\n";
@@ -621,20 +664,22 @@ void RecoverExpressions::analyzeFunction(Function *F) {
             annotateExternalLoop(I);
           output = prag + output;
           /*Loop *L = this->li->getLoopFor(I->getParent());
-          if (!isUniqueinLine(I)) {
-            errs() << "Bug 1\n";
-            continue;
-          }
           if ((loops.count(L) == 0)) { //&& st->isSafetlyRegionLoops(R)) {
             annotateExternalLoop(I);
             loops[L] = true;
           }*/
           //if(st->isSafetlyRegionLoops(R)) {
             output = "{\n" + output;
+            numFA++;
+            numPI = numPI + 1;
             addCommentToLine(output, line);
             int lineEnd = line + 1;
             std::string outputEnd = "}\n";
+            if (twiceBrac == true)
+              outputEnd = " }\n";
             addCommentToLine(outputEnd, lineEnd);
+            if (isRecursive.count(I->getParent()->getParent()) > 0)
+              insertCutoff(CI->getCalledFunction());
           //}
         }
       }
@@ -1082,6 +1127,7 @@ bool RecoverExpressions::analyzeLoop (Loop* L, int Line, int LastLine,
   output += getDataPragmaRegion(vctLower, vctUpper, vctPtMA);
   output += priv + " ";
   output += cmpif + "\n{\n";
+  numPI = numPI + 1;
   addCommentToLine(output, Line);
   std::string output2 = "}\n}\n";
   addCommentToLine(output2, LastLine); 

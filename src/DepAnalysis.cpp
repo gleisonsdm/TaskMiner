@@ -62,14 +62,17 @@ void DepAnalysis::createProgramDependenceGraph(Function &F)
 	auto &DI = getAnalysis<DependenceAnalysis>();
 	auto &PDT = getAnalysis<PostDominatorTree>();
 
+  errs() << "T1.1.1\n";
 	// This is going to represent the graph
 	G = new PDG(F.getName(), &F);
 
+  errs() << "T1.1.2\n"; 
 	// Add all nodes to the graph
 	for (Function::iterator BB = F.begin(), E = F.end(); BB != E; ++BB)
 		for (BasicBlock::iterator i = BB->begin(), e = BB->end(); i != e; ++i)
 			G->addNode(&*i);
 
+  errs() << "T1.1.3\n"; 
 	// Collect memory dependence edges
 	for (inst_iterator SrcI = inst_begin(F), SrcE = inst_end(F); SrcI != SrcE; ++SrcI) {
 
@@ -114,6 +117,7 @@ void DepAnalysis::createProgramDependenceGraph(Function &F)
 		}
 	}
 
+  errs() << "T1.1.4\n"; 
 	// Collect data dependence edges
 	for (inst_iterator SrcI = inst_begin(F), SrcE = inst_end(F); SrcI != SrcE; ++SrcI)
 	{
@@ -127,6 +131,7 @@ void DepAnalysis::createProgramDependenceGraph(Function &F)
 		}
 	}
 
+errs() << "T1.1.5\n"; 
 	// Collect control dependence edges
 	ControlDependenceGraphBase cdgBuilder;
 	cdgBuilder.graphForFunction(F, PDT);
@@ -148,12 +153,14 @@ void DepAnalysis::createProgramDependenceGraph(Function &F)
 			}
 		}
 
+errs() << "T1.1.6\n"; 
 		if (!cdgBuilder.isDominated(A)) {
 			for (BasicBlock::iterator i = A->begin(), e = A->end(); i != e; ++i) {
 				G->connectToEntry(&*i);
 			}
 		}
 
+errs() << "T1.1.7\n"; 
 		if (cdgBuilder.getNode(A)->getNumChildren() == 0) {
 			for (BasicBlock::iterator i = A->begin(), e = A->end(); i != e; ++i) {
 				G->connectToExit(&*i);
