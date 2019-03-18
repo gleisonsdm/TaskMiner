@@ -1,0 +1,689 @@
+; ModuleID = 'result.bc'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct.snode = type { %struct.rnode*, i32, %struct.snode* }
+%struct.rnode = type { i16, %union.anon, i16, %struct.pnode*, %struct.pnode* }
+%union.anon = type { %struct.anon.2 }
+%struct.anon.2 = type { %struct.rnode*, %struct.rnode* }
+%struct.pnode = type { i32, %struct.pnode* }
+
+; Function Attrs: nounwind uwtable
+define %struct.snode* @Push(%struct.snode** %s, %struct.rnode* %v) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct.snode** %s, i64 0, metadata !94, metadata !95), !dbg !96
+  call void @llvm.dbg.value(metadata %struct.rnode* %v, i64 0, metadata !97, metadata !95), !dbg !98
+  %call = call noalias i8* @malloc(i64 24) #3, !dbg !99
+  %tmp = bitcast i8* %call to %struct.snode*, !dbg !100
+  call void @llvm.dbg.value(metadata %struct.snode* %tmp, i64 0, metadata !101, metadata !95), !dbg !102
+  %cmp = icmp eq %struct.snode** %s, null, !dbg !103
+  br i1 %cmp, label %if.then, label %lor.lhs.false, !dbg !105
+
+lor.lhs.false:                                    ; preds = %entry
+  %cmp1 = icmp eq %struct.snode* %tmp, null, !dbg !106
+  br i1 %cmp1, label %if.then, label %if.end, !dbg !107
+
+if.then:                                          ; preds = %lor.lhs.false, %entry
+  br label %return, !dbg !108
+
+if.end:                                           ; preds = %lor.lhs.false
+  %tmp4 = load %struct.snode*, %struct.snode** %s, align 8, !dbg !109
+  %next = getelementptr inbounds %struct.snode, %struct.snode* %tmp, i32 0, i32 2, !dbg !110
+  store %struct.snode* %tmp4, %struct.snode** %next, align 8, !dbg !111
+  %val = getelementptr inbounds %struct.snode, %struct.snode* %tmp, i32 0, i32 0, !dbg !112
+  store %struct.rnode* %v, %struct.rnode** %val, align 8, !dbg !113
+  %tmp9 = load %struct.snode*, %struct.snode** %s, align 8, !dbg !114
+  %cmp2 = icmp eq %struct.snode* %tmp9, null, !dbg !116
+  br i1 %cmp2, label %if.then.3, label %if.else, !dbg !117
+
+if.then.3:                                        ; preds = %if.end
+  %size = getelementptr inbounds %struct.snode, %struct.snode* %tmp, i32 0, i32 1, !dbg !118
+  store i32 1, i32* %size, align 4, !dbg !119
+  br label %if.end.6, !dbg !120
+
+if.else:                                          ; preds = %if.end
+  %tmp12 = load %struct.snode*, %struct.snode** %s, align 8, !dbg !121
+  %size4 = getelementptr inbounds %struct.snode, %struct.snode* %tmp12, i32 0, i32 1, !dbg !122
+  %tmp13 = load i32, i32* %size4, align 4, !dbg !122
+  %add = add nsw i32 %tmp13, 1, !dbg !123
+  %size5 = getelementptr inbounds %struct.snode, %struct.snode* %tmp, i32 0, i32 1, !dbg !124
+  store i32 %add, i32* %size5, align 4, !dbg !125
+  br label %if.end.6
+
+if.end.6:                                         ; preds = %if.else, %if.then.3
+  store %struct.snode* %tmp, %struct.snode** %s, align 8, !dbg !126
+  %tmp18 = load %struct.snode*, %struct.snode** %s, align 8, !dbg !127
+  br label %return, !dbg !128
+
+return:                                           ; preds = %if.end.6, %if.then
+  %retval.0 = phi %struct.snode* [ null, %if.then ], [ %tmp18, %if.end.6 ]
+  ret %struct.snode* %retval.0, !dbg !129
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind
+declare noalias i8* @malloc(i64) #2
+
+; Function Attrs: nounwind uwtable
+define %struct.rnode* @Pop(%struct.snode** %s) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct.snode** %s, i64 0, metadata !130, metadata !95), !dbg !131
+  %cmp = icmp eq %struct.snode** %s, null, !dbg !132
+  br i1 %cmp, label %if.then, label %lor.lhs.false, !dbg !134
+
+lor.lhs.false:                                    ; preds = %entry
+  %tmp2 = load %struct.snode*, %struct.snode** %s, align 8, !dbg !135
+  %cmp1 = icmp eq %struct.snode* %tmp2, null, !dbg !136
+  br i1 %cmp1, label %if.then, label %if.else, !dbg !137
+
+if.then:                                          ; preds = %lor.lhs.false, %entry
+  br label %return, !dbg !138
+
+if.else:                                          ; preds = %lor.lhs.false
+  %tmp4 = load %struct.snode*, %struct.snode** %s, align 8, !dbg !139
+  call void @llvm.dbg.value(metadata %struct.snode* %tmp4, i64 0, metadata !141, metadata !95), !dbg !142
+  %tmp6 = load %struct.snode*, %struct.snode** %s, align 8, !dbg !143
+  %val = getelementptr inbounds %struct.snode, %struct.snode* %tmp6, i32 0, i32 0, !dbg !144
+  %tmp7 = load %struct.rnode*, %struct.rnode** %val, align 8, !dbg !144
+  call void @llvm.dbg.value(metadata %struct.rnode* %tmp7, i64 0, metadata !145, metadata !95), !dbg !146
+  %tmp9 = load %struct.snode*, %struct.snode** %s, align 8, !dbg !147
+  %next = getelementptr inbounds %struct.snode, %struct.snode* %tmp9, i32 0, i32 2, !dbg !148
+  %tmp10 = load %struct.snode*, %struct.snode** %next, align 8, !dbg !148
+  store %struct.snode* %tmp10, %struct.snode** %s, align 8, !dbg !149
+  %tmp13 = bitcast %struct.snode* %tmp4 to i8*, !dbg !150
+  call void @free(i8* %tmp13) #3, !dbg !151
+  br label %return, !dbg !152
+
+return:                                           ; preds = %if.else, %if.then
+  %retval.0 = phi %struct.rnode* [ null, %if.then ], [ %tmp7, %if.else ]
+  ret %struct.rnode* %retval.0, !dbg !153
+}
+
+; Function Attrs: nounwind
+declare void @free(i8*) #2
+
+; Function Attrs: nounwind uwtable
+define %struct.rnode* @Top(%struct.snode* %s) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct.snode* %s, i64 0, metadata !154, metadata !95), !dbg !155
+  %cmp = icmp eq %struct.snode* %s, null, !dbg !156
+  br i1 %cmp, label %if.then, label %if.else, !dbg !158
+
+if.then:                                          ; preds = %entry
+  br label %return, !dbg !159
+
+if.else:                                          ; preds = %entry
+  %val = getelementptr inbounds %struct.snode, %struct.snode* %s, i32 0, i32 0, !dbg !160
+  %tmp2 = load %struct.rnode*, %struct.rnode** %val, align 8, !dbg !160
+  br label %return, !dbg !161
+
+return:                                           ; preds = %if.else, %if.then
+  %retval.0 = phi %struct.rnode* [ null, %if.then ], [ %tmp2, %if.else ]
+  ret %struct.rnode* %retval.0, !dbg !162
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @Size(%struct.snode* %s) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct.snode* %s, i64 0, metadata !163, metadata !95), !dbg !164
+  %cmp = icmp eq %struct.snode* %s, null, !dbg !165
+  br i1 %cmp, label %if.then, label %if.else, !dbg !167
+
+if.then:                                          ; preds = %entry
+  br label %return, !dbg !168
+
+if.else:                                          ; preds = %entry
+  %size = getelementptr inbounds %struct.snode, %struct.snode* %s, i32 0, i32 1, !dbg !169
+  %tmp2 = load i32, i32* %size, align 4, !dbg !169
+  br label %return, !dbg !170
+
+return:                                           ; preds = %if.else, %if.then
+  %retval.0 = phi i32 [ 0, %if.then ], [ %tmp2, %if.else ]
+  ret i32 %retval.0, !dbg !171
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @occurs_in(i32 %n, %struct.pnode* %p) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %n, i64 0, metadata !172, metadata !95), !dbg !173
+  call void @llvm.dbg.value(metadata %struct.pnode* %p, i64 0, metadata !174, metadata !95), !dbg !175
+  br label %while.cond, !dbg !176
+
+while.cond:                                       ; preds = %if.end, %entry
+  %p.addr.0 = phi %struct.pnode* [ %p, %entry ], [ %tmp5, %if.end ]
+  %cmp = icmp ne %struct.pnode* %p.addr.0, null, !dbg !177
+  br i1 %cmp, label %while.body, label %while.end, !dbg !176
+
+while.body:                                       ; preds = %while.cond
+  %posnum = getelementptr inbounds %struct.pnode, %struct.pnode* %p.addr.0, i32 0, i32 0, !dbg !178
+  %tmp3 = load i32, i32* %posnum, align 4, !dbg !178
+  %cmp1 = icmp eq i32 %n, %tmp3, !dbg !180
+  br i1 %cmp1, label %if.then, label %if.else, !dbg !181
+
+if.then:                                          ; preds = %while.body
+  br label %return, !dbg !182
+
+if.else:                                          ; preds = %while.body
+  %nextpos = getelementptr inbounds %struct.pnode, %struct.pnode* %p.addr.0, i32 0, i32 1, !dbg !183
+  %tmp5 = load %struct.pnode*, %struct.pnode** %nextpos, align 8, !dbg !183
+  call void @llvm.dbg.value(metadata %struct.pnode* %tmp5, i64 0, metadata !174, metadata !95), !dbg !175
+  br label %if.end
+
+if.end:                                           ; preds = %if.else
+  br label %while.cond, !dbg !176
+
+while.end:                                        ; preds = %while.cond
+  br label %return, !dbg !184
+
+return:                                           ; preds = %while.end, %if.then
+  %retval.0 = phi i32 [ 1, %if.then ], [ 0, %while.end ]
+  ret i32 %retval.0, !dbg !185
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.pnode* @pset_union(%struct.pnode* %s1, %struct.pnode* %s2) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct.pnode* %s1, i64 0, metadata !186, metadata !95), !dbg !187
+  call void @llvm.dbg.value(metadata %struct.pnode* %s2, i64 0, metadata !188, metadata !95), !dbg !189
+  call void @llvm.dbg.value(metadata %struct.pnode* null, i64 0, metadata !190, metadata !95), !dbg !191
+  call void @llvm.dbg.value(metadata %struct.pnode* null, i64 0, metadata !192, metadata !95), !dbg !193
+  br label %while.cond, !dbg !194
+
+while.cond:                                       ; preds = %if.end.9, %entry
+  %curr.0 = phi %struct.pnode* [ null, %entry ], [ %new1.1, %if.end.9 ]
+  %hd.0 = phi %struct.pnode* [ null, %entry ], [ %hd.2, %if.end.9 ]
+  %new1.0 = phi %struct.pnode* [ undef, %entry ], [ %new1.1, %if.end.9 ]
+  %s1.addr.0 = phi %struct.pnode* [ %s1, %entry ], [ %tmp15, %if.end.9 ]
+  %cmp = icmp ne %struct.pnode* %s1.addr.0, null, !dbg !195
+  br i1 %cmp, label %while.body, label %while.end, !dbg !194
+
+while.body:                                       ; preds = %while.cond
+  %posnum = getelementptr inbounds %struct.pnode, %struct.pnode* %s1.addr.0, i32 0, i32 0, !dbg !196
+  %tmp2 = load i32, i32* %posnum, align 4, !dbg !196
+  %call = call i32 @occurs_in(i32 %tmp2, %struct.pnode* %s2), !dbg !199
+  %tobool = icmp ne i32 %call, 0, !dbg !199
+  br i1 %tobool, label %if.end.9, label %if.then, !dbg !200
+
+if.then:                                          ; preds = %while.body
+  %call1 = call noalias i8* @malloc(i64 16) #3, !dbg !201
+  %tmp4 = bitcast i8* %call1 to %struct.pnode*, !dbg !203
+  call void @llvm.dbg.value(metadata %struct.pnode* %tmp4, i64 0, metadata !204, metadata !95), !dbg !205
+  %cmp2 = icmp eq %struct.pnode* %tmp4, null, !dbg !206
+  br i1 %cmp2, label %if.then.3, label %if.end, !dbg !208
+
+if.then.3:                                        ; preds = %if.then
+  br label %return, !dbg !209
+
+if.end:                                           ; preds = %if.then
+  %posnum4 = getelementptr inbounds %struct.pnode, %struct.pnode* %s1.addr.0, i32 0, i32 0, !dbg !210
+  %tmp7 = load i32, i32* %posnum4, align 4, !dbg !210
+  %posnum5 = getelementptr inbounds %struct.pnode, %struct.pnode* %tmp4, i32 0, i32 0, !dbg !211
+  store i32 %tmp7, i32* %posnum5, align 4, !dbg !212
+  %cmp6 = icmp eq %struct.pnode* %hd.0, null, !dbg !213
+  br i1 %cmp6, label %if.then.7, label %if.else, !dbg !215
+
+if.then.7:                                        ; preds = %if.end
+  call void @llvm.dbg.value(metadata %struct.pnode* %tmp4, i64 0, metadata !190, metadata !95), !dbg !191
+  br label %if.end.8, !dbg !216
+
+if.else:                                          ; preds = %if.end
+  %nextpos = getelementptr inbounds %struct.pnode, %struct.pnode* %curr.0, i32 0, i32 1, !dbg !217
+  store %struct.pnode* %tmp4, %struct.pnode** %nextpos, align 8, !dbg !218
+  br label %if.end.8
+
+if.end.8:                                         ; preds = %if.else, %if.then.7
+  %hd.1 = phi %struct.pnode* [ %tmp4, %if.then.7 ], [ %hd.0, %if.else ]
+  br label %if.end.9, !dbg !219
+
+if.end.9:                                         ; preds = %if.end.8, %while.body
+  %hd.2 = phi %struct.pnode* [ %hd.0, %while.body ], [ %hd.1, %if.end.8 ]
+  %new1.1 = phi %struct.pnode* [ %new1.0, %while.body ], [ %tmp4, %if.end.8 ]
+  call void @llvm.dbg.value(metadata %struct.pnode* %new1.1, i64 0, metadata !192, metadata !95), !dbg !193
+  %nextpos10 = getelementptr inbounds %struct.pnode, %struct.pnode* %s1.addr.0, i32 0, i32 1, !dbg !220
+  %tmp15 = load %struct.pnode*, %struct.pnode** %nextpos10, align 8, !dbg !220
+  call void @llvm.dbg.value(metadata %struct.pnode* %tmp15, i64 0, metadata !186, metadata !95), !dbg !187
+  br label %while.cond, !dbg !194
+
+while.end:                                        ; preds = %while.cond
+  %hd.0.lcssa = phi %struct.pnode* [ %hd.0, %while.cond ]
+  %curr.0.lcssa = phi %struct.pnode* [ %curr.0, %while.cond ]
+  %cmp11 = icmp eq %struct.pnode* %hd.0.lcssa, null, !dbg !221
+  br i1 %cmp11, label %if.then.12, label %if.else.13, !dbg !223
+
+if.then.12:                                       ; preds = %while.end
+  call void @llvm.dbg.value(metadata %struct.pnode* %s2, i64 0, metadata !190, metadata !95), !dbg !191
+  br label %if.end.15, !dbg !224
+
+if.else.13:                                       ; preds = %while.end
+  %nextpos14 = getelementptr inbounds %struct.pnode, %struct.pnode* %curr.0.lcssa, i32 0, i32 1, !dbg !225
+  store %struct.pnode* %s2, %struct.pnode** %nextpos14, align 8, !dbg !226
+  br label %if.end.15
+
+if.end.15:                                        ; preds = %if.else.13, %if.then.12
+  %hd.3 = phi %struct.pnode* [ %s2, %if.then.12 ], [ %hd.0.lcssa, %if.else.13 ]
+  br label %return, !dbg !227
+
+return:                                           ; preds = %if.end.15, %if.then.3
+  %retval.0 = phi %struct.pnode* [ null, %if.then.3 ], [ %hd.3, %if.end.15 ]
+  ret %struct.pnode* %retval.0, !dbg !228
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.pnode* @create_pos(i32 %n) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %n, i64 0, metadata !229, metadata !95), !dbg !230
+  %call = call noalias i8* @malloc(i64 16) #3, !dbg !231
+  %tmp = bitcast i8* %call to %struct.pnode*, !dbg !232
+  call void @llvm.dbg.value(metadata %struct.pnode* %tmp, i64 0, metadata !233, metadata !95), !dbg !234
+  %cmp = icmp eq %struct.pnode* %tmp, null, !dbg !235
+  br i1 %cmp, label %if.then, label %if.end, !dbg !237
+
+if.then:                                          ; preds = %entry
+  br label %return, !dbg !238
+
+if.end:                                           ; preds = %entry
+  %posnum = getelementptr inbounds %struct.pnode, %struct.pnode* %tmp, i32 0, i32 0, !dbg !239
+  store i32 %n, i32* %posnum, align 4, !dbg !240
+  %nextpos = getelementptr inbounds %struct.pnode, %struct.pnode* %tmp, i32 0, i32 1, !dbg !241
+  store %struct.pnode* null, %struct.pnode** %nextpos, align 8, !dbg !242
+  br label %return, !dbg !243
+
+return:                                           ; preds = %if.end, %if.then
+  %retval.0 = phi %struct.pnode* [ null, %if.then ], [ %tmp, %if.end ]
+  ret %struct.pnode* %retval.0, !dbg !244
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @subset_pset(%struct.pnode* %s1, %struct.pnode* %s2) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct.pnode* %s1, i64 0, metadata !245, metadata !95), !dbg !246
+  call void @llvm.dbg.value(metadata %struct.pnode* %s2, i64 0, metadata !247, metadata !95), !dbg !248
+  call void @llvm.dbg.value(metadata i32 1, i64 0, metadata !249, metadata !95), !dbg !250
+  br label %while.cond, !dbg !251
+
+while.cond:                                       ; preds = %while.end, %entry
+  %subs.0 = phi i32 [ 1, %entry ], [ %subs.1.lcssa, %while.end ]
+  %s2.addr.0 = phi %struct.pnode* [ %s2, %entry ], [ %s2.addr.1.lcssa, %while.end ]
+  %s1.addr.0 = phi %struct.pnode* [ %s1, %entry ], [ %tmp13, %while.end ]
+  %cmp = icmp ne %struct.pnode* %s1.addr.0, null, !dbg !252
+  br i1 %cmp, label %land.rhs, label %land.end, !dbg !253
+
+land.rhs:                                         ; preds = %while.cond
+  %cmp1 = icmp ne i32 %subs.0, 0, !dbg !254
+  br label %land.end
+
+land.end:                                         ; preds = %land.rhs, %while.cond
+  %tmp2 = phi i1 [ false, %while.cond ], [ %cmp1, %land.rhs ]
+  br i1 %tmp2, label %while.body, label %while.end.11, !dbg !255
+
+while.body:                                       ; preds = %land.end
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !249, metadata !95), !dbg !250
+  br label %while.cond.2, !dbg !257
+
+while.cond.2:                                     ; preds = %if.end, %while.body
+  %subs.1 = phi i32 [ 0, %while.body ], [ %subs.2, %if.end ]
+  %s2.addr.1 = phi %struct.pnode* [ %s2.addr.0, %while.body ], [ %s2.addr.2, %if.end ]
+  %cmp3 = icmp ne %struct.pnode* %s2.addr.1, null, !dbg !259
+  br i1 %cmp3, label %land.rhs.4, label %land.end.6, !dbg !260
+
+land.rhs.4:                                       ; preds = %while.cond.2
+  %cmp5 = icmp ne i32 %subs.1, 1, !dbg !261
+  br label %land.end.6
+
+land.end.6:                                       ; preds = %land.rhs.4, %while.cond.2
+  %tmp5 = phi i1 [ false, %while.cond.2 ], [ %cmp5, %land.rhs.4 ]
+  br i1 %tmp5, label %while.body.7, label %while.end, !dbg !262
+
+while.body.7:                                     ; preds = %land.end.6
+  %posnum = getelementptr inbounds %struct.pnode, %struct.pnode* %s1.addr.0, i32 0, i32 0, !dbg !264
+  %tmp7 = load i32, i32* %posnum, align 4, !dbg !264
+  %posnum8 = getelementptr inbounds %struct.pnode, %struct.pnode* %s2.addr.1, i32 0, i32 0, !dbg !266
+  %tmp9 = load i32, i32* %posnum8, align 4, !dbg !266
+  %cmp9 = icmp eq i32 %tmp7, %tmp9, !dbg !267
+  br i1 %cmp9, label %if.then, label %if.else, !dbg !268
+
+if.then:                                          ; preds = %while.body.7
+  call void @llvm.dbg.value(metadata i32 1, i64 0, metadata !249, metadata !95), !dbg !250
+  br label %if.end, !dbg !269
+
+if.else:                                          ; preds = %while.body.7
+  %nextpos = getelementptr inbounds %struct.pnode, %struct.pnode* %s2.addr.1, i32 0, i32 1, !dbg !270
+  %tmp11 = load %struct.pnode*, %struct.pnode** %nextpos, align 8, !dbg !270
+  call void @llvm.dbg.value(metadata %struct.pnode* %tmp11, i64 0, metadata !247, metadata !95), !dbg !248
+  br label %if.end
+
+if.end:                                           ; preds = %if.else, %if.then
+  %subs.2 = phi i32 [ 1, %if.then ], [ %subs.1, %if.else ]
+  %s2.addr.2 = phi %struct.pnode* [ %s2.addr.1, %if.then ], [ %tmp11, %if.else ]
+  br label %while.cond.2, !dbg !257
+
+while.end:                                        ; preds = %land.end.6
+  %s2.addr.1.lcssa = phi %struct.pnode* [ %s2.addr.1, %land.end.6 ]
+  %subs.1.lcssa = phi i32 [ %subs.1, %land.end.6 ]
+  %nextpos10 = getelementptr inbounds %struct.pnode, %struct.pnode* %s1.addr.0, i32 0, i32 1, !dbg !271
+  %tmp13 = load %struct.pnode*, %struct.pnode** %nextpos10, align 8, !dbg !271
+  call void @llvm.dbg.value(metadata %struct.pnode* %tmp13, i64 0, metadata !245, metadata !95), !dbg !246
+  br label %while.cond, !dbg !251
+
+while.end.11:                                     ; preds = %land.end
+  %subs.0.lcssa = phi i32 [ %subs.0, %land.end ]
+  ret i32 %subs.0.lcssa, !dbg !272
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @eq_pset(%struct.pnode* %s1, %struct.pnode* %s2) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct.pnode* %s1, i64 0, metadata !273, metadata !95), !dbg !274
+  call void @llvm.dbg.value(metadata %struct.pnode* %s2, i64 0, metadata !275, metadata !95), !dbg !276
+  %call = call i32 @subset_pset(%struct.pnode* %s1, %struct.pnode* %s2), !dbg !277
+  %tobool = icmp ne i32 %call, 0, !dbg !277
+  br i1 %tobool, label %land.rhs, label %land.end, !dbg !278
+
+land.rhs:                                         ; preds = %entry
+  %call1 = call i32 @subset_pset(%struct.pnode* %s2, %struct.pnode* %s1), !dbg !279
+  %tobool2 = icmp ne i32 %call1, 0, !dbg !278
+  br label %land.end
+
+land.end:                                         ; preds = %land.rhs, %entry
+  %tmp4 = phi i1 [ false, %entry ], [ %tobool2, %land.rhs ]
+  %land.ext = zext i1 %tmp4 to i32, !dbg !280
+  ret i32 %land.ext, !dbg !282
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.value(metadata, i64, metadata, metadata) #1
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { nounwind "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { nounwind }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!91, !92}
+!llvm.ident = !{!93}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, retainedTypes: !3, subprograms: !63)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/agrep")
+!2 = !{}
+!3 = !{!4, !62, !53}
+!4 = !DIDerivedType(tag: DW_TAG_typedef, name: "Stack", file: !5, line: 116, baseType: !6)
+!5 = !DIFile(filename: "./re.h", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/agrep")
+!6 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !7, size: 64, align: 64)
+!7 = !DICompositeType(tag: DW_TAG_structure_type, name: "snode", file: !5, line: 112, size: 192, align: 64, elements: !8)
+!8 = !{!9, !60, !61}
+!9 = !DIDerivedType(tag: DW_TAG_member, name: "val", scope: !7, file: !5, line: 113, baseType: !10, size: 64, align: 64)
+!10 = !DIDerivedType(tag: DW_TAG_typedef, name: "Re_node", file: !5, line: 104, baseType: !11)
+!11 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !12, size: 64, align: 64)
+!12 = !DICompositeType(tag: DW_TAG_structure_type, name: "rnode", file: !5, line: 92, size: 384, align: 64, elements: !13)
+!13 = !{!14, !16, !51, !52, !59}
+!14 = !DIDerivedType(tag: DW_TAG_member, name: "op", scope: !12, file: !5, line: 93, baseType: !15, size: 16, align: 16)
+!15 = !DIBasicType(name: "short", size: 16, align: 16, encoding: DW_ATE_signed)
+!16 = !DIDerivedType(tag: DW_TAG_member, name: "refs", scope: !12, file: !5, line: 101, baseType: !17, size: 128, align: 64, offset: 64)
+!17 = !DICompositeType(tag: DW_TAG_union_type, scope: !12, file: !5, line: 94, size: 128, align: 64, elements: !18)
+!18 = !{!19, !45, !46}
+!19 = !DIDerivedType(tag: DW_TAG_member, name: "lit", scope: !17, file: !5, line: 95, baseType: !20, size: 64, align: 64)
+!20 = !DIDerivedType(tag: DW_TAG_typedef, name: "Re_Lit", file: !5, line: 85, baseType: !21)
+!21 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !22, size: 64, align: 64)
+!22 = !DICompositeType(tag: DW_TAG_structure_type, file: !5, line: 78, size: 128, align: 64, elements: !23)
+!23 = !{!24, !26, !27}
+!24 = !DIDerivedType(tag: DW_TAG_member, name: "pos", scope: !22, file: !5, line: 79, baseType: !25, size: 32, align: 32)
+!25 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!26 = !DIDerivedType(tag: DW_TAG_member, name: "l_type", scope: !22, file: !5, line: 80, baseType: !15, size: 16, align: 16, offset: 32)
+!27 = !DIDerivedType(tag: DW_TAG_member, name: "val", scope: !22, file: !5, line: 84, baseType: !28, size: 64, align: 64, offset: 64)
+!28 = !DICompositeType(tag: DW_TAG_union_type, scope: !22, file: !5, line: 81, size: 64, align: 64, elements: !29)
+!29 = !{!30, !32}
+!30 = !DIDerivedType(tag: DW_TAG_member, name: "c", scope: !28, file: !5, line: 82, baseType: !31, size: 8, align: 8)
+!31 = !DIBasicType(name: "char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!32 = !DIDerivedType(tag: DW_TAG_member, name: "cset", scope: !28, file: !5, line: 83, baseType: !33, size: 64, align: 64)
+!33 = !DIDerivedType(tag: DW_TAG_typedef, name: "Ch_Set", file: !5, line: 76, baseType: !34)
+!34 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !35, size: 64, align: 64)
+!35 = !DICompositeType(tag: DW_TAG_structure_type, name: "ch_set", file: !5, line: 73, size: 128, align: 64, elements: !36)
+!36 = !{!37, !44}
+!37 = !DIDerivedType(tag: DW_TAG_member, name: "elt", scope: !35, file: !5, line: 74, baseType: !38, size: 64, align: 64)
+!38 = !DIDerivedType(tag: DW_TAG_typedef, name: "Ch_Range", file: !5, line: 71, baseType: !39)
+!39 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !40, size: 64, align: 64)
+!40 = !DICompositeType(tag: DW_TAG_structure_type, file: !5, line: 69, size: 16, align: 8, elements: !41)
+!41 = !{!42, !43}
+!42 = !DIDerivedType(tag: DW_TAG_member, name: "low_bd", scope: !40, file: !5, line: 70, baseType: !31, size: 8, align: 8)
+!43 = !DIDerivedType(tag: DW_TAG_member, name: "hi_bd", scope: !40, file: !5, line: 70, baseType: !31, size: 8, align: 8, offset: 8)
+!44 = !DIDerivedType(tag: DW_TAG_member, name: "rest", scope: !35, file: !5, line: 75, baseType: !34, size: 64, align: 64, offset: 64)
+!45 = !DIDerivedType(tag: DW_TAG_member, name: "child", scope: !17, file: !5, line: 96, baseType: !11, size: 64, align: 64)
+!46 = !DIDerivedType(tag: DW_TAG_member, name: "children", scope: !17, file: !5, line: 100, baseType: !47, size: 128, align: 64)
+!47 = !DICompositeType(tag: DW_TAG_structure_type, scope: !17, file: !5, line: 97, size: 128, align: 64, elements: !48)
+!48 = !{!49, !50}
+!49 = !DIDerivedType(tag: DW_TAG_member, name: "l_child", scope: !47, file: !5, line: 98, baseType: !11, size: 64, align: 64)
+!50 = !DIDerivedType(tag: DW_TAG_member, name: "r_child", scope: !47, file: !5, line: 99, baseType: !11, size: 64, align: 64, offset: 64)
+!51 = !DIDerivedType(tag: DW_TAG_member, name: "nullable", scope: !12, file: !5, line: 102, baseType: !15, size: 16, align: 16, offset: 192)
+!52 = !DIDerivedType(tag: DW_TAG_member, name: "firstposn", scope: !12, file: !5, line: 103, baseType: !53, size: 64, align: 64, offset: 256)
+!53 = !DIDerivedType(tag: DW_TAG_typedef, name: "Pset", file: !5, line: 90, baseType: !54)
+!54 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !55, size: 64, align: 64)
+!55 = !DICompositeType(tag: DW_TAG_structure_type, name: "pnode", file: !5, line: 87, size: 128, align: 64, elements: !56)
+!56 = !{!57, !58}
+!57 = !DIDerivedType(tag: DW_TAG_member, name: "posnum", scope: !55, file: !5, line: 88, baseType: !25, size: 32, align: 32)
+!58 = !DIDerivedType(tag: DW_TAG_member, name: "nextpos", scope: !55, file: !5, line: 89, baseType: !54, size: 64, align: 64, offset: 64)
+!59 = !DIDerivedType(tag: DW_TAG_member, name: "lastposn", scope: !12, file: !5, line: 103, baseType: !53, size: 64, align: 64, offset: 320)
+!60 = !DIDerivedType(tag: DW_TAG_member, name: "size", scope: !7, file: !5, line: 114, baseType: !25, size: 32, align: 32, offset: 64)
+!61 = !DIDerivedType(tag: DW_TAG_member, name: "next", scope: !7, file: !5, line: 115, baseType: !6, size: 64, align: 64, offset: 128)
+!62 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: null, size: 64, align: 64)
+!63 = !{!64, !69, !72, !75, !78, !81, !84, !87, !90}
+!64 = !DISubprogram(name: "Push", scope: !65, file: !65, line: 14, type: !66, isLocal: false, isDefinition: true, scopeLine: 14, flags: DIFlagPrototyped, isOptimized: false, function: %struct.snode* (%struct.snode**, %struct.rnode*)* @Push, variables: !2)
+!65 = !DIFile(filename: "/home/gleison/tf/Benchmarks/Prolangs-C/agrep/tmp.c", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/agrep")
+!66 = !DISubroutineType(types: !67)
+!67 = !{!4, !68, !10}
+!68 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !4, size: 64, align: 64)
+!69 = !DISubprogram(name: "Pop", scope: !65, file: !65, line: 30, type: !70, isLocal: false, isDefinition: true, scopeLine: 30, flags: DIFlagPrototyped, isOptimized: false, function: %struct.rnode* (%struct.snode**)* @Pop, variables: !2)
+!70 = !DISubroutineType(types: !71)
+!71 = !{!10, !68}
+!72 = !DISubprogram(name: "Top", scope: !65, file: !65, line: 45, type: !73, isLocal: false, isDefinition: true, scopeLine: 45, flags: DIFlagPrototyped, isOptimized: false, function: %struct.rnode* (%struct.snode*)* @Top, variables: !2)
+!73 = !DISubroutineType(types: !74)
+!74 = !{!10, !4}
+!75 = !DISubprogram(name: "Size", scope: !65, file: !65, line: 52, type: !76, isLocal: false, isDefinition: true, scopeLine: 52, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct.snode*)* @Size, variables: !2)
+!76 = !DISubroutineType(types: !77)
+!77 = !{!25, !4}
+!78 = !DISubprogram(name: "occurs_in", scope: !65, file: !65, line: 65, type: !79, isLocal: false, isDefinition: true, scopeLine: 65, flags: DIFlagPrototyped, isOptimized: false, function: i32 (i32, %struct.pnode*)* @occurs_in, variables: !2)
+!79 = !DISubroutineType(types: !80)
+!80 = !{!25, !25, !53}
+!81 = !DISubprogram(name: "pset_union", scope: !65, file: !65, line: 76, type: !82, isLocal: false, isDefinition: true, scopeLine: 76, flags: DIFlagPrototyped, isOptimized: false, function: %struct.pnode* (%struct.pnode*, %struct.pnode*)* @pset_union, variables: !2)
+!82 = !DISubroutineType(types: !83)
+!83 = !{!53, !53, !53}
+!84 = !DISubprogram(name: "create_pos", scope: !65, file: !65, line: 105, type: !85, isLocal: false, isDefinition: true, scopeLine: 105, flags: DIFlagPrototyped, isOptimized: false, function: %struct.pnode* (i32)* @create_pos, variables: !2)
+!85 = !DISubroutineType(types: !86)
+!86 = !{!53, !25}
+!87 = !DISubprogram(name: "subset_pset", scope: !65, file: !65, line: 119, type: !88, isLocal: false, isDefinition: true, scopeLine: 119, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct.pnode*, %struct.pnode*)* @subset_pset, variables: !2)
+!88 = !DISubroutineType(types: !89)
+!89 = !{!25, !53, !53}
+!90 = !DISubprogram(name: "eq_pset", scope: !65, file: !65, line: 134, type: !88, isLocal: false, isDefinition: true, scopeLine: 134, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct.pnode*, %struct.pnode*)* @eq_pset, variables: !2)
+!91 = !{i32 2, !"Dwarf Version", i32 4}
+!92 = !{i32 2, !"Debug Info Version", i32 3}
+!93 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!94 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "s", arg: 1, scope: !64, file: !65, line: 14, type: !68)
+!95 = !DIExpression()
+!96 = !DILocation(line: 14, column: 19, scope: !64)
+!97 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "v", arg: 2, scope: !64, file: !65, line: 14, type: !10)
+!98 = !DILocation(line: 14, column: 30, scope: !64)
+!99 = !DILocation(line: 17, column: 17, scope: !64)
+!100 = !DILocation(line: 17, column: 10, scope: !64)
+!101 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "node", scope: !64, file: !65, line: 15, type: !4)
+!102 = !DILocation(line: 15, column: 9, scope: !64)
+!103 = !DILocation(line: 18, column: 9, scope: !104)
+!104 = distinct !DILexicalBlock(scope: !64, file: !65, line: 18, column: 7)
+!105 = !DILocation(line: 18, column: 17, scope: !104)
+!106 = !DILocation(line: 18, column: 25, scope: !104)
+!107 = !DILocation(line: 18, column: 7, scope: !64)
+!108 = !DILocation(line: 19, column: 5, scope: !104)
+!109 = !DILocation(line: 20, column: 16, scope: !64)
+!110 = !DILocation(line: 20, column: 9, scope: !64)
+!111 = !DILocation(line: 20, column: 14, scope: !64)
+!112 = !DILocation(line: 21, column: 9, scope: !64)
+!113 = !DILocation(line: 21, column: 13, scope: !64)
+!114 = !DILocation(line: 22, column: 7, scope: !115)
+!115 = distinct !DILexicalBlock(scope: !64, file: !65, line: 22, column: 7)
+!116 = !DILocation(line: 22, column: 10, scope: !115)
+!117 = !DILocation(line: 22, column: 7, scope: !64)
+!118 = !DILocation(line: 23, column: 11, scope: !115)
+!119 = !DILocation(line: 23, column: 16, scope: !115)
+!120 = !DILocation(line: 23, column: 5, scope: !115)
+!121 = !DILocation(line: 25, column: 19, scope: !115)
+!122 = !DILocation(line: 25, column: 24, scope: !115)
+!123 = !DILocation(line: 25, column: 29, scope: !115)
+!124 = !DILocation(line: 25, column: 11, scope: !115)
+!125 = !DILocation(line: 25, column: 16, scope: !115)
+!126 = !DILocation(line: 26, column: 6, scope: !64)
+!127 = !DILocation(line: 27, column: 10, scope: !64)
+!128 = !DILocation(line: 27, column: 3, scope: !64)
+!129 = !DILocation(line: 28, column: 1, scope: !64)
+!130 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "s", arg: 1, scope: !69, file: !65, line: 30, type: !68)
+!131 = !DILocation(line: 30, column: 20, scope: !69)
+!132 = !DILocation(line: 34, column: 9, scope: !133)
+!133 = distinct !DILexicalBlock(scope: !69, file: !65, line: 34, column: 7)
+!134 = !DILocation(line: 34, column: 17, scope: !133)
+!135 = !DILocation(line: 34, column: 20, scope: !133)
+!136 = !DILocation(line: 34, column: 23, scope: !133)
+!137 = !DILocation(line: 34, column: 7, scope: !69)
+!138 = !DILocation(line: 35, column: 5, scope: !133)
+!139 = !DILocation(line: 37, column: 12, scope: !140)
+!140 = distinct !DILexicalBlock(scope: !133, file: !65, line: 36, column: 8)
+!141 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "temp", scope: !69, file: !65, line: 32, type: !4)
+!142 = !DILocation(line: 32, column: 9, scope: !69)
+!143 = !DILocation(line: 38, column: 13, scope: !140)
+!144 = !DILocation(line: 38, column: 18, scope: !140)
+!145 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "node", scope: !69, file: !65, line: 31, type: !10)
+!146 = !DILocation(line: 31, column: 11, scope: !69)
+!147 = !DILocation(line: 39, column: 11, scope: !140)
+!148 = !DILocation(line: 39, column: 16, scope: !140)
+!149 = !DILocation(line: 39, column: 8, scope: !140)
+!150 = !DILocation(line: 40, column: 10, scope: !140)
+!151 = !DILocation(line: 40, column: 5, scope: !140)
+!152 = !DILocation(line: 41, column: 5, scope: !140)
+!153 = !DILocation(line: 43, column: 1, scope: !69)
+!154 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "s", arg: 1, scope: !72, file: !65, line: 45, type: !4)
+!155 = !DILocation(line: 45, column: 19, scope: !72)
+!156 = !DILocation(line: 46, column: 9, scope: !157)
+!157 = distinct !DILexicalBlock(scope: !72, file: !65, line: 46, column: 7)
+!158 = !DILocation(line: 46, column: 7, scope: !72)
+!159 = !DILocation(line: 47, column: 5, scope: !157)
+!160 = !DILocation(line: 49, column: 15, scope: !157)
+!161 = !DILocation(line: 49, column: 5, scope: !157)
+!162 = !DILocation(line: 50, column: 1, scope: !72)
+!163 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "s", arg: 1, scope: !75, file: !65, line: 52, type: !4)
+!164 = !DILocation(line: 52, column: 16, scope: !75)
+!165 = !DILocation(line: 53, column: 9, scope: !166)
+!166 = distinct !DILexicalBlock(scope: !75, file: !65, line: 53, column: 7)
+!167 = !DILocation(line: 53, column: 7, scope: !75)
+!168 = !DILocation(line: 54, column: 5, scope: !166)
+!169 = !DILocation(line: 56, column: 15, scope: !166)
+!170 = !DILocation(line: 56, column: 5, scope: !166)
+!171 = !DILocation(line: 57, column: 1, scope: !75)
+!172 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "n", arg: 1, scope: !78, file: !65, line: 65, type: !25)
+!173 = !DILocation(line: 65, column: 19, scope: !78)
+!174 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "p", arg: 2, scope: !78, file: !65, line: 65, type: !53)
+!175 = !DILocation(line: 65, column: 27, scope: !78)
+!176 = !DILocation(line: 66, column: 3, scope: !78)
+!177 = !DILocation(line: 66, column: 12, scope: !78)
+!178 = !DILocation(line: 67, column: 17, scope: !179)
+!179 = distinct !DILexicalBlock(scope: !78, file: !65, line: 67, column: 9)
+!180 = !DILocation(line: 67, column: 11, scope: !179)
+!181 = !DILocation(line: 67, column: 9, scope: !78)
+!182 = !DILocation(line: 68, column: 7, scope: !179)
+!183 = !DILocation(line: 70, column: 14, scope: !179)
+!184 = !DILocation(line: 71, column: 3, scope: !78)
+!185 = !DILocation(line: 72, column: 1, scope: !78)
+!186 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "s1", arg: 1, scope: !81, file: !65, line: 76, type: !53)
+!187 = !DILocation(line: 76, column: 22, scope: !81)
+!188 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "s2", arg: 2, scope: !81, file: !65, line: 76, type: !53)
+!189 = !DILocation(line: 76, column: 31, scope: !81)
+!190 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "hd", scope: !81, file: !65, line: 77, type: !53)
+!191 = !DILocation(line: 77, column: 8, scope: !81)
+!192 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "curr", scope: !81, file: !65, line: 77, type: !53)
+!193 = !DILocation(line: 77, column: 12, scope: !81)
+!194 = !DILocation(line: 81, column: 3, scope: !81)
+!195 = !DILocation(line: 81, column: 13, scope: !81)
+!196 = !DILocation(line: 82, column: 24, scope: !197)
+!197 = distinct !DILexicalBlock(scope: !198, file: !65, line: 82, column: 9)
+!198 = distinct !DILexicalBlock(scope: !81, file: !65, line: 81, column: 22)
+!199 = !DILocation(line: 82, column: 10, scope: !197)
+!200 = !DILocation(line: 82, column: 9, scope: !198)
+!201 = !DILocation(line: 83, column: 20, scope: !202)
+!202 = distinct !DILexicalBlock(scope: !197, file: !65, line: 82, column: 37)
+!203 = !DILocation(line: 83, column: 14, scope: !202)
+!204 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "new1", scope: !81, file: !65, line: 77, type: !53)
+!205 = !DILocation(line: 77, column: 18, scope: !81)
+!206 = !DILocation(line: 84, column: 16, scope: !207)
+!207 = distinct !DILexicalBlock(scope: !202, file: !65, line: 84, column: 11)
+!208 = !DILocation(line: 84, column: 11, scope: !202)
+!209 = !DILocation(line: 85, column: 9, scope: !207)
+!210 = !DILocation(line: 86, column: 26, scope: !202)
+!211 = !DILocation(line: 86, column: 13, scope: !202)
+!212 = !DILocation(line: 86, column: 20, scope: !202)
+!213 = !DILocation(line: 87, column: 14, scope: !214)
+!214 = distinct !DILexicalBlock(scope: !202, file: !65, line: 87, column: 11)
+!215 = !DILocation(line: 87, column: 11, scope: !202)
+!216 = !DILocation(line: 88, column: 9, scope: !214)
+!217 = !DILocation(line: 90, column: 15, scope: !214)
+!218 = !DILocation(line: 90, column: 23, scope: !214)
+!219 = !DILocation(line: 91, column: 5, scope: !202)
+!220 = !DILocation(line: 93, column: 14, scope: !198)
+!221 = !DILocation(line: 95, column: 10, scope: !222)
+!222 = distinct !DILexicalBlock(scope: !81, file: !65, line: 95, column: 7)
+!223 = !DILocation(line: 95, column: 7, scope: !81)
+!224 = !DILocation(line: 96, column: 5, scope: !222)
+!225 = !DILocation(line: 98, column: 11, scope: !222)
+!226 = !DILocation(line: 98, column: 19, scope: !222)
+!227 = !DILocation(line: 99, column: 3, scope: !81)
+!228 = !DILocation(line: 100, column: 1, scope: !81)
+!229 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "n", arg: 1, scope: !84, file: !65, line: 105, type: !25)
+!230 = !DILocation(line: 105, column: 21, scope: !84)
+!231 = !DILocation(line: 108, column: 13, scope: !84)
+!232 = !DILocation(line: 108, column: 7, scope: !84)
+!233 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "x", scope: !84, file: !65, line: 106, type: !53)
+!234 = !DILocation(line: 106, column: 8, scope: !84)
+!235 = !DILocation(line: 109, column: 9, scope: !236)
+!236 = distinct !DILexicalBlock(scope: !84, file: !65, line: 109, column: 7)
+!237 = !DILocation(line: 109, column: 7, scope: !84)
+!238 = !DILocation(line: 110, column: 5, scope: !236)
+!239 = !DILocation(line: 111, column: 6, scope: !84)
+!240 = !DILocation(line: 111, column: 13, scope: !84)
+!241 = !DILocation(line: 112, column: 6, scope: !84)
+!242 = !DILocation(line: 112, column: 14, scope: !84)
+!243 = !DILocation(line: 113, column: 3, scope: !84)
+!244 = !DILocation(line: 114, column: 1, scope: !84)
+!245 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "s1", arg: 1, scope: !87, file: !65, line: 119, type: !53)
+!246 = !DILocation(line: 119, column: 22, scope: !87)
+!247 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "s2", arg: 2, scope: !87, file: !65, line: 119, type: !53)
+!248 = !DILocation(line: 119, column: 31, scope: !87)
+!249 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "subs", scope: !87, file: !65, line: 120, type: !25)
+!250 = !DILocation(line: 120, column: 7, scope: !87)
+!251 = !DILocation(line: 122, column: 3, scope: !87)
+!252 = !DILocation(line: 122, column: 13, scope: !87)
+!253 = !DILocation(line: 122, column: 21, scope: !87)
+!254 = !DILocation(line: 122, column: 29, scope: !87)
+!255 = !DILocation(line: 122, column: 3, scope: !256)
+!256 = !DILexicalBlockFile(scope: !87, file: !65, discriminator: 3)
+!257 = !DILocation(line: 124, column: 5, scope: !258)
+!258 = distinct !DILexicalBlock(scope: !87, file: !65, line: 122, column: 35)
+!259 = !DILocation(line: 124, column: 15, scope: !258)
+!260 = !DILocation(line: 124, column: 23, scope: !258)
+!261 = !DILocation(line: 124, column: 31, scope: !258)
+!262 = !DILocation(line: 124, column: 5, scope: !263)
+!263 = !DILexicalBlockFile(scope: !258, file: !65, discriminator: 3)
+!264 = !DILocation(line: 125, column: 15, scope: !265)
+!265 = distinct !DILexicalBlock(scope: !258, file: !65, line: 125, column: 11)
+!266 = !DILocation(line: 125, column: 29, scope: !265)
+!267 = !DILocation(line: 125, column: 22, scope: !265)
+!268 = !DILocation(line: 125, column: 11, scope: !258)
+!269 = !DILocation(line: 126, column: 9, scope: !265)
+!270 = !DILocation(line: 128, column: 18, scope: !265)
+!271 = !DILocation(line: 129, column: 14, scope: !258)
+!272 = !DILocation(line: 131, column: 3, scope: !87)
+!273 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "s1", arg: 1, scope: !90, file: !65, line: 134, type: !53)
+!274 = !DILocation(line: 134, column: 18, scope: !90)
+!275 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "s2", arg: 2, scope: !90, file: !65, line: 134, type: !53)
+!276 = !DILocation(line: 134, column: 27, scope: !90)
+!277 = !DILocation(line: 135, column: 10, scope: !90)
+!278 = !DILocation(line: 135, column: 30, scope: !90)
+!279 = !DILocation(line: 135, column: 33, scope: !90)
+!280 = !DILocation(line: 135, column: 30, scope: !281)
+!281 = !DILexicalBlockFile(scope: !90, file: !65, discriminator: 2)
+!282 = !DILocation(line: 135, column: 3, scope: !90)

@@ -1,0 +1,129 @@
+; ModuleID = '/home/gleison/tf/Benchmarks/MiBench/automotive-bitcount/tmp.c'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [3 x i8] c"01\00", align 1
+
+; Function Attrs: nounwind uwtable
+define i32 @bstr_i(i8* %cptr) #0 {
+entry:
+  %cptr.addr = alloca i8*, align 8
+  %i = alloca i32, align 4
+  %j = alloca i32, align 4
+  store i8* %cptr, i8** %cptr.addr, align 8
+  call void @llvm.dbg.declare(metadata i8** %cptr.addr, metadata !14, metadata !15), !dbg !16
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !17, metadata !15), !dbg !18
+  call void @llvm.dbg.declare(metadata i32* %j, metadata !19, metadata !15), !dbg !20
+  store i32 0, i32* %j, align 4, !dbg !20
+  br label %while.cond, !dbg !21
+
+while.cond:                                       ; preds = %while.body, %entry
+  %0 = load i8*, i8** %cptr.addr, align 8, !dbg !22
+  %tobool = icmp ne i8* %0, null, !dbg !22
+  br i1 %tobool, label %land.lhs.true, label %land.end, !dbg !25
+
+land.lhs.true:                                    ; preds = %while.cond
+  %1 = load i8*, i8** %cptr.addr, align 8, !dbg !26
+  %2 = load i8, i8* %1, align 1, !dbg !28
+  %conv = sext i8 %2 to i32, !dbg !28
+  %tobool1 = icmp ne i32 %conv, 0, !dbg !28
+  br i1 %tobool1, label %land.rhs, label %land.end, !dbg !29
+
+land.rhs:                                         ; preds = %land.lhs.true
+  %3 = load i8*, i8** %cptr.addr, align 8, !dbg !30
+  %4 = load i8, i8* %3, align 1, !dbg !32
+  %conv2 = sext i8 %4 to i32, !dbg !32
+  %call = call i8* @strchr(i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str, i32 0, i32 0), i32 %conv2) #3, !dbg !33
+  %tobool3 = icmp ne i8* %call, null, !dbg !29
+  br label %land.end
+
+land.end:                                         ; preds = %land.rhs, %land.lhs.true, %while.cond
+  %5 = phi i1 [ false, %land.lhs.true ], [ false, %while.cond ], [ %tobool3, %land.rhs ]
+  br i1 %5, label %while.body, label %while.end, !dbg !34
+
+while.body:                                       ; preds = %land.end
+  %6 = load i8*, i8** %cptr.addr, align 8, !dbg !37
+  %incdec.ptr = getelementptr inbounds i8, i8* %6, i32 1, !dbg !37
+  store i8* %incdec.ptr, i8** %cptr.addr, align 8, !dbg !37
+  %7 = load i8, i8* %6, align 1, !dbg !39
+  %conv4 = sext i8 %7 to i32, !dbg !39
+  %sub = sub nsw i32 %conv4, 48, !dbg !40
+  store i32 %sub, i32* %i, align 4, !dbg !41
+  %8 = load i32, i32* %j, align 4, !dbg !42
+  %shl = shl i32 %8, 1, !dbg !42
+  store i32 %shl, i32* %j, align 4, !dbg !42
+  %9 = load i32, i32* %i, align 4, !dbg !43
+  %and = and i32 %9, 1, !dbg !44
+  %10 = load i32, i32* %j, align 4, !dbg !45
+  %or = or i32 %10, %and, !dbg !45
+  store i32 %or, i32* %j, align 4, !dbg !45
+  br label %while.cond, !dbg !21
+
+while.end:                                        ; preds = %land.end
+  %11 = load i32, i32* %j, align 4, !dbg !46
+  ret i32 %11, !dbg !47
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind readonly
+declare i8* @strchr(i8*, i32) #2
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { nounwind readonly "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { nounwind readonly }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!11, !12}
+!llvm.ident = !{!13}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, subprograms: !3)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/MiBench/automotive-bitcount")
+!2 = !{}
+!3 = !{!4}
+!4 = !DISubprogram(name: "bstr_i", scope: !5, file: !5, line: 12, type: !6, isLocal: false, isDefinition: true, scopeLine: 12, flags: DIFlagPrototyped, isOptimized: false, function: i32 (i8*)* @bstr_i, variables: !2)
+!5 = !DIFile(filename: "/home/gleison/tf/Benchmarks/MiBench/automotive-bitcount/tmp.c", directory: "/home/gleison/tf/Benchmarks/MiBench/automotive-bitcount")
+!6 = !DISubroutineType(types: !7)
+!7 = !{!8, !9}
+!8 = !DIBasicType(name: "unsigned int", size: 32, align: 32, encoding: DW_ATE_unsigned)
+!9 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !10, size: 64, align: 64)
+!10 = !DIBasicType(name: "char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!11 = !{i32 2, !"Dwarf Version", i32 4}
+!12 = !{i32 2, !"Debug Info Version", i32 3}
+!13 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!14 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "cptr", arg: 1, scope: !4, file: !5, line: 12, type: !9)
+!15 = !DIExpression()
+!16 = !DILocation(line: 12, column: 27, scope: !4)
+!17 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !4, file: !5, line: 13, type: !8)
+!18 = !DILocation(line: 13, column: 16, scope: !4)
+!19 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "j", scope: !4, file: !5, line: 13, type: !8)
+!20 = !DILocation(line: 13, column: 19, scope: !4)
+!21 = !DILocation(line: 15, column: 3, scope: !4)
+!22 = !DILocation(line: 15, column: 10, scope: !23)
+!23 = !DILexicalBlockFile(scope: !24, file: !5, discriminator: 6)
+!24 = !DILexicalBlockFile(scope: !4, file: !5, discriminator: 1)
+!25 = !DILocation(line: 15, column: 15, scope: !4)
+!26 = !DILocation(line: 15, column: 19, scope: !27)
+!27 = !DILexicalBlockFile(scope: !4, file: !5, discriminator: 2)
+!28 = !DILocation(line: 15, column: 18, scope: !4)
+!29 = !DILocation(line: 15, column: 24, scope: !4)
+!30 = !DILocation(line: 15, column: 41, scope: !31)
+!31 = !DILexicalBlockFile(scope: !4, file: !5, discriminator: 4)
+!32 = !DILocation(line: 15, column: 40, scope: !4)
+!33 = !DILocation(line: 15, column: 27, scope: !4)
+!34 = !DILocation(line: 15, column: 3, scope: !35)
+!35 = !DILexicalBlockFile(scope: !36, file: !5, discriminator: 5)
+!36 = !DILexicalBlockFile(scope: !4, file: !5, discriminator: 3)
+!37 = !DILocation(line: 16, column: 14, scope: !38)
+!38 = distinct !DILexicalBlock(scope: !4, file: !5, line: 15, column: 48)
+!39 = !DILocation(line: 16, column: 9, scope: !38)
+!40 = !DILocation(line: 16, column: 17, scope: !38)
+!41 = !DILocation(line: 16, column: 7, scope: !38)
+!42 = !DILocation(line: 17, column: 7, scope: !38)
+!43 = !DILocation(line: 18, column: 11, scope: !38)
+!44 = !DILocation(line: 18, column: 13, scope: !38)
+!45 = !DILocation(line: 18, column: 7, scope: !38)
+!46 = !DILocation(line: 20, column: 11, scope: !4)
+!47 = !DILocation(line: 20, column: 3, scope: !4)

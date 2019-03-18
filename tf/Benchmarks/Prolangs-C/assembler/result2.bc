@@ -1,0 +1,244 @@
+; ModuleID = 'result.bc'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct.SYMBOL_TABLE_ENTRY = type { [9 x i8], [9 x i8], i32, i32, i32, %struct.SYMBOL_TABLE_ENTRY* }
+
+; Function Attrs: nounwind uwtable
+define void @INIT_SYM_TAB(%struct.SYMBOL_TABLE_ENTRY** %TABLE) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct.SYMBOL_TABLE_ENTRY** %TABLE, i64 0, metadata !46, metadata !47), !dbg !48
+  store %struct.SYMBOL_TABLE_ENTRY* null, %struct.SYMBOL_TABLE_ENTRY** %TABLE, align 8, !dbg !49
+  ret void, !dbg !50
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind uwtable
+define %struct.SYMBOL_TABLE_ENTRY* @LOOK_UP_SYMBOL(i8* %MODULE, i8* %LABEL, %struct.SYMBOL_TABLE_ENTRY** %TABLE) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i8* %MODULE, i64 0, metadata !51, metadata !47), !dbg !52
+  call void @llvm.dbg.value(metadata i8* %LABEL, i64 0, metadata !53, metadata !47), !dbg !54
+  call void @llvm.dbg.value(metadata %struct.SYMBOL_TABLE_ENTRY** %TABLE, i64 0, metadata !55, metadata !47), !dbg !56
+  %tmp1 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %TABLE, align 8, !dbg !57
+  call void @llvm.dbg.value(metadata %struct.SYMBOL_TABLE_ENTRY* %tmp1, i64 0, metadata !58, metadata !47), !dbg !59
+  br label %while.cond, !dbg !60
+
+while.cond:                                       ; preds = %if.end, %entry
+  %TABLE_ENTRY.0 = phi %struct.SYMBOL_TABLE_ENTRY* [ %tmp1, %entry ], [ %tmp9, %if.end ]
+  %cmp = icmp ne %struct.SYMBOL_TABLE_ENTRY* %TABLE_ENTRY.0, null, !dbg !61
+  br i1 %cmp, label %while.body, label %while.end, !dbg !60
+
+while.body:                                       ; preds = %while.cond
+  %MODULE1 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %TABLE_ENTRY.0, i32 0, i32 1, !dbg !62
+  %arraydecay = getelementptr inbounds [9 x i8], [9 x i8]* %MODULE1, i32 0, i32 0, !dbg !65
+  %call = call i32 @strcmp(i8* %arraydecay, i8* %MODULE) #4, !dbg !66
+  %tobool = icmp ne i32 %call, 0, !dbg !66
+  br i1 %tobool, label %if.end, label %land.lhs.true, !dbg !67
+
+land.lhs.true:                                    ; preds = %while.body
+  %LABEL2 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %TABLE_ENTRY.0, i32 0, i32 0, !dbg !68
+  %arraydecay3 = getelementptr inbounds [9 x i8], [9 x i8]* %LABEL2, i32 0, i32 0, !dbg !69
+  %call4 = call i32 @strcmp(i8* %arraydecay3, i8* %LABEL) #4, !dbg !70
+  %tobool5 = icmp ne i32 %call4, 0, !dbg !70
+  br i1 %tobool5, label %if.end, label %if.then, !dbg !71
+
+if.then:                                          ; preds = %land.lhs.true
+  %TABLE_ENTRY.0.lcssa11 = phi %struct.SYMBOL_TABLE_ENTRY* [ %TABLE_ENTRY.0, %land.lhs.true ]
+  br label %return, !dbg !72
+
+if.end:                                           ; preds = %land.lhs.true, %while.body
+  %NEXT = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %TABLE_ENTRY.0, i32 0, i32 5, !dbg !73
+  %tmp9 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %NEXT, align 8, !dbg !73
+  call void @llvm.dbg.value(metadata %struct.SYMBOL_TABLE_ENTRY* %tmp9, i64 0, metadata !58, metadata !47), !dbg !59
+  br label %while.cond, !dbg !60
+
+while.end:                                        ; preds = %while.cond
+  br label %return, !dbg !74
+
+return:                                           ; preds = %while.end, %if.then
+  %retval.0 = phi %struct.SYMBOL_TABLE_ENTRY* [ %TABLE_ENTRY.0.lcssa11, %if.then ], [ null, %while.end ]
+  ret %struct.SYMBOL_TABLE_ENTRY* %retval.0, !dbg !75
+}
+
+; Function Attrs: nounwind readonly
+declare i32 @strcmp(i8*, i8*) #2
+
+; Function Attrs: nounwind uwtable
+define i32 @INSERT_IN_SYM_TAB(i8* %MODULE, i8* %LABEL, i32 %LOCATION, i32 %TYPE, %struct.SYMBOL_TABLE_ENTRY** %TABLE) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i8* %MODULE, i64 0, metadata !76, metadata !47), !dbg !77
+  call void @llvm.dbg.value(metadata i8* %LABEL, i64 0, metadata !78, metadata !47), !dbg !79
+  call void @llvm.dbg.value(metadata i32 %LOCATION, i64 0, metadata !80, metadata !47), !dbg !81
+  call void @llvm.dbg.value(metadata i32 %TYPE, i64 0, metadata !82, metadata !47), !dbg !83
+  call void @llvm.dbg.value(metadata %struct.SYMBOL_TABLE_ENTRY** %TABLE, i64 0, metadata !84, metadata !47), !dbg !85
+  %call = call %struct.SYMBOL_TABLE_ENTRY* @LOOK_UP_SYMBOL(i8* %MODULE, i8* %LABEL, %struct.SYMBOL_TABLE_ENTRY** %TABLE), !dbg !86
+  call void @llvm.dbg.value(metadata %struct.SYMBOL_TABLE_ENTRY* %call, i64 0, metadata !87, metadata !47), !dbg !88
+  %cmp = icmp eq %struct.SYMBOL_TABLE_ENTRY* %call, null, !dbg !89
+  br i1 %cmp, label %if.then, label %if.else, !dbg !91
+
+if.then:                                          ; preds = %entry
+  %call1 = call noalias i8* @malloc(i64 40) #5, !dbg !92
+  %tmp4 = bitcast i8* %call1 to %struct.SYMBOL_TABLE_ENTRY*, !dbg !94
+  call void @llvm.dbg.value(metadata %struct.SYMBOL_TABLE_ENTRY* %tmp4, i64 0, metadata !87, metadata !47), !dbg !88
+  %tmp6 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %TABLE, align 8, !dbg !95
+  %NEXT = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %tmp4, i32 0, i32 5, !dbg !96
+  store %struct.SYMBOL_TABLE_ENTRY* %tmp6, %struct.SYMBOL_TABLE_ENTRY** %NEXT, align 8, !dbg !97
+  %MODULE2 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %tmp4, i32 0, i32 1, !dbg !98
+  %arraydecay = getelementptr inbounds [9 x i8], [9 x i8]* %MODULE2, i32 0, i32 0, !dbg !99
+  %call3 = call i8* @strcpy(i8* %arraydecay, i8* %MODULE) #5, !dbg !100
+  %LABEL4 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %tmp4, i32 0, i32 0, !dbg !101
+  %arraydecay5 = getelementptr inbounds [9 x i8], [9 x i8]* %LABEL4, i32 0, i32 0, !dbg !102
+  %call6 = call i8* @strcpy(i8* %arraydecay5, i8* %LABEL) #5, !dbg !103
+  %LOCATION7 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %tmp4, i32 0, i32 2, !dbg !104
+  store i32 %LOCATION, i32* %LOCATION7, align 4, !dbg !105
+  %LENGTH = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %tmp4, i32 0, i32 3, !dbg !106
+  store i32 0, i32* %LENGTH, align 4, !dbg !107
+  %TYPE8 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %tmp4, i32 0, i32 4, !dbg !108
+  store i32 %TYPE, i32* %TYPE8, align 4, !dbg !109
+  store %struct.SYMBOL_TABLE_ENTRY* %tmp4, %struct.SYMBOL_TABLE_ENTRY** %TABLE, align 8, !dbg !110
+  br label %return, !dbg !111
+
+if.else:                                          ; preds = %entry
+  br label %return, !dbg !112
+
+return:                                           ; preds = %if.else, %if.then
+  %retval.0 = phi i32 [ 1, %if.then ], [ 0, %if.else ]
+  ret i32 %retval.0, !dbg !113
+}
+
+; Function Attrs: nounwind
+declare noalias i8* @malloc(i64) #3
+
+; Function Attrs: nounwind
+declare i8* @strcpy(i8*, i8*) #3
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.value(metadata, i64, metadata, metadata) #1
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { nounwind readonly "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { nounwind "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #4 = { nounwind readonly }
+attributes #5 = { nounwind }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!43, !44}
+!llvm.ident = !{!45}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, retainedTypes: !12, subprograms: !28)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/assembler")
+!2 = !{!3}
+!3 = !DICompositeType(tag: DW_TAG_enumeration_type, name: "kind", file: !4, line: 8, size: 32, align: 32, elements: !5)
+!4 = !DIFile(filename: "./sym_tab.h", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/assembler")
+!5 = !{!6, !7, !8, !9, !10, !11}
+!6 = !DIEnumerator(name: "RELATIVE", value: 0)
+!7 = !DIEnumerator(name: "ABSOLUTE", value: 1)
+!8 = !DIEnumerator(name: "EXTERN_REF", value: 2)
+!9 = !DIEnumerator(name: "MODULE", value: 3)
+!10 = !DIEnumerator(name: "GLOBAL", value: 4)
+!11 = !DIEnumerator(name: "UNDEFINED", value: 5)
+!12 = !{!13, !14}
+!13 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: null, size: 64, align: 64)
+!14 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !15, size: 64, align: 64)
+!15 = !DICompositeType(tag: DW_TAG_structure_type, name: "SYMBOL_TABLE_ENTRY", file: !4, line: 11, size: 320, align: 64, elements: !16)
+!16 = !{!17, !22, !23, !25, !26, !27}
+!17 = !DIDerivedType(tag: DW_TAG_member, name: "LABEL", scope: !15, file: !4, line: 12, baseType: !18, size: 72, align: 8)
+!18 = !DICompositeType(tag: DW_TAG_array_type, baseType: !19, size: 72, align: 8, elements: !20)
+!19 = !DIBasicType(name: "char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!20 = !{!21}
+!21 = !DISubrange(count: 9)
+!22 = !DIDerivedType(tag: DW_TAG_member, name: "MODULE", scope: !15, file: !4, line: 13, baseType: !18, size: 72, align: 8, offset: 72)
+!23 = !DIDerivedType(tag: DW_TAG_member, name: "LOCATION", scope: !15, file: !4, line: 15, baseType: !24, size: 32, align: 32, offset: 160)
+!24 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!25 = !DIDerivedType(tag: DW_TAG_member, name: "LENGTH", scope: !15, file: !4, line: 19, baseType: !24, size: 32, align: 32, offset: 192)
+!26 = !DIDerivedType(tag: DW_TAG_member, name: "TYPE", scope: !15, file: !4, line: 21, baseType: !3, size: 32, align: 32, offset: 224)
+!27 = !DIDerivedType(tag: DW_TAG_member, name: "NEXT", scope: !15, file: !4, line: 22, baseType: !14, size: 64, align: 64, offset: 256)
+!28 = !{!29, !36, !40}
+!29 = !DISubprogram(name: "INIT_SYM_TAB", scope: !30, file: !30, line: 14, type: !31, isLocal: false, isDefinition: true, scopeLine: 14, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.SYMBOL_TABLE_ENTRY**)* @INIT_SYM_TAB, variables: !35)
+!30 = !DIFile(filename: "/home/gleison/tf/Benchmarks/Prolangs-C/assembler/tmp.c", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/assembler")
+!31 = !DISubroutineType(types: !32)
+!32 = !{null, !33}
+!33 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !34, size: 64, align: 64)
+!34 = !DIDerivedType(tag: DW_TAG_typedef, name: "SYMBOL_TABLE", file: !4, line: 23, baseType: !14)
+!35 = !{}
+!36 = !DISubprogram(name: "LOOK_UP_SYMBOL", scope: !30, file: !30, line: 21, type: !37, isLocal: false, isDefinition: true, scopeLine: 22, flags: DIFlagPrototyped, isOptimized: false, function: %struct.SYMBOL_TABLE_ENTRY* (i8*, i8*, %struct.SYMBOL_TABLE_ENTRY**)* @LOOK_UP_SYMBOL, variables: !35)
+!37 = !DISubroutineType(types: !38)
+!38 = !{!14, !39, !39, !33}
+!39 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !19, size: 64, align: 64)
+!40 = !DISubprogram(name: "INSERT_IN_SYM_TAB", scope: !30, file: !30, line: 38, type: !41, isLocal: false, isDefinition: true, scopeLine: 39, flags: DIFlagPrototyped, isOptimized: false, function: i32 (i8*, i8*, i32, i32, %struct.SYMBOL_TABLE_ENTRY**)* @INSERT_IN_SYM_TAB, variables: !35)
+!41 = !DISubroutineType(types: !42)
+!42 = !{!24, !39, !39, !24, !3, !33}
+!43 = !{i32 2, !"Dwarf Version", i32 4}
+!44 = !{i32 2, !"Debug Info Version", i32 3}
+!45 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!46 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "TABLE", arg: 1, scope: !29, file: !30, line: 14, type: !33)
+!47 = !DIExpression()
+!48 = !DILocation(line: 14, column: 33, scope: !29)
+!49 = !DILocation(line: 15, column: 10, scope: !29)
+!50 = !DILocation(line: 16, column: 1, scope: !29)
+!51 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "MODULE", arg: 1, scope: !36, file: !30, line: 21, type: !39)
+!52 = !DILocation(line: 21, column: 48, scope: !36)
+!53 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "LABEL", arg: 2, scope: !36, file: !30, line: 21, type: !39)
+!54 = !DILocation(line: 21, column: 63, scope: !36)
+!55 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "TABLE", arg: 3, scope: !36, file: !30, line: 22, type: !33)
+!56 = !DILocation(line: 22, column: 57, scope: !36)
+!57 = !DILocation(line: 24, column: 17, scope: !36)
+!58 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "TABLE_ENTRY", scope: !36, file: !30, line: 23, type: !14)
+!59 = !DILocation(line: 23, column: 30, scope: !36)
+!60 = !DILocation(line: 25, column: 3, scope: !36)
+!61 = !DILocation(line: 25, column: 22, scope: !36)
+!62 = !DILocation(line: 26, column: 32, scope: !63)
+!63 = distinct !DILexicalBlock(scope: !64, file: !30, line: 26, column: 9)
+!64 = distinct !DILexicalBlock(scope: !36, file: !30, line: 25, column: 31)
+!65 = !DILocation(line: 26, column: 17, scope: !63)
+!66 = !DILocation(line: 26, column: 10, scope: !63)
+!67 = !DILocation(line: 26, column: 48, scope: !63)
+!68 = !DILocation(line: 27, column: 32, scope: !63)
+!69 = !DILocation(line: 27, column: 17, scope: !63)
+!70 = !DILocation(line: 27, column: 10, scope: !63)
+!71 = !DILocation(line: 26, column: 9, scope: !64)
+!72 = !DILocation(line: 28, column: 7, scope: !63)
+!73 = !DILocation(line: 29, column: 34, scope: !64)
+!74 = !DILocation(line: 31, column: 3, scope: !36)
+!75 = !DILocation(line: 32, column: 1, scope: !36)
+!76 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "MODULE", arg: 1, scope: !40, file: !30, line: 38, type: !39)
+!77 = !DILocation(line: 38, column: 29, scope: !40)
+!78 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "LABEL", arg: 2, scope: !40, file: !30, line: 38, type: !39)
+!79 = !DILocation(line: 38, column: 43, scope: !40)
+!80 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "LOCATION", arg: 3, scope: !40, file: !30, line: 38, type: !24)
+!81 = !DILocation(line: 38, column: 54, scope: !40)
+!82 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "TYPE", arg: 4, scope: !40, file: !30, line: 38, type: !3)
+!83 = !DILocation(line: 38, column: 74, scope: !40)
+!84 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "TABLE", arg: 5, scope: !40, file: !30, line: 39, type: !33)
+!85 = !DILocation(line: 39, column: 37, scope: !40)
+!86 = !DILocation(line: 42, column: 17, scope: !40)
+!87 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "TABLE_ENTRY", scope: !40, file: !30, line: 40, type: !14)
+!88 = !DILocation(line: 40, column: 30, scope: !40)
+!89 = !DILocation(line: 43, column: 19, scope: !90)
+!90 = distinct !DILexicalBlock(scope: !40, file: !30, line: 43, column: 7)
+!91 = !DILocation(line: 43, column: 7, scope: !40)
+!92 = !DILocation(line: 44, column: 48, scope: !93)
+!93 = distinct !DILexicalBlock(scope: !90, file: !30, line: 43, column: 28)
+!94 = !DILocation(line: 44, column: 19, scope: !93)
+!95 = !DILocation(line: 45, column: 27, scope: !93)
+!96 = !DILocation(line: 45, column: 20, scope: !93)
+!97 = !DILocation(line: 45, column: 25, scope: !93)
+!98 = !DILocation(line: 46, column: 33, scope: !93)
+!99 = !DILocation(line: 46, column: 18, scope: !93)
+!100 = !DILocation(line: 46, column: 11, scope: !93)
+!101 = !DILocation(line: 47, column: 33, scope: !93)
+!102 = !DILocation(line: 47, column: 18, scope: !93)
+!103 = !DILocation(line: 47, column: 11, scope: !93)
+!104 = !DILocation(line: 48, column: 20, scope: !93)
+!105 = !DILocation(line: 48, column: 29, scope: !93)
+!106 = !DILocation(line: 49, column: 20, scope: !93)
+!107 = !DILocation(line: 49, column: 27, scope: !93)
+!108 = !DILocation(line: 50, column: 20, scope: !93)
+!109 = !DILocation(line: 50, column: 25, scope: !93)
+!110 = !DILocation(line: 51, column: 12, scope: !93)
+!111 = !DILocation(line: 52, column: 5, scope: !93)
+!112 = !DILocation(line: 54, column: 5, scope: !90)
+!113 = !DILocation(line: 55, column: 1, scope: !40)

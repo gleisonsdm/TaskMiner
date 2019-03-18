@@ -1,0 +1,580 @@
+; ModuleID = '/home/gleison/tf/Benchmarks/Prolangs-C/simulator/tmp.c'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct.SYMBOL_TABLE_ENTRY = type { [9 x i8], [9 x i8], i32, i32, i32, %struct.SYMBOL_TABLE_ENTRY* }
+%struct._IO_FILE = type { i32, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, %struct._IO_marker*, %struct._IO_FILE*, i32, i32, i64, i16, i8, [1 x i8], i8*, i64, i8*, i8*, i8*, i8*, i64, i32, [20 x i8] }
+%struct._IO_marker = type { %struct._IO_marker*, %struct._IO_FILE*, i32 }
+
+@.str = private unnamed_addr constant [15 x i8] c"%s            \00", align 1
+@.str.1 = private unnamed_addr constant [15 x i8] c"          %s  \00", align 1
+@.str.2 = private unnamed_addr constant [11 x i8] c"Undefined \00", align 1
+@.str.3 = private unnamed_addr constant [7 x i8] c"%s    \00", align 1
+@.str.4 = private unnamed_addr constant [4 x i8] c"%s\0A\00", align 1
+@.str.5 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
+@.str.6 = private unnamed_addr constant [18 x i8] c"CONTROL   SYMBOL\0A\00", align 1
+@.str.7 = private unnamed_addr constant [37 x i8] c"SECTION   NAME     ADDRESS   LENGTH\0A\00", align 1
+@.str.8 = private unnamed_addr constant [37 x i8] c"-----------------------------------\0A\00", align 1
+@.str.9 = private unnamed_addr constant [4 x i8] c"M%s\00", align 1
+@.str.10 = private unnamed_addr constant [9 x i8] c"_GLOBAL \00", align 1
+@.str.11 = private unnamed_addr constant [4 x i8] c"G%s\00", align 1
+@.str.12 = private unnamed_addr constant [6 x i8] c"L%s%s\00", align 1
+@.str.13 = private unnamed_addr constant [3 x i8] c"%s\00", align 1
+@START_ADDRESS = common global i32 0, align 4
+@.str.14 = private unnamed_addr constant [7 x i8] c"S%s%s\0A\00", align 1
+@MAIN_ROUTINE = common global [9 x i8] zeroinitializer, align 1
+
+; Function Attrs: nounwind uwtable
+define void @PRINT_TABLE(%struct.SYMBOL_TABLE_ENTRY* %SYM_TAB, %struct._IO_FILE* %OUTPUT) #0 {
+entry:
+  %SYM_TAB.addr = alloca %struct.SYMBOL_TABLE_ENTRY*, align 8
+  %OUTPUT.addr = alloca %struct._IO_FILE*, align 8
+  %TEMP = alloca [6 x i8], align 1
+  store %struct.SYMBOL_TABLE_ENTRY* %SYM_TAB, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, metadata !109, metadata !110), !dbg !111
+  store %struct._IO_FILE* %OUTPUT, %struct._IO_FILE** %OUTPUT.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct._IO_FILE** %OUTPUT.addr, metadata !112, metadata !110), !dbg !113
+  call void @llvm.dbg.declare(metadata [6 x i8]* %TEMP, metadata !114, metadata !110), !dbg !118
+  %0 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !119
+  %cmp = icmp ne %struct.SYMBOL_TABLE_ENTRY* %0, null, !dbg !121
+  br i1 %cmp, label %if.then, label %if.end.24, !dbg !122
+
+if.then:                                          ; preds = %entry
+  %1 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !123
+  %NEXT = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %1, i32 0, i32 5, !dbg !125
+  %2 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %NEXT, align 8, !dbg !125
+  %3 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !126
+  call void @PRINT_TABLE(%struct.SYMBOL_TABLE_ENTRY* %2, %struct._IO_FILE* %3), !dbg !127
+  %4 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !128
+  %TYPE = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %4, i32 0, i32 4, !dbg !130
+  %5 = load i32, i32* %TYPE, align 4, !dbg !130
+  %cmp1 = icmp eq i32 %5, 3, !dbg !131
+  br i1 %cmp1, label %if.then.2, label %if.else, !dbg !132
+
+if.then.2:                                        ; preds = %if.then
+  %6 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !133
+  %7 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !134
+  %LABEL = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %7, i32 0, i32 0, !dbg !135
+  %arraydecay = getelementptr inbounds [9 x i8], [9 x i8]* %LABEL, i32 0, i32 0, !dbg !136
+  %call = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %6, i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i32 0, i32 0), i8* %arraydecay), !dbg !137
+  br label %if.end, !dbg !138
+
+if.else:                                          ; preds = %if.then
+  %8 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !139
+  %9 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !140
+  %LABEL3 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %9, i32 0, i32 0, !dbg !141
+  %arraydecay4 = getelementptr inbounds [9 x i8], [9 x i8]* %LABEL3, i32 0, i32 0, !dbg !142
+  %call5 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %8, i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str.1, i32 0, i32 0), i8* %arraydecay4), !dbg !143
+  br label %if.end
+
+if.end:                                           ; preds = %if.else, %if.then.2
+  %10 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !144
+  %LOCATION = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %10, i32 0, i32 2, !dbg !145
+  %11 = load i32, i32* %LOCATION, align 4, !dbg !145
+  %arraydecay6 = getelementptr inbounds [6 x i8], [6 x i8]* %TEMP, i32 0, i32 0, !dbg !146
+  call void (i32, i32, i32, i8*, ...) bitcast (void (...)* @NUM_TO_STR to void (i32, i32, i32, i8*, ...)*)(i32 %11, i32 16, i32 5, i8* %arraydecay6), !dbg !147
+  %12 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !148
+  %TYPE7 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %12, i32 0, i32 4, !dbg !150
+  %13 = load i32, i32* %TYPE7, align 4, !dbg !150
+  %cmp8 = icmp eq i32 %13, 5, !dbg !151
+  br i1 %cmp8, label %if.then.9, label %if.else.11, !dbg !152
+
+if.then.9:                                        ; preds = %if.end
+  %14 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !153
+  %call10 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %14, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.str.2, i32 0, i32 0)), !dbg !154
+  br label %if.end.14, !dbg !155
+
+if.else.11:                                       ; preds = %if.end
+  %15 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !156
+  %arraydecay12 = getelementptr inbounds [6 x i8], [6 x i8]* %TEMP, i32 0, i32 0, !dbg !157
+  %call13 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %15, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.3, i32 0, i32 0), i8* %arraydecay12), !dbg !158
+  br label %if.end.14
+
+if.end.14:                                        ; preds = %if.else.11, %if.then.9
+  %16 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !159
+  %TYPE15 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %16, i32 0, i32 4, !dbg !161
+  %17 = load i32, i32* %TYPE15, align 4, !dbg !161
+  %cmp16 = icmp eq i32 %17, 3, !dbg !162
+  br i1 %cmp16, label %if.then.17, label %if.else.21, !dbg !163
+
+if.then.17:                                       ; preds = %if.end.14
+  %18 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !164
+  %LENGTH = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %18, i32 0, i32 3, !dbg !166
+  %19 = load i32, i32* %LENGTH, align 4, !dbg !166
+  %arraydecay18 = getelementptr inbounds [6 x i8], [6 x i8]* %TEMP, i32 0, i32 0, !dbg !167
+  call void (i32, i32, i32, i8*, ...) bitcast (void (...)* @NUM_TO_STR to void (i32, i32, i32, i8*, ...)*)(i32 %19, i32 16, i32 6, i8* %arraydecay18), !dbg !168
+  %20 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !169
+  %arraydecay19 = getelementptr inbounds [6 x i8], [6 x i8]* %TEMP, i32 0, i32 0, !dbg !170
+  %call20 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %20, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.4, i32 0, i32 0), i8* %arraydecay19), !dbg !171
+  br label %if.end.23, !dbg !172
+
+if.else.21:                                       ; preds = %if.end.14
+  %21 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !173
+  %call22 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %21, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.5, i32 0, i32 0)), !dbg !174
+  br label %if.end.23
+
+if.end.23:                                        ; preds = %if.else.21, %if.then.17
+  br label %if.end.24, !dbg !175
+
+if.end.24:                                        ; preds = %if.end.23, %entry
+  ret void, !dbg !176
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+declare i32 @fprintf(%struct._IO_FILE*, i8*, ...) #2
+
+declare void @NUM_TO_STR(...) #2
+
+; Function Attrs: nounwind uwtable
+define void @PRT_SYM_TAB(%struct.SYMBOL_TABLE_ENTRY* %SYM_TAB, %struct._IO_FILE* %OUTPUT) #0 {
+entry:
+  %SYM_TAB.addr = alloca %struct.SYMBOL_TABLE_ENTRY*, align 8
+  %OUTPUT.addr = alloca %struct._IO_FILE*, align 8
+  store %struct.SYMBOL_TABLE_ENTRY* %SYM_TAB, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, metadata !177, metadata !110), !dbg !178
+  store %struct._IO_FILE* %OUTPUT, %struct._IO_FILE** %OUTPUT.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct._IO_FILE** %OUTPUT.addr, metadata !179, metadata !110), !dbg !180
+  %0 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !181
+  %call = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %0, i8* getelementptr inbounds ([18 x i8], [18 x i8]* @.str.6, i32 0, i32 0)), !dbg !182
+  %1 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !183
+  %call1 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %1, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @.str.7, i32 0, i32 0)), !dbg !184
+  %2 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !185
+  %call2 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %2, i8* getelementptr inbounds ([37 x i8], [37 x i8]* @.str.8, i32 0, i32 0)), !dbg !186
+  %3 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !187
+  %4 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !188
+  call void @PRINT_TABLE(%struct.SYMBOL_TABLE_ENTRY* %3, %struct._IO_FILE* %4), !dbg !189
+  ret void, !dbg !190
+}
+
+; Function Attrs: nounwind uwtable
+define void @OUTPUT_TABLE(%struct.SYMBOL_TABLE_ENTRY* %SYM_TAB, %struct._IO_FILE* %OUTPUT) #0 {
+entry:
+  %SYM_TAB.addr = alloca %struct.SYMBOL_TABLE_ENTRY*, align 8
+  %OUTPUT.addr = alloca %struct._IO_FILE*, align 8
+  %TEMP = alloca [7 x i8], align 1
+  store %struct.SYMBOL_TABLE_ENTRY* %SYM_TAB, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, metadata !191, metadata !110), !dbg !192
+  store %struct._IO_FILE* %OUTPUT, %struct._IO_FILE** %OUTPUT.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct._IO_FILE** %OUTPUT.addr, metadata !193, metadata !110), !dbg !194
+  call void @llvm.dbg.declare(metadata [7 x i8]* %TEMP, metadata !195, metadata !110), !dbg !199
+  %0 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !200
+  %cmp = icmp ne %struct.SYMBOL_TABLE_ENTRY* %0, null, !dbg !202
+  br i1 %cmp, label %if.then, label %if.end.27, !dbg !203
+
+if.then:                                          ; preds = %entry
+  %1 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !204
+  %NEXT = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %1, i32 0, i32 5, !dbg !206
+  %2 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %NEXT, align 8, !dbg !206
+  %3 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !207
+  call void @OUTPUT_TABLE(%struct.SYMBOL_TABLE_ENTRY* %2, %struct._IO_FILE* %3), !dbg !208
+  %4 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !209
+  %TYPE = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %4, i32 0, i32 4, !dbg !211
+  %5 = load i32, i32* %TYPE, align 4, !dbg !211
+  %cmp1 = icmp eq i32 %5, 3, !dbg !212
+  br i1 %cmp1, label %if.then.2, label %if.else, !dbg !213
+
+if.then.2:                                        ; preds = %if.then
+  %6 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !214
+  %7 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !215
+  %LABEL = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %7, i32 0, i32 0, !dbg !216
+  %arraydecay = getelementptr inbounds [9 x i8], [9 x i8]* %LABEL, i32 0, i32 0, !dbg !217
+  %call = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %6, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.9, i32 0, i32 0), i8* %arraydecay), !dbg !218
+  br label %if.end.15, !dbg !219
+
+if.else:                                          ; preds = %if.then
+  %8 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !220
+  %MODULE = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %8, i32 0, i32 1, !dbg !222
+  %arraydecay3 = getelementptr inbounds [9 x i8], [9 x i8]* %MODULE, i32 0, i32 0, !dbg !223
+  %call4 = call i32 @strcmp(i8* %arraydecay3, i8* getelementptr inbounds ([9 x i8], [9 x i8]* @.str.10, i32 0, i32 0)) #4, !dbg !224
+  %tobool = icmp ne i32 %call4, 0, !dbg !224
+  br i1 %tobool, label %if.else.9, label %if.then.5, !dbg !225
+
+if.then.5:                                        ; preds = %if.else
+  %9 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !226
+  %10 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !227
+  %LABEL6 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %10, i32 0, i32 0, !dbg !228
+  %arraydecay7 = getelementptr inbounds [9 x i8], [9 x i8]* %LABEL6, i32 0, i32 0, !dbg !229
+  %call8 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %9, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.11, i32 0, i32 0), i8* %arraydecay7), !dbg !230
+  br label %if.end, !dbg !231
+
+if.else.9:                                        ; preds = %if.else
+  %11 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !232
+  %12 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !233
+  %MODULE10 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %12, i32 0, i32 1, !dbg !234
+  %arraydecay11 = getelementptr inbounds [9 x i8], [9 x i8]* %MODULE10, i32 0, i32 0, !dbg !235
+  %13 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !236
+  %LABEL12 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %13, i32 0, i32 0, !dbg !237
+  %arraydecay13 = getelementptr inbounds [9 x i8], [9 x i8]* %LABEL12, i32 0, i32 0, !dbg !238
+  %call14 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %11, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str.12, i32 0, i32 0), i8* %arraydecay11, i8* %arraydecay13), !dbg !239
+  br label %if.end
+
+if.end:                                           ; preds = %if.else.9, %if.then.5
+  br label %if.end.15
+
+if.end.15:                                        ; preds = %if.end, %if.then.2
+  %14 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !240
+  %LOCATION = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %14, i32 0, i32 2, !dbg !241
+  %15 = load i32, i32* %LOCATION, align 4, !dbg !241
+  %arraydecay16 = getelementptr inbounds [7 x i8], [7 x i8]* %TEMP, i32 0, i32 0, !dbg !242
+  call void (i32, i32, i32, i8*, ...) bitcast (void (...)* @NUM_TO_STR to void (i32, i32, i32, i8*, ...)*)(i32 %15, i32 16, i32 6, i8* %arraydecay16), !dbg !243
+  %16 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !244
+  %arraydecay17 = getelementptr inbounds [7 x i8], [7 x i8]* %TEMP, i32 0, i32 0, !dbg !245
+  %call18 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %16, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.13, i32 0, i32 0), i8* %arraydecay17), !dbg !246
+  %17 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !247
+  %TYPE19 = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %17, i32 0, i32 4, !dbg !249
+  %18 = load i32, i32* %TYPE19, align 4, !dbg !249
+  %cmp20 = icmp eq i32 %18, 3, !dbg !250
+  br i1 %cmp20, label %if.then.21, label %if.end.25, !dbg !251
+
+if.then.21:                                       ; preds = %if.end.15
+  %19 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !252
+  %LENGTH = getelementptr inbounds %struct.SYMBOL_TABLE_ENTRY, %struct.SYMBOL_TABLE_ENTRY* %19, i32 0, i32 3, !dbg !254
+  %20 = load i32, i32* %LENGTH, align 4, !dbg !254
+  %arraydecay22 = getelementptr inbounds [7 x i8], [7 x i8]* %TEMP, i32 0, i32 0, !dbg !255
+  call void (i32, i32, i32, i8*, ...) bitcast (void (...)* @NUM_TO_STR to void (i32, i32, i32, i8*, ...)*)(i32 %20, i32 16, i32 6, i8* %arraydecay22), !dbg !256
+  %21 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !257
+  %arraydecay23 = getelementptr inbounds [7 x i8], [7 x i8]* %TEMP, i32 0, i32 0, !dbg !258
+  %call24 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %21, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.13, i32 0, i32 0), i8* %arraydecay23), !dbg !259
+  br label %if.end.25, !dbg !260
+
+if.end.25:                                        ; preds = %if.then.21, %if.end.15
+  %22 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !261
+  %call26 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %22, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.5, i32 0, i32 0)), !dbg !262
+  br label %if.end.27, !dbg !263
+
+if.end.27:                                        ; preds = %if.end.25, %entry
+  ret void, !dbg !264
+}
+
+; Function Attrs: nounwind readonly
+declare i32 @strcmp(i8*, i8*) #3
+
+; Function Attrs: nounwind uwtable
+define void @PRINT_EXEC(i8* %MEMORY, %struct.SYMBOL_TABLE_ENTRY* %SYM_TAB, %struct._IO_FILE* %OUTPUT) #0 {
+entry:
+  %MEMORY.addr = alloca i8*, align 8
+  %SYM_TAB.addr = alloca %struct.SYMBOL_TABLE_ENTRY*, align 8
+  %OUTPUT.addr = alloca %struct._IO_FILE*, align 8
+  %ADDRESS = alloca [6 x i8], align 1
+  store i8* %MEMORY, i8** %MEMORY.addr, align 8
+  call void @llvm.dbg.declare(metadata i8** %MEMORY.addr, metadata !265, metadata !110), !dbg !266
+  store %struct.SYMBOL_TABLE_ENTRY* %SYM_TAB, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, metadata !267, metadata !110), !dbg !268
+  store %struct._IO_FILE* %OUTPUT, %struct._IO_FILE** %OUTPUT.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct._IO_FILE** %OUTPUT.addr, metadata !269, metadata !110), !dbg !270
+  call void @llvm.dbg.declare(metadata [6 x i8]* %ADDRESS, metadata !271, metadata !110), !dbg !272
+  %0 = load i32, i32* @START_ADDRESS, align 4, !dbg !273
+  %arraydecay = getelementptr inbounds [6 x i8], [6 x i8]* %ADDRESS, i32 0, i32 0, !dbg !274
+  call void (i32, i32, i32, i8*, ...) bitcast (void (...)* @NUM_TO_STR to void (i32, i32, i32, i8*, ...)*)(i32 %0, i32 16, i32 5, i8* %arraydecay), !dbg !275
+  %1 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !276
+  %arraydecay1 = getelementptr inbounds [6 x i8], [6 x i8]* %ADDRESS, i32 0, i32 0, !dbg !277
+  %call = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %1, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.14, i32 0, i32 0), i8* getelementptr inbounds ([9 x i8], [9 x i8]* @MAIN_ROUTINE, i32 0, i32 0), i8* %arraydecay1), !dbg !278
+  %2 = load %struct.SYMBOL_TABLE_ENTRY*, %struct.SYMBOL_TABLE_ENTRY** %SYM_TAB.addr, align 8, !dbg !279
+  %3 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !280
+  call void @OUTPUT_TABLE(%struct.SYMBOL_TABLE_ENTRY* %2, %struct._IO_FILE* %3), !dbg !281
+  %4 = load i8*, i8** %MEMORY.addr, align 8, !dbg !282
+  %5 = load %struct._IO_FILE*, %struct._IO_FILE** %OUTPUT.addr, align 8, !dbg !283
+  call void (i8*, %struct._IO_FILE*, ...) bitcast (void (...)* @OUTPUT_MEM to void (i8*, %struct._IO_FILE*, ...)*)(i8* %4, %struct._IO_FILE* %5), !dbg !284
+  ret void, !dbg !285
+}
+
+declare void @OUTPUT_MEM(...) #2
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { nounwind readonly "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #4 = { nounwind readonly }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!106, !107}
+!llvm.ident = !{!108}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, retainedTypes: !12, subprograms: !15, globals: !102)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/simulator")
+!2 = !{!3}
+!3 = !DICompositeType(tag: DW_TAG_enumeration_type, name: "kind", file: !4, line: 8, size: 32, align: 32, elements: !5)
+!4 = !DIFile(filename: "./sym_tab.h", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/simulator")
+!5 = !{!6, !7, !8, !9, !10, !11}
+!6 = !DIEnumerator(name: "RELATIVE", value: 0)
+!7 = !DIEnumerator(name: "ABSOLUTE", value: 1)
+!8 = !DIEnumerator(name: "EXTERN_REF", value: 2)
+!9 = !DIEnumerator(name: "MODULE", value: 3)
+!10 = !DIEnumerator(name: "GLOBAL", value: 4)
+!11 = !DIEnumerator(name: "UNDEFINED", value: 5)
+!12 = !{!13, !14}
+!13 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: null, size: 64, align: 64)
+!14 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!15 = !{!16, !95, !96, !97}
+!16 = !DISubprogram(name: "PRINT_TABLE", scope: !17, file: !17, line: 18, type: !18, isLocal: false, isDefinition: true, scopeLine: 18, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.SYMBOL_TABLE_ENTRY*, %struct._IO_FILE*)* @PRINT_TABLE, variables: !94)
+!17 = !DIFile(filename: "/home/gleison/tf/Benchmarks/Prolangs-C/simulator/tmp.c", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/simulator")
+!18 = !DISubroutineType(types: !19)
+!19 = !{null, !20, !34}
+!20 = !DIDerivedType(tag: DW_TAG_typedef, name: "SYMBOL_TABLE", file: !4, line: 23, baseType: !21)
+!21 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !22, size: 64, align: 64)
+!22 = !DICompositeType(tag: DW_TAG_structure_type, name: "SYMBOL_TABLE_ENTRY", file: !4, line: 11, size: 320, align: 64, elements: !23)
+!23 = !{!24, !29, !30, !31, !32, !33}
+!24 = !DIDerivedType(tag: DW_TAG_member, name: "LABEL", scope: !22, file: !4, line: 12, baseType: !25, size: 72, align: 8)
+!25 = !DICompositeType(tag: DW_TAG_array_type, baseType: !26, size: 72, align: 8, elements: !27)
+!26 = !DIBasicType(name: "char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!27 = !{!28}
+!28 = !DISubrange(count: 9)
+!29 = !DIDerivedType(tag: DW_TAG_member, name: "MODULE", scope: !22, file: !4, line: 13, baseType: !25, size: 72, align: 8, offset: 72)
+!30 = !DIDerivedType(tag: DW_TAG_member, name: "LOCATION", scope: !22, file: !4, line: 15, baseType: !14, size: 32, align: 32, offset: 160)
+!31 = !DIDerivedType(tag: DW_TAG_member, name: "LENGTH", scope: !22, file: !4, line: 19, baseType: !14, size: 32, align: 32, offset: 192)
+!32 = !DIDerivedType(tag: DW_TAG_member, name: "TYPE", scope: !22, file: !4, line: 21, baseType: !3, size: 32, align: 32, offset: 224)
+!33 = !DIDerivedType(tag: DW_TAG_member, name: "NEXT", scope: !22, file: !4, line: 22, baseType: !21, size: 64, align: 64, offset: 256)
+!34 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !35, size: 64, align: 64)
+!35 = !DIDerivedType(tag: DW_TAG_typedef, name: "FILE", file: !36, line: 48, baseType: !37)
+!36 = !DIFile(filename: "/usr/include/stdio.h", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/simulator")
+!37 = !DICompositeType(tag: DW_TAG_structure_type, name: "_IO_FILE", file: !38, line: 241, size: 1728, align: 64, elements: !39)
+!38 = !DIFile(filename: "/usr/include/libio.h", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/simulator")
+!39 = !{!40, !41, !43, !44, !45, !46, !47, !48, !49, !50, !51, !52, !53, !61, !62, !63, !64, !68, !70, !72, !76, !79, !81, !82, !83, !84, !85, !89, !90}
+!40 = !DIDerivedType(tag: DW_TAG_member, name: "_flags", scope: !37, file: !38, line: 242, baseType: !14, size: 32, align: 32)
+!41 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_read_ptr", scope: !37, file: !38, line: 247, baseType: !42, size: 64, align: 64, offset: 64)
+!42 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !26, size: 64, align: 64)
+!43 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_read_end", scope: !37, file: !38, line: 248, baseType: !42, size: 64, align: 64, offset: 128)
+!44 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_read_base", scope: !37, file: !38, line: 249, baseType: !42, size: 64, align: 64, offset: 192)
+!45 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_write_base", scope: !37, file: !38, line: 250, baseType: !42, size: 64, align: 64, offset: 256)
+!46 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_write_ptr", scope: !37, file: !38, line: 251, baseType: !42, size: 64, align: 64, offset: 320)
+!47 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_write_end", scope: !37, file: !38, line: 252, baseType: !42, size: 64, align: 64, offset: 384)
+!48 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_buf_base", scope: !37, file: !38, line: 253, baseType: !42, size: 64, align: 64, offset: 448)
+!49 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_buf_end", scope: !37, file: !38, line: 254, baseType: !42, size: 64, align: 64, offset: 512)
+!50 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_save_base", scope: !37, file: !38, line: 256, baseType: !42, size: 64, align: 64, offset: 576)
+!51 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_backup_base", scope: !37, file: !38, line: 257, baseType: !42, size: 64, align: 64, offset: 640)
+!52 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_save_end", scope: !37, file: !38, line: 258, baseType: !42, size: 64, align: 64, offset: 704)
+!53 = !DIDerivedType(tag: DW_TAG_member, name: "_markers", scope: !37, file: !38, line: 260, baseType: !54, size: 64, align: 64, offset: 768)
+!54 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !55, size: 64, align: 64)
+!55 = !DICompositeType(tag: DW_TAG_structure_type, name: "_IO_marker", file: !38, line: 156, size: 192, align: 64, elements: !56)
+!56 = !{!57, !58, !60}
+!57 = !DIDerivedType(tag: DW_TAG_member, name: "_next", scope: !55, file: !38, line: 157, baseType: !54, size: 64, align: 64)
+!58 = !DIDerivedType(tag: DW_TAG_member, name: "_sbuf", scope: !55, file: !38, line: 158, baseType: !59, size: 64, align: 64, offset: 64)
+!59 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !37, size: 64, align: 64)
+!60 = !DIDerivedType(tag: DW_TAG_member, name: "_pos", scope: !55, file: !38, line: 162, baseType: !14, size: 32, align: 32, offset: 128)
+!61 = !DIDerivedType(tag: DW_TAG_member, name: "_chain", scope: !37, file: !38, line: 262, baseType: !59, size: 64, align: 64, offset: 832)
+!62 = !DIDerivedType(tag: DW_TAG_member, name: "_fileno", scope: !37, file: !38, line: 264, baseType: !14, size: 32, align: 32, offset: 896)
+!63 = !DIDerivedType(tag: DW_TAG_member, name: "_flags2", scope: !37, file: !38, line: 268, baseType: !14, size: 32, align: 32, offset: 928)
+!64 = !DIDerivedType(tag: DW_TAG_member, name: "_old_offset", scope: !37, file: !38, line: 270, baseType: !65, size: 64, align: 64, offset: 960)
+!65 = !DIDerivedType(tag: DW_TAG_typedef, name: "__off_t", file: !66, line: 131, baseType: !67)
+!66 = !DIFile(filename: "/usr/include/x86_64-linux-gnu/bits/types.h", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/simulator")
+!67 = !DIBasicType(name: "long int", size: 64, align: 64, encoding: DW_ATE_signed)
+!68 = !DIDerivedType(tag: DW_TAG_member, name: "_cur_column", scope: !37, file: !38, line: 274, baseType: !69, size: 16, align: 16, offset: 1024)
+!69 = !DIBasicType(name: "unsigned short", size: 16, align: 16, encoding: DW_ATE_unsigned)
+!70 = !DIDerivedType(tag: DW_TAG_member, name: "_vtable_offset", scope: !37, file: !38, line: 275, baseType: !71, size: 8, align: 8, offset: 1040)
+!71 = !DIBasicType(name: "signed char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!72 = !DIDerivedType(tag: DW_TAG_member, name: "_shortbuf", scope: !37, file: !38, line: 276, baseType: !73, size: 8, align: 8, offset: 1048)
+!73 = !DICompositeType(tag: DW_TAG_array_type, baseType: !26, size: 8, align: 8, elements: !74)
+!74 = !{!75}
+!75 = !DISubrange(count: 1)
+!76 = !DIDerivedType(tag: DW_TAG_member, name: "_lock", scope: !37, file: !38, line: 280, baseType: !77, size: 64, align: 64, offset: 1088)
+!77 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !78, size: 64, align: 64)
+!78 = !DIDerivedType(tag: DW_TAG_typedef, name: "_IO_lock_t", file: !38, line: 150, baseType: null)
+!79 = !DIDerivedType(tag: DW_TAG_member, name: "_offset", scope: !37, file: !38, line: 289, baseType: !80, size: 64, align: 64, offset: 1152)
+!80 = !DIDerivedType(tag: DW_TAG_typedef, name: "__off64_t", file: !66, line: 132, baseType: !67)
+!81 = !DIDerivedType(tag: DW_TAG_member, name: "__pad1", scope: !37, file: !38, line: 297, baseType: !13, size: 64, align: 64, offset: 1216)
+!82 = !DIDerivedType(tag: DW_TAG_member, name: "__pad2", scope: !37, file: !38, line: 298, baseType: !13, size: 64, align: 64, offset: 1280)
+!83 = !DIDerivedType(tag: DW_TAG_member, name: "__pad3", scope: !37, file: !38, line: 299, baseType: !13, size: 64, align: 64, offset: 1344)
+!84 = !DIDerivedType(tag: DW_TAG_member, name: "__pad4", scope: !37, file: !38, line: 300, baseType: !13, size: 64, align: 64, offset: 1408)
+!85 = !DIDerivedType(tag: DW_TAG_member, name: "__pad5", scope: !37, file: !38, line: 302, baseType: !86, size: 64, align: 64, offset: 1472)
+!86 = !DIDerivedType(tag: DW_TAG_typedef, name: "size_t", file: !87, line: 62, baseType: !88)
+!87 = !DIFile(filename: "/home/gleison/lge/llvm-3.7-src/build-debug/bin/../lib/clang/3.7.0/include/stddef.h", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/simulator")
+!88 = !DIBasicType(name: "long unsigned int", size: 64, align: 64, encoding: DW_ATE_unsigned)
+!89 = !DIDerivedType(tag: DW_TAG_member, name: "_mode", scope: !37, file: !38, line: 303, baseType: !14, size: 32, align: 32, offset: 1536)
+!90 = !DIDerivedType(tag: DW_TAG_member, name: "_unused2", scope: !37, file: !38, line: 305, baseType: !91, size: 160, align: 8, offset: 1568)
+!91 = !DICompositeType(tag: DW_TAG_array_type, baseType: !26, size: 160, align: 8, elements: !92)
+!92 = !{!93}
+!93 = !DISubrange(count: 20)
+!94 = !{}
+!95 = !DISubprogram(name: "PRT_SYM_TAB", scope: !17, file: !17, line: 50, type: !18, isLocal: false, isDefinition: true, scopeLine: 50, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.SYMBOL_TABLE_ENTRY*, %struct._IO_FILE*)* @PRT_SYM_TAB, variables: !94)
+!96 = !DISubprogram(name: "OUTPUT_TABLE", scope: !17, file: !17, line: 59, type: !18, isLocal: false, isDefinition: true, scopeLine: 59, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.SYMBOL_TABLE_ENTRY*, %struct._IO_FILE*)* @OUTPUT_TABLE, variables: !94)
+!97 = !DISubprogram(name: "PRINT_EXEC", scope: !17, file: !17, line: 88, type: !98, isLocal: false, isDefinition: true, scopeLine: 88, flags: DIFlagPrototyped, isOptimized: false, function: void (i8*, %struct.SYMBOL_TABLE_ENTRY*, %struct._IO_FILE*)* @PRINT_EXEC, variables: !94)
+!98 = !DISubroutineType(types: !99)
+!99 = !{null, !100, !20, !34}
+!100 = !DIDerivedType(tag: DW_TAG_typedef, name: "MEM_SPACE", file: !101, line: 9, baseType: !42)
+!101 = !DIFile(filename: "./memory.h", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/simulator")
+!102 = !{!103, !105}
+!103 = !DIGlobalVariable(name: "START_ADDRESS", scope: !0, file: !104, line: 8, type: !14, isLocal: false, isDefinition: true, variable: i32* @START_ADDRESS)
+!104 = !DIFile(filename: "./load.h", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/simulator")
+!105 = !DIGlobalVariable(name: "MAIN_ROUTINE", scope: !0, file: !104, line: 12, type: !25, isLocal: false, isDefinition: true, variable: [9 x i8]* @MAIN_ROUTINE)
+!106 = !{i32 2, !"Dwarf Version", i32 4}
+!107 = !{i32 2, !"Debug Info Version", i32 3}
+!108 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!109 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "SYM_TAB", arg: 1, scope: !16, file: !17, line: 18, type: !20)
+!110 = !DIExpression()
+!111 = !DILocation(line: 18, column: 31, scope: !16)
+!112 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "OUTPUT", arg: 2, scope: !16, file: !17, line: 18, type: !34)
+!113 = !DILocation(line: 18, column: 46, scope: !16)
+!114 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "TEMP", scope: !16, file: !17, line: 19, type: !115)
+!115 = !DICompositeType(tag: DW_TAG_array_type, baseType: !26, size: 48, align: 8, elements: !116)
+!116 = !{!117}
+!117 = !DISubrange(count: 6)
+!118 = !DILocation(line: 19, column: 8, scope: !16)
+!119 = !DILocation(line: 22, column: 7, scope: !120)
+!120 = distinct !DILexicalBlock(scope: !16, file: !17, line: 22, column: 7)
+!121 = !DILocation(line: 22, column: 15, scope: !120)
+!122 = !DILocation(line: 22, column: 7, scope: !16)
+!123 = !DILocation(line: 24, column: 19, scope: !124)
+!124 = distinct !DILexicalBlock(scope: !120, file: !17, line: 22, column: 24)
+!125 = !DILocation(line: 24, column: 28, scope: !124)
+!126 = !DILocation(line: 24, column: 34, scope: !124)
+!127 = !DILocation(line: 24, column: 5, scope: !124)
+!128 = !DILocation(line: 26, column: 11, scope: !129)
+!129 = distinct !DILexicalBlock(scope: !124, file: !17, line: 26, column: 9)
+!130 = !DILocation(line: 26, column: 20, scope: !129)
+!131 = !DILocation(line: 26, column: 25, scope: !129)
+!132 = !DILocation(line: 26, column: 9, scope: !124)
+!133 = !DILocation(line: 27, column: 21, scope: !129)
+!134 = !DILocation(line: 27, column: 49, scope: !129)
+!135 = !DILocation(line: 27, column: 58, scope: !129)
+!136 = !DILocation(line: 27, column: 47, scope: !129)
+!137 = !DILocation(line: 27, column: 13, scope: !129)
+!138 = !DILocation(line: 27, column: 7, scope: !129)
+!139 = !DILocation(line: 29, column: 21, scope: !129)
+!140 = !DILocation(line: 29, column: 49, scope: !129)
+!141 = !DILocation(line: 29, column: 58, scope: !129)
+!142 = !DILocation(line: 29, column: 47, scope: !129)
+!143 = !DILocation(line: 29, column: 13, scope: !129)
+!144 = !DILocation(line: 31, column: 18, scope: !124)
+!145 = !DILocation(line: 31, column: 27, scope: !124)
+!146 = !DILocation(line: 32, column: 60, scope: !124)
+!147 = !DILocation(line: 31, column: 5, scope: !124)
+!148 = !DILocation(line: 34, column: 11, scope: !149)
+!149 = distinct !DILexicalBlock(scope: !124, file: !17, line: 34, column: 9)
+!150 = !DILocation(line: 34, column: 20, scope: !149)
+!151 = !DILocation(line: 34, column: 25, scope: !149)
+!152 = !DILocation(line: 34, column: 9, scope: !124)
+!153 = !DILocation(line: 35, column: 21, scope: !149)
+!154 = !DILocation(line: 35, column: 13, scope: !149)
+!155 = !DILocation(line: 35, column: 7, scope: !149)
+!156 = !DILocation(line: 37, column: 21, scope: !149)
+!157 = !DILocation(line: 37, column: 39, scope: !149)
+!158 = !DILocation(line: 37, column: 13, scope: !149)
+!159 = !DILocation(line: 39, column: 11, scope: !160)
+!160 = distinct !DILexicalBlock(scope: !124, file: !17, line: 39, column: 9)
+!161 = !DILocation(line: 39, column: 20, scope: !160)
+!162 = !DILocation(line: 39, column: 25, scope: !160)
+!163 = !DILocation(line: 39, column: 9, scope: !124)
+!164 = !DILocation(line: 40, column: 20, scope: !165)
+!165 = distinct !DILexicalBlock(scope: !160, file: !17, line: 39, column: 36)
+!166 = !DILocation(line: 40, column: 29, scope: !165)
+!167 = !DILocation(line: 41, column: 66, scope: !165)
+!168 = !DILocation(line: 40, column: 7, scope: !165)
+!169 = !DILocation(line: 42, column: 21, scope: !165)
+!170 = !DILocation(line: 42, column: 37, scope: !165)
+!171 = !DILocation(line: 42, column: 13, scope: !165)
+!172 = !DILocation(line: 43, column: 5, scope: !165)
+!173 = !DILocation(line: 44, column: 21, scope: !160)
+!174 = !DILocation(line: 44, column: 13, scope: !160)
+!175 = !DILocation(line: 45, column: 3, scope: !124)
+!176 = !DILocation(line: 46, column: 1, scope: !16)
+!177 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "SYM_TAB", arg: 1, scope: !95, file: !17, line: 50, type: !20)
+!178 = !DILocation(line: 50, column: 31, scope: !95)
+!179 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "OUTPUT", arg: 2, scope: !95, file: !17, line: 50, type: !34)
+!180 = !DILocation(line: 50, column: 46, scope: !95)
+!181 = !DILocation(line: 51, column: 17, scope: !95)
+!182 = !DILocation(line: 51, column: 9, scope: !95)
+!183 = !DILocation(line: 52, column: 17, scope: !95)
+!184 = !DILocation(line: 52, column: 9, scope: !95)
+!185 = !DILocation(line: 53, column: 17, scope: !95)
+!186 = !DILocation(line: 53, column: 9, scope: !95)
+!187 = !DILocation(line: 54, column: 15, scope: !95)
+!188 = !DILocation(line: 54, column: 24, scope: !95)
+!189 = !DILocation(line: 54, column: 3, scope: !95)
+!190 = !DILocation(line: 55, column: 1, scope: !95)
+!191 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "SYM_TAB", arg: 1, scope: !96, file: !17, line: 59, type: !20)
+!192 = !DILocation(line: 59, column: 32, scope: !96)
+!193 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "OUTPUT", arg: 2, scope: !96, file: !17, line: 59, type: !34)
+!194 = !DILocation(line: 59, column: 47, scope: !96)
+!195 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "TEMP", scope: !96, file: !17, line: 60, type: !196)
+!196 = !DICompositeType(tag: DW_TAG_array_type, baseType: !26, size: 56, align: 8, elements: !197)
+!197 = !{!198}
+!198 = !DISubrange(count: 7)
+!199 = !DILocation(line: 60, column: 8, scope: !96)
+!200 = !DILocation(line: 63, column: 7, scope: !201)
+!201 = distinct !DILexicalBlock(scope: !96, file: !17, line: 63, column: 7)
+!202 = !DILocation(line: 63, column: 15, scope: !201)
+!203 = !DILocation(line: 63, column: 7, scope: !96)
+!204 = !DILocation(line: 64, column: 20, scope: !205)
+!205 = distinct !DILexicalBlock(scope: !201, file: !17, line: 63, column: 24)
+!206 = !DILocation(line: 64, column: 29, scope: !205)
+!207 = !DILocation(line: 64, column: 35, scope: !205)
+!208 = !DILocation(line: 64, column: 5, scope: !205)
+!209 = !DILocation(line: 66, column: 11, scope: !210)
+!210 = distinct !DILexicalBlock(scope: !205, file: !17, line: 66, column: 9)
+!211 = !DILocation(line: 66, column: 20, scope: !210)
+!212 = !DILocation(line: 66, column: 25, scope: !210)
+!213 = !DILocation(line: 66, column: 9, scope: !205)
+!214 = !DILocation(line: 67, column: 21, scope: !210)
+!215 = !DILocation(line: 67, column: 38, scope: !210)
+!216 = !DILocation(line: 67, column: 47, scope: !210)
+!217 = !DILocation(line: 67, column: 36, scope: !210)
+!218 = !DILocation(line: 67, column: 13, scope: !210)
+!219 = !DILocation(line: 67, column: 7, scope: !210)
+!220 = !DILocation(line: 68, column: 24, scope: !221)
+!221 = distinct !DILexicalBlock(scope: !210, file: !17, line: 68, column: 14)
+!222 = !DILocation(line: 68, column: 33, scope: !221)
+!223 = !DILocation(line: 68, column: 22, scope: !221)
+!224 = !DILocation(line: 68, column: 15, scope: !221)
+!225 = !DILocation(line: 68, column: 14, scope: !210)
+!226 = !DILocation(line: 69, column: 21, scope: !221)
+!227 = !DILocation(line: 69, column: 38, scope: !221)
+!228 = !DILocation(line: 69, column: 47, scope: !221)
+!229 = !DILocation(line: 69, column: 36, scope: !221)
+!230 = !DILocation(line: 69, column: 13, scope: !221)
+!231 = !DILocation(line: 69, column: 7, scope: !221)
+!232 = !DILocation(line: 71, column: 21, scope: !221)
+!233 = !DILocation(line: 71, column: 40, scope: !221)
+!234 = !DILocation(line: 71, column: 49, scope: !221)
+!235 = !DILocation(line: 71, column: 38, scope: !221)
+!236 = !DILocation(line: 71, column: 59, scope: !221)
+!237 = !DILocation(line: 71, column: 68, scope: !221)
+!238 = !DILocation(line: 71, column: 57, scope: !221)
+!239 = !DILocation(line: 71, column: 13, scope: !221)
+!240 = !DILocation(line: 73, column: 18, scope: !205)
+!241 = !DILocation(line: 73, column: 27, scope: !205)
+!242 = !DILocation(line: 74, column: 64, scope: !205)
+!243 = !DILocation(line: 73, column: 5, scope: !205)
+!244 = !DILocation(line: 75, column: 19, scope: !205)
+!245 = !DILocation(line: 75, column: 33, scope: !205)
+!246 = !DILocation(line: 75, column: 11, scope: !205)
+!247 = !DILocation(line: 77, column: 11, scope: !248)
+!248 = distinct !DILexicalBlock(scope: !205, file: !17, line: 77, column: 9)
+!249 = !DILocation(line: 77, column: 20, scope: !248)
+!250 = !DILocation(line: 77, column: 25, scope: !248)
+!251 = !DILocation(line: 77, column: 9, scope: !205)
+!252 = !DILocation(line: 78, column: 20, scope: !253)
+!253 = distinct !DILexicalBlock(scope: !248, file: !17, line: 77, column: 36)
+!254 = !DILocation(line: 78, column: 29, scope: !253)
+!255 = !DILocation(line: 79, column: 66, scope: !253)
+!256 = !DILocation(line: 78, column: 7, scope: !253)
+!257 = !DILocation(line: 80, column: 21, scope: !253)
+!258 = !DILocation(line: 80, column: 35, scope: !253)
+!259 = !DILocation(line: 80, column: 13, scope: !253)
+!260 = !DILocation(line: 81, column: 5, scope: !253)
+!261 = !DILocation(line: 82, column: 19, scope: !205)
+!262 = !DILocation(line: 82, column: 11, scope: !205)
+!263 = !DILocation(line: 83, column: 3, scope: !205)
+!264 = !DILocation(line: 84, column: 1, scope: !96)
+!265 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "MEMORY", arg: 1, scope: !97, file: !17, line: 88, type: !100)
+!266 = !DILocation(line: 88, column: 27, scope: !97)
+!267 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "SYM_TAB", arg: 2, scope: !97, file: !17, line: 88, type: !20)
+!268 = !DILocation(line: 88, column: 48, scope: !97)
+!269 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "OUTPUT", arg: 3, scope: !97, file: !17, line: 88, type: !34)
+!270 = !DILocation(line: 88, column: 63, scope: !97)
+!271 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ADDRESS", scope: !97, file: !17, line: 89, type: !115)
+!272 = !DILocation(line: 89, column: 8, scope: !97)
+!273 = !DILocation(line: 91, column: 14, scope: !97)
+!274 = !DILocation(line: 91, column: 72, scope: !97)
+!275 = !DILocation(line: 91, column: 3, scope: !97)
+!276 = !DILocation(line: 92, column: 17, scope: !97)
+!277 = !DILocation(line: 92, column: 50, scope: !97)
+!278 = !DILocation(line: 92, column: 9, scope: !97)
+!279 = !DILocation(line: 94, column: 16, scope: !97)
+!280 = !DILocation(line: 94, column: 25, scope: !97)
+!281 = !DILocation(line: 94, column: 3, scope: !97)
+!282 = !DILocation(line: 95, column: 14, scope: !97)
+!283 = !DILocation(line: 95, column: 22, scope: !97)
+!284 = !DILocation(line: 95, column: 3, scope: !97)
+!285 = !DILocation(line: 96, column: 1, scope: !97)

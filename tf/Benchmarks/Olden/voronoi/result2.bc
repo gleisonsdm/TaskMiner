@@ -1,0 +1,315 @@
+; ModuleID = 'result.bc'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct.VEC2 = type { double, double, double }
+
+; Function Attrs: nounwind uwtable
+define double @V2_cprod(%struct.VEC2* byval align 8 %u, %struct.VEC2* byval align 8 %v) #0 {
+entry:
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %u, metadata !32, metadata !33), !dbg !34
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %v, metadata !35, metadata !33), !dbg !36
+  %x = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 0, !dbg !37
+  %tmp = load double, double* %x, align 8, !dbg !37
+  %y = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 1, !dbg !38
+  %tmp1 = load double, double* %y, align 8, !dbg !38
+  %mul = fmul double %tmp, %tmp1, !dbg !39
+  %y1 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 1, !dbg !40
+  %tmp2 = load double, double* %y1, align 8, !dbg !40
+  %x2 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 0, !dbg !41
+  %tmp3 = load double, double* %x2, align 8, !dbg !41
+  %mul3 = fmul double %tmp2, %tmp3, !dbg !42
+  %sub = fsub double %mul, %mul3, !dbg !43
+  ret double %sub, !dbg !44
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind uwtable
+define double @V2_dot(%struct.VEC2* byval align 8 %u, %struct.VEC2* byval align 8 %v) #0 {
+entry:
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %u, metadata !45, metadata !33), !dbg !46
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %v, metadata !47, metadata !33), !dbg !48
+  %x = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 0, !dbg !49
+  %tmp = load double, double* %x, align 8, !dbg !49
+  %x1 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 0, !dbg !50
+  %tmp1 = load double, double* %x1, align 8, !dbg !50
+  %mul = fmul double %tmp, %tmp1, !dbg !51
+  %y = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 1, !dbg !52
+  %tmp2 = load double, double* %y, align 8, !dbg !52
+  %y2 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 1, !dbg !53
+  %tmp3 = load double, double* %y2, align 8, !dbg !53
+  %mul3 = fmul double %tmp2, %tmp3, !dbg !54
+  %add = fadd double %mul, %mul3, !dbg !55
+  ret double %add, !dbg !56
+}
+
+; Function Attrs: nounwind uwtable
+define void @V2_times(%struct.VEC2* noalias sret %agg.result, double %c, %struct.VEC2* byval align 8 %v) #0 {
+entry:
+  %ans = alloca %struct.VEC2, align 8
+  call void @llvm.dbg.value(metadata double %c, i64 0, metadata !57, metadata !33), !dbg !58
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %v, metadata !59, metadata !33), !dbg !60
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %ans, metadata !61, metadata !33), !dbg !62
+  %x = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 0, !dbg !63
+  %tmp1 = load double, double* %x, align 8, !dbg !63
+  %mul = fmul double %c, %tmp1, !dbg !64
+  %x1 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %ans, i32 0, i32 0, !dbg !65
+  store double %mul, double* %x1, align 8, !dbg !66
+  %y = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 1, !dbg !67
+  %tmp3 = load double, double* %y, align 8, !dbg !67
+  %mul2 = fmul double %c, %tmp3, !dbg !68
+  %y3 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %ans, i32 0, i32 1, !dbg !69
+  store double %mul2, double* %y3, align 8, !dbg !70
+  %tmp4 = bitcast %struct.VEC2* %agg.result to i8*, !dbg !71
+  %tmp5 = bitcast %struct.VEC2* %ans to i8*, !dbg !71
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %tmp4, i8* %tmp5, i64 24, i32 8, i1 false), !dbg !71
+  ret void, !dbg !72
+}
+
+; Function Attrs: nounwind
+declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture, i8* nocapture readonly, i64, i32, i1) #2
+
+; Function Attrs: nounwind uwtable
+define void @V2_sum(%struct.VEC2* noalias sret %agg.result, %struct.VEC2* byval align 8 %u, %struct.VEC2* byval align 8 %v) #0 {
+entry:
+  %ans = alloca %struct.VEC2, align 8
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %u, metadata !73, metadata !33), !dbg !74
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %v, metadata !75, metadata !33), !dbg !76
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %ans, metadata !77, metadata !33), !dbg !78
+  %x = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 0, !dbg !79
+  %tmp = load double, double* %x, align 8, !dbg !79
+  %x1 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 0, !dbg !80
+  %tmp1 = load double, double* %x1, align 8, !dbg !80
+  %add = fadd double %tmp, %tmp1, !dbg !81
+  %x2 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %ans, i32 0, i32 0, !dbg !82
+  store double %add, double* %x2, align 8, !dbg !83
+  %y = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 1, !dbg !84
+  %tmp2 = load double, double* %y, align 8, !dbg !84
+  %y3 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 1, !dbg !85
+  %tmp3 = load double, double* %y3, align 8, !dbg !85
+  %add4 = fadd double %tmp2, %tmp3, !dbg !86
+  %y5 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %ans, i32 0, i32 1, !dbg !87
+  store double %add4, double* %y5, align 8, !dbg !88
+  %tmp4 = bitcast %struct.VEC2* %agg.result to i8*, !dbg !89
+  %tmp5 = bitcast %struct.VEC2* %ans to i8*, !dbg !89
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %tmp4, i8* %tmp5, i64 24, i32 8, i1 false), !dbg !89
+  ret void, !dbg !90
+}
+
+; Function Attrs: nounwind uwtable
+define void @V2_sub(%struct.VEC2* noalias sret %agg.result, %struct.VEC2* byval align 8 %u, %struct.VEC2* byval align 8 %v) #0 {
+entry:
+  %ans = alloca %struct.VEC2, align 8
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %u, metadata !91, metadata !33), !dbg !92
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %v, metadata !93, metadata !33), !dbg !94
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %ans, metadata !95, metadata !33), !dbg !96
+  %x = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 0, !dbg !97
+  %tmp = load double, double* %x, align 8, !dbg !97
+  %x1 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 0, !dbg !98
+  %tmp1 = load double, double* %x1, align 8, !dbg !98
+  %sub = fsub double %tmp, %tmp1, !dbg !99
+  %x2 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %ans, i32 0, i32 0, !dbg !100
+  store double %sub, double* %x2, align 8, !dbg !101
+  %y = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 1, !dbg !102
+  %tmp2 = load double, double* %y, align 8, !dbg !102
+  %y3 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 1, !dbg !103
+  %tmp3 = load double, double* %y3, align 8, !dbg !103
+  %sub4 = fsub double %tmp2, %tmp3, !dbg !104
+  %y5 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %ans, i32 0, i32 1, !dbg !105
+  store double %sub4, double* %y5, align 8, !dbg !106
+  %tmp4 = bitcast %struct.VEC2* %agg.result to i8*, !dbg !107
+  %tmp5 = bitcast %struct.VEC2* %ans to i8*, !dbg !107
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %tmp4, i8* %tmp5, i64 24, i32 8, i1 false), !dbg !107
+  ret void, !dbg !108
+}
+
+; Function Attrs: nounwind uwtable
+define double @V2_magn(%struct.VEC2* byval align 8 %u) #0 {
+entry:
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %u, metadata !109, metadata !33), !dbg !110
+  %x = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 0, !dbg !111
+  %tmp = load double, double* %x, align 8, !dbg !111
+  %x1 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 0, !dbg !112
+  %tmp1 = load double, double* %x1, align 8, !dbg !112
+  %mul = fmul double %tmp, %tmp1, !dbg !113
+  %y = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 1, !dbg !114
+  %tmp2 = load double, double* %y, align 8, !dbg !114
+  %y2 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %u, i32 0, i32 1, !dbg !115
+  %tmp3 = load double, double* %y2, align 8, !dbg !115
+  %mul3 = fmul double %tmp2, %tmp3, !dbg !116
+  %add = fadd double %mul, %mul3, !dbg !117
+  %call = call double @sqrt(double %add) #2, !dbg !118
+  ret double %call, !dbg !119
+}
+
+; Function Attrs: nounwind
+declare double @sqrt(double) #3
+
+; Function Attrs: nounwind uwtable
+define void @V2_cross(%struct.VEC2* noalias sret %agg.result, %struct.VEC2* byval align 8 %v) #0 {
+entry:
+  %ans = alloca %struct.VEC2, align 8
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %v, metadata !120, metadata !33), !dbg !121
+  call void @llvm.dbg.declare(metadata %struct.VEC2* %ans, metadata !122, metadata !33), !dbg !123
+  %y = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 1, !dbg !124
+  %tmp = load double, double* %y, align 8, !dbg !124
+  %x = getelementptr inbounds %struct.VEC2, %struct.VEC2* %ans, i32 0, i32 0, !dbg !125
+  store double %tmp, double* %x, align 8, !dbg !126
+  %x1 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %v, i32 0, i32 0, !dbg !127
+  %tmp1 = load double, double* %x1, align 8, !dbg !127
+  %sub = fsub double -0.000000e+00, %tmp1, !dbg !128
+  %y2 = getelementptr inbounds %struct.VEC2, %struct.VEC2* %ans, i32 0, i32 1, !dbg !129
+  store double %sub, double* %y2, align 8, !dbg !130
+  %tmp2 = bitcast %struct.VEC2* %agg.result to i8*, !dbg !131
+  %tmp3 = bitcast %struct.VEC2* %ans to i8*, !dbg !131
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %tmp2, i8* %tmp3, i64 24, i32 8, i1 false), !dbg !131
+  ret void, !dbg !132
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.value(metadata, i64, metadata, metadata) #1
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { nounwind }
+attributes #3 = { nounwind "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!29, !30}
+!llvm.ident = !{!31}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, subprograms: !3)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/Olden/voronoi")
+!2 = !{}
+!3 = !{!4, !15, !16, !19, !22, !23, !26}
+!4 = !DISubprogram(name: "V2_cprod", scope: !5, file: !5, line: 15, type: !6, isLocal: false, isDefinition: true, scopeLine: 15, flags: DIFlagPrototyped, isOptimized: false, function: double (%struct.VEC2*, %struct.VEC2*)* @V2_cprod, variables: !2)
+!5 = !DIFile(filename: "/home/gleison/tf/Benchmarks/Olden/voronoi/tmp.c", directory: "/home/gleison/tf/Benchmarks/Olden/voronoi")
+!6 = !DISubroutineType(types: !7)
+!7 = !{!8, !9, !9}
+!8 = !DIBasicType(name: "double", size: 64, align: 64, encoding: DW_ATE_float)
+!9 = !DICompositeType(tag: DW_TAG_structure_type, name: "VEC2", file: !10, line: 27, size: 192, align: 64, elements: !11)
+!10 = !DIFile(filename: "./defines.h", directory: "/home/gleison/tf/Benchmarks/Olden/voronoi")
+!11 = !{!12, !13, !14}
+!12 = !DIDerivedType(tag: DW_TAG_member, name: "x", scope: !9, file: !10, line: 28, baseType: !8, size: 64, align: 64)
+!13 = !DIDerivedType(tag: DW_TAG_member, name: "y", scope: !9, file: !10, line: 28, baseType: !8, size: 64, align: 64, offset: 64)
+!14 = !DIDerivedType(tag: DW_TAG_member, name: "norm", scope: !9, file: !10, line: 29, baseType: !8, size: 64, align: 64, offset: 128)
+!15 = !DISubprogram(name: "V2_dot", scope: !5, file: !5, line: 21, type: !6, isLocal: false, isDefinition: true, scopeLine: 21, flags: DIFlagPrototyped, isOptimized: false, function: double (%struct.VEC2*, %struct.VEC2*)* @V2_dot, variables: !2)
+!16 = !DISubprogram(name: "V2_times", scope: !5, file: !5, line: 27, type: !17, isLocal: false, isDefinition: true, scopeLine: 27, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.VEC2*, double, %struct.VEC2*)* @V2_times, variables: !2)
+!17 = !DISubroutineType(types: !18)
+!18 = !{!9, !8, !9}
+!19 = !DISubprogram(name: "V2_sum", scope: !5, file: !5, line: 36, type: !20, isLocal: false, isDefinition: true, scopeLine: 36, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.VEC2*, %struct.VEC2*, %struct.VEC2*)* @V2_sum, variables: !2)
+!20 = !DISubroutineType(types: !21)
+!21 = !{!9, !9, !9}
+!22 = !DISubprogram(name: "V2_sub", scope: !5, file: !5, line: 44, type: !20, isLocal: false, isDefinition: true, scopeLine: 44, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.VEC2*, %struct.VEC2*, %struct.VEC2*)* @V2_sub, variables: !2)
+!23 = !DISubprogram(name: "V2_magn", scope: !5, file: !5, line: 53, type: !24, isLocal: false, isDefinition: true, scopeLine: 53, flags: DIFlagPrototyped, isOptimized: false, function: double (%struct.VEC2*)* @V2_magn, variables: !2)
+!24 = !DISubroutineType(types: !25)
+!25 = !{!8, !9}
+!26 = !DISubprogram(name: "V2_cross", scope: !5, file: !5, line: 58, type: !27, isLocal: false, isDefinition: true, scopeLine: 58, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.VEC2*, %struct.VEC2*)* @V2_cross, variables: !2)
+!27 = !DISubroutineType(types: !28)
+!28 = !{!9, !9}
+!29 = !{i32 2, !"Dwarf Version", i32 4}
+!30 = !{i32 2, !"Debug Info Version", i32 3}
+!31 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!32 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "u", arg: 1, scope: !4, file: !5, line: 15, type: !9)
+!33 = !DIExpression()
+!34 = !DILocation(line: 15, column: 29, scope: !4)
+!35 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "v", arg: 2, scope: !4, file: !5, line: 15, type: !9)
+!36 = !DILocation(line: 15, column: 44, scope: !4)
+!37 = !DILocation(line: 16, column: 13, scope: !4)
+!38 = !DILocation(line: 16, column: 19, scope: !4)
+!39 = !DILocation(line: 16, column: 15, scope: !4)
+!40 = !DILocation(line: 16, column: 25, scope: !4)
+!41 = !DILocation(line: 16, column: 31, scope: !4)
+!42 = !DILocation(line: 16, column: 27, scope: !4)
+!43 = !DILocation(line: 16, column: 21, scope: !4)
+!44 = !DILocation(line: 16, column: 3, scope: !4)
+!45 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "u", arg: 1, scope: !15, file: !5, line: 21, type: !9)
+!46 = !DILocation(line: 21, column: 27, scope: !15)
+!47 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "v", arg: 2, scope: !15, file: !5, line: 21, type: !9)
+!48 = !DILocation(line: 21, column: 42, scope: !15)
+!49 = !DILocation(line: 22, column: 13, scope: !15)
+!50 = !DILocation(line: 22, column: 19, scope: !15)
+!51 = !DILocation(line: 22, column: 15, scope: !15)
+!52 = !DILocation(line: 22, column: 25, scope: !15)
+!53 = !DILocation(line: 22, column: 31, scope: !15)
+!54 = !DILocation(line: 22, column: 27, scope: !15)
+!55 = !DILocation(line: 22, column: 21, scope: !15)
+!56 = !DILocation(line: 22, column: 3, scope: !15)
+!57 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "c", arg: 1, scope: !16, file: !5, line: 27, type: !8)
+!58 = !DILocation(line: 27, column: 29, scope: !16)
+!59 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "v", arg: 2, scope: !16, file: !5, line: 27, type: !9)
+!60 = !DILocation(line: 27, column: 44, scope: !16)
+!61 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ans", scope: !16, file: !5, line: 28, type: !9)
+!62 = !DILocation(line: 28, column: 15, scope: !16)
+!63 = !DILocation(line: 29, column: 17, scope: !16)
+!64 = !DILocation(line: 29, column: 13, scope: !16)
+!65 = !DILocation(line: 29, column: 7, scope: !16)
+!66 = !DILocation(line: 29, column: 9, scope: !16)
+!67 = !DILocation(line: 30, column: 17, scope: !16)
+!68 = !DILocation(line: 30, column: 13, scope: !16)
+!69 = !DILocation(line: 30, column: 7, scope: !16)
+!70 = !DILocation(line: 30, column: 9, scope: !16)
+!71 = !DILocation(line: 31, column: 11, scope: !16)
+!72 = !DILocation(line: 31, column: 3, scope: !16)
+!73 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "u", arg: 1, scope: !19, file: !5, line: 36, type: !9)
+!74 = !DILocation(line: 36, column: 32, scope: !19)
+!75 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "v", arg: 2, scope: !19, file: !5, line: 36, type: !9)
+!76 = !DILocation(line: 36, column: 47, scope: !19)
+!77 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ans", scope: !19, file: !5, line: 37, type: !9)
+!78 = !DILocation(line: 37, column: 15, scope: !19)
+!79 = !DILocation(line: 39, column: 13, scope: !19)
+!80 = !DILocation(line: 39, column: 19, scope: !19)
+!81 = !DILocation(line: 39, column: 15, scope: !19)
+!82 = !DILocation(line: 39, column: 7, scope: !19)
+!83 = !DILocation(line: 39, column: 9, scope: !19)
+!84 = !DILocation(line: 40, column: 13, scope: !19)
+!85 = !DILocation(line: 40, column: 19, scope: !19)
+!86 = !DILocation(line: 40, column: 15, scope: !19)
+!87 = !DILocation(line: 40, column: 7, scope: !19)
+!88 = !DILocation(line: 40, column: 9, scope: !19)
+!89 = !DILocation(line: 41, column: 11, scope: !19)
+!90 = !DILocation(line: 41, column: 3, scope: !19)
+!91 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "u", arg: 1, scope: !22, file: !5, line: 44, type: !9)
+!92 = !DILocation(line: 44, column: 32, scope: !22)
+!93 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "v", arg: 2, scope: !22, file: !5, line: 44, type: !9)
+!94 = !DILocation(line: 44, column: 47, scope: !22)
+!95 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ans", scope: !22, file: !5, line: 45, type: !9)
+!96 = !DILocation(line: 45, column: 15, scope: !22)
+!97 = !DILocation(line: 46, column: 13, scope: !22)
+!98 = !DILocation(line: 46, column: 19, scope: !22)
+!99 = !DILocation(line: 46, column: 15, scope: !22)
+!100 = !DILocation(line: 46, column: 7, scope: !22)
+!101 = !DILocation(line: 46, column: 9, scope: !22)
+!102 = !DILocation(line: 47, column: 13, scope: !22)
+!103 = !DILocation(line: 47, column: 19, scope: !22)
+!104 = !DILocation(line: 47, column: 15, scope: !22)
+!105 = !DILocation(line: 47, column: 7, scope: !22)
+!106 = !DILocation(line: 47, column: 9, scope: !22)
+!107 = !DILocation(line: 48, column: 11, scope: !22)
+!108 = !DILocation(line: 48, column: 3, scope: !22)
+!109 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "u", arg: 1, scope: !23, file: !5, line: 53, type: !9)
+!110 = !DILocation(line: 53, column: 28, scope: !23)
+!111 = !DILocation(line: 54, column: 18, scope: !23)
+!112 = !DILocation(line: 54, column: 24, scope: !23)
+!113 = !DILocation(line: 54, column: 20, scope: !23)
+!114 = !DILocation(line: 54, column: 30, scope: !23)
+!115 = !DILocation(line: 54, column: 36, scope: !23)
+!116 = !DILocation(line: 54, column: 32, scope: !23)
+!117 = !DILocation(line: 54, column: 26, scope: !23)
+!118 = !DILocation(line: 54, column: 11, scope: !23)
+!119 = !DILocation(line: 54, column: 3, scope: !23)
+!120 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "v", arg: 1, scope: !26, file: !5, line: 58, type: !9)
+!121 = !DILocation(line: 58, column: 34, scope: !26)
+!122 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ans", scope: !26, file: !5, line: 59, type: !9)
+!123 = !DILocation(line: 59, column: 15, scope: !26)
+!124 = !DILocation(line: 60, column: 13, scope: !26)
+!125 = !DILocation(line: 60, column: 7, scope: !26)
+!126 = !DILocation(line: 60, column: 9, scope: !26)
+!127 = !DILocation(line: 61, column: 14, scope: !26)
+!128 = !DILocation(line: 61, column: 11, scope: !26)
+!129 = !DILocation(line: 61, column: 7, scope: !26)
+!130 = !DILocation(line: 61, column: 9, scope: !26)
+!131 = !DILocation(line: 62, column: 11, scope: !26)
+!132 = !DILocation(line: 62, column: 3, scope: !26)

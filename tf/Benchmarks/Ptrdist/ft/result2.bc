@@ -1,0 +1,153 @@
+; ModuleID = 'result.bc'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct._Vertices = type { i32, %struct._Edges*, %struct._Vertices*, i32, %struct._Edges* }
+%struct._Edges = type { i32, %struct._Vertices*, %struct._Vertices*, %struct._Edges* }
+
+@.str = private unnamed_addr constant [10 x i8] c"delta > 0\00", align 1
+@.str.1 = private unnamed_addr constant [45 x i8] c"/home/gleison/tf/Benchmarks/Ptrdist/ft/tmp.c\00", align 1
+@__PRETTY_FUNCTION__.Subtract = private unnamed_addr constant [28 x i8] c"Item *Subtract(Item *, int)\00", align 1
+
+; Function Attrs: nounwind uwtable
+define i32 @LessThan(%struct._Vertices* %item1, %struct._Vertices* %item2) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct._Vertices* %item1, i64 0, metadata !38, metadata !39), !dbg !40
+  call void @llvm.dbg.value(metadata %struct._Vertices* %item2, i64 0, metadata !41, metadata !39), !dbg !42
+  %key = getelementptr inbounds %struct._Vertices, %struct._Vertices* %item1, i32 0, i32 3, !dbg !43
+  %tmp1 = load i32, i32* %key, align 4, !dbg !43
+  %key1 = getelementptr inbounds %struct._Vertices, %struct._Vertices* %item2, i32 0, i32 3, !dbg !44
+  %tmp3 = load i32, i32* %key1, align 4, !dbg !44
+  %cmp = icmp slt i32 %tmp1, %tmp3, !dbg !45
+  %conv = zext i1 %cmp to i32, !dbg !45
+  ret i32 %conv, !dbg !46
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind uwtable
+define i32 @Equal(%struct._Vertices* %item1, %struct._Vertices* %item2) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct._Vertices* %item1, i64 0, metadata !47, metadata !39), !dbg !48
+  call void @llvm.dbg.value(metadata %struct._Vertices* %item2, i64 0, metadata !49, metadata !39), !dbg !50
+  %key = getelementptr inbounds %struct._Vertices, %struct._Vertices* %item1, i32 0, i32 3, !dbg !51
+  %tmp1 = load i32, i32* %key, align 4, !dbg !51
+  %key1 = getelementptr inbounds %struct._Vertices, %struct._Vertices* %item2, i32 0, i32 3, !dbg !52
+  %tmp3 = load i32, i32* %key1, align 4, !dbg !52
+  %cmp = icmp eq i32 %tmp1, %tmp3, !dbg !53
+  %conv = zext i1 %cmp to i32, !dbg !53
+  ret i32 %conv, !dbg !54
+}
+
+; Function Attrs: nounwind uwtable
+define %struct._Vertices* @Subtract(%struct._Vertices* %item, i32 %delta) #0 {
+entry:
+  call void @llvm.dbg.value(metadata %struct._Vertices* %item, i64 0, metadata !55, metadata !39), !dbg !56
+  call void @llvm.dbg.value(metadata i32 %delta, i64 0, metadata !57, metadata !39), !dbg !58
+  %cmp = icmp sgt i32 %delta, 0, !dbg !59
+  br i1 %cmp, label %cond.true, label %cond.false, !dbg !59
+
+cond.true:                                        ; preds = %entry
+  br label %cond.end, !dbg !60
+
+cond.false:                                       ; preds = %entry
+  call void @__assert_fail(i8* getelementptr inbounds ([10 x i8], [10 x i8]* @.str, i32 0, i32 0), i8* getelementptr inbounds ([45 x i8], [45 x i8]* @.str.1, i32 0, i32 0), i32 46, i8* getelementptr inbounds ([28 x i8], [28 x i8]* @__PRETTY_FUNCTION__.Subtract, i32 0, i32 0)) #3, !dbg !62
+  unreachable, !dbg !62
+
+bb:                                               ; No predecessors!
+  br label %cond.end, !dbg !59
+
+cond.end:                                         ; preds = %bb, %cond.true
+  %key = getelementptr inbounds %struct._Vertices, %struct._Vertices* %item, i32 0, i32 3, !dbg !64
+  %tmp2 = load i32, i32* %key, align 4, !dbg !64
+  %sub = sub nsw i32 %tmp2, %delta, !dbg !65
+  %key1 = getelementptr inbounds %struct._Vertices, %struct._Vertices* %item, i32 0, i32 3, !dbg !66
+  store i32 %sub, i32* %key1, align 4, !dbg !67
+  ret %struct._Vertices* %item, !dbg !68
+}
+
+; Function Attrs: noreturn nounwind
+declare void @__assert_fail(i8*, i8*, i32, i8*) #2
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.value(metadata, i64, metadata, metadata) #1
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { noreturn nounwind "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { noreturn nounwind }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!35, !36}
+!llvm.ident = !{!37}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, subprograms: !3)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/Ptrdist/ft")
+!2 = !{}
+!3 = !{!4, !31, !32}
+!4 = !DISubprogram(name: "LessThan", scope: !5, file: !5, line: 37, type: !6, isLocal: false, isDefinition: true, scopeLine: 37, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct._Vertices*, %struct._Vertices*)* @LessThan, variables: !2)
+!5 = !DIFile(filename: "/home/gleison/tf/Benchmarks/Ptrdist/ft/tmp.c", directory: "/home/gleison/tf/Benchmarks/Ptrdist/ft")
+!6 = !DISubroutineType(types: !7)
+!7 = !{!8, !9, !9}
+!8 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!9 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !10, size: 64, align: 64)
+!10 = !DIDerivedType(tag: DW_TAG_typedef, name: "Item", file: !11, line: 36, baseType: !12)
+!11 = !DIFile(filename: "./item.h", directory: "/home/gleison/tf/Benchmarks/Ptrdist/ft")
+!12 = !DIDerivedType(tag: DW_TAG_typedef, name: "Vertices", file: !13, line: 56, baseType: !14)
+!13 = !DIFile(filename: "./graph.h", directory: "/home/gleison/tf/Benchmarks/Ptrdist/ft")
+!14 = !DICompositeType(tag: DW_TAG_structure_type, name: "_Vertices", file: !13, line: 45, size: 320, align: 64, elements: !15)
+!15 = !{!16, !17, !28, !29, !30}
+!16 = !DIDerivedType(tag: DW_TAG_member, name: "id", scope: !14, file: !13, line: 47, baseType: !8, size: 32, align: 32)
+!17 = !DIDerivedType(tag: DW_TAG_member, name: "edges", scope: !14, file: !13, line: 48, baseType: !18, size: 64, align: 64, offset: 64)
+!18 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !19, size: 64, align: 64)
+!19 = !DIDerivedType(tag: DW_TAG_typedef, name: "Edges", file: !13, line: 43, baseType: !20)
+!20 = !DICompositeType(tag: DW_TAG_structure_type, name: "_Edges", file: !13, line: 36, size: 256, align: 64, elements: !21)
+!21 = !{!22, !23, !25, !26}
+!22 = !DIDerivedType(tag: DW_TAG_member, name: "weight", scope: !20, file: !13, line: 38, baseType: !8, size: 32, align: 32)
+!23 = !DIDerivedType(tag: DW_TAG_member, name: "source", scope: !20, file: !13, line: 40, baseType: !24, size: 64, align: 64, offset: 64)
+!24 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !14, size: 64, align: 64)
+!25 = !DIDerivedType(tag: DW_TAG_member, name: "vertex", scope: !20, file: !13, line: 41, baseType: !24, size: 64, align: 64, offset: 128)
+!26 = !DIDerivedType(tag: DW_TAG_member, name: "next", scope: !20, file: !13, line: 42, baseType: !27, size: 64, align: 64, offset: 192)
+!27 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !20, size: 64, align: 64)
+!28 = !DIDerivedType(tag: DW_TAG_member, name: "next", scope: !14, file: !13, line: 49, baseType: !24, size: 64, align: 64, offset: 128)
+!29 = !DIDerivedType(tag: DW_TAG_member, name: "key", scope: !14, file: !13, line: 54, baseType: !8, size: 32, align: 32, offset: 192)
+!30 = !DIDerivedType(tag: DW_TAG_member, name: "chosenEdge", scope: !14, file: !13, line: 55, baseType: !18, size: 64, align: 64, offset: 256)
+!31 = !DISubprogram(name: "Equal", scope: !5, file: !5, line: 41, type: !6, isLocal: false, isDefinition: true, scopeLine: 41, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct._Vertices*, %struct._Vertices*)* @Equal, variables: !2)
+!32 = !DISubprogram(name: "Subtract", scope: !5, file: !5, line: 45, type: !33, isLocal: false, isDefinition: true, scopeLine: 45, flags: DIFlagPrototyped, isOptimized: false, function: %struct._Vertices* (%struct._Vertices*, i32)* @Subtract, variables: !2)
+!33 = !DISubroutineType(types: !34)
+!34 = !{!9, !9, !8}
+!35 = !{i32 2, !"Dwarf Version", i32 4}
+!36 = !{i32 2, !"Debug Info Version", i32 3}
+!37 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!38 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "item1", arg: 1, scope: !4, file: !5, line: 37, type: !9)
+!39 = !DIExpression()
+!40 = !DILocation(line: 37, column: 20, scope: !4)
+!41 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "item2", arg: 2, scope: !4, file: !5, line: 37, type: !9)
+!42 = !DILocation(line: 37, column: 33, scope: !4)
+!43 = !DILocation(line: 38, column: 11, scope: !4)
+!44 = !DILocation(line: 38, column: 24, scope: !4)
+!45 = !DILocation(line: 38, column: 22, scope: !4)
+!46 = !DILocation(line: 38, column: 3, scope: !4)
+!47 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "item1", arg: 1, scope: !31, file: !5, line: 41, type: !9)
+!48 = !DILocation(line: 41, column: 17, scope: !31)
+!49 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "item2", arg: 2, scope: !31, file: !5, line: 41, type: !9)
+!50 = !DILocation(line: 41, column: 30, scope: !31)
+!51 = !DILocation(line: 42, column: 11, scope: !31)
+!52 = !DILocation(line: 42, column: 25, scope: !31)
+!53 = !DILocation(line: 42, column: 22, scope: !31)
+!54 = !DILocation(line: 42, column: 3, scope: !31)
+!55 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "item", arg: 1, scope: !32, file: !5, line: 45, type: !9)
+!56 = !DILocation(line: 45, column: 22, scope: !32)
+!57 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "delta", arg: 2, scope: !32, file: !5, line: 45, type: !8)
+!58 = !DILocation(line: 45, column: 32, scope: !32)
+!59 = !DILocation(line: 46, column: 3, scope: !32)
+!60 = !DILocation(line: 46, column: 3, scope: !61)
+!61 = !DILexicalBlockFile(scope: !32, file: !5, discriminator: 1)
+!62 = !DILocation(line: 46, column: 3, scope: !63)
+!63 = !DILexicalBlockFile(scope: !32, file: !5, discriminator: 2)
+!64 = !DILocation(line: 48, column: 15, scope: !32)
+!65 = !DILocation(line: 48, column: 25, scope: !32)
+!66 = !DILocation(line: 48, column: 3, scope: !32)
+!67 = !DILocation(line: 48, column: 13, scope: !32)
+!68 = !DILocation(line: 50, column: 3, scope: !32)

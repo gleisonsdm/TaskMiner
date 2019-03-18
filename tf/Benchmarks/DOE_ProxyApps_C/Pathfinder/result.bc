@@ -1,0 +1,1406 @@
+; ModuleID = '/home/gleison/tf/Benchmarks/DOE_ProxyApps_C/Pathfinder/tmp.c'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct.NodeStruct = type { i32, i32, i8*, i32, i32, %struct.NodeStruct*, %struct.NodeListStruct*, %struct.EdgeListStruct*, i32, i32 }
+%struct.NodeListStruct = type { %struct.NodeStruct*, %struct.NodeListStruct* }
+%struct.EdgeListStruct = type { i32, %struct.NodeStruct*, %struct.EdgeListStruct* }
+
+; Function Attrs: nounwind uwtable
+define %struct.NodeStruct* @Node_new(i32 %id, i32 %nodeCount) #0 {
+entry:
+  %retval = alloca %struct.NodeStruct*, align 8
+  %id.addr = alloca i32, align 4
+  %nodeCount.addr = alloca i32, align 4
+  %node = alloca %struct.NodeStruct*, align 8
+  store i32 %id, i32* %id.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %id.addr, metadata !84, metadata !85), !dbg !86
+  store i32 %nodeCount, i32* %nodeCount.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %nodeCount.addr, metadata !87, metadata !85), !dbg !88
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %node, metadata !89, metadata !85), !dbg !90
+  %call = call noalias i8* @malloc(i64 56) #3, !dbg !91
+  %0 = bitcast i8* %call to %struct.NodeStruct*, !dbg !91
+  store %struct.NodeStruct* %0, %struct.NodeStruct** %node, align 8, !dbg !90
+  %1 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !92
+  %tobool = icmp ne %struct.NodeStruct* %1, null, !dbg !92
+  br i1 %tobool, label %if.end, label %if.then, !dbg !94
+
+if.then:                                          ; preds = %entry
+  store %struct.NodeStruct* null, %struct.NodeStruct** %retval, !dbg !95
+  br label %return, !dbg !95
+
+if.end:                                           ; preds = %entry
+  %2 = load i32, i32* %id.addr, align 4, !dbg !96
+  %3 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !97
+  %id1 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %3, i32 0, i32 0, !dbg !98
+  store i32 %2, i32* %id1, align 4, !dbg !99
+  %4 = load i32, i32* %nodeCount.addr, align 4, !dbg !100
+  %5 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !101
+  %nodeCount2 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %5, i32 0, i32 1, !dbg !102
+  store i32 %4, i32* %nodeCount2, align 4, !dbg !103
+  %6 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !104
+  %label = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %6, i32 0, i32 2, !dbg !105
+  store i8* null, i8** %label, align 8, !dbg !106
+  %7 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !107
+  %labelIdx = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %7, i32 0, i32 3, !dbg !108
+  store i32 -1, i32* %labelIdx, align 4, !dbg !109
+  %8 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !110
+  %type = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %8, i32 0, i32 4, !dbg !111
+  store i32 0, i32* %type, align 4, !dbg !112
+  %9 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !113
+  %container = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %9, i32 0, i32 5, !dbg !114
+  store %struct.NodeStruct* null, %struct.NodeStruct** %container, align 8, !dbg !115
+  %10 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !116
+  %interiorNodes = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %10, i32 0, i32 6, !dbg !117
+  store %struct.NodeListStruct* null, %struct.NodeListStruct** %interiorNodes, align 8, !dbg !118
+  %11 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !119
+  %edges = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %11, i32 0, i32 7, !dbg !120
+  store %struct.EdgeListStruct* null, %struct.EdgeListStruct** %edges, align 8, !dbg !121
+  %12 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !122
+  %edgeCount = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %12, i32 0, i32 8, !dbg !123
+  store i32 0, i32* %edgeCount, align 4, !dbg !124
+  %13 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !125
+  %entranceCount = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %13, i32 0, i32 9, !dbg !126
+  store i32 0, i32* %entranceCount, align 4, !dbg !127
+  %14 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !128
+  store %struct.NodeStruct* %14, %struct.NodeStruct** %retval, !dbg !129
+  br label %return, !dbg !129
+
+return:                                           ; preds = %if.end, %if.then
+  %15 = load %struct.NodeStruct*, %struct.NodeStruct** %retval, !dbg !130
+  ret %struct.NodeStruct* %15, !dbg !130
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind
+declare noalias i8* @malloc(i64) #2
+
+; Function Attrs: nounwind uwtable
+define void @Node_delete(%struct.NodeStruct* %trash) #0 {
+entry:
+  %trash.addr = alloca %struct.NodeStruct*, align 8
+  store %struct.NodeStruct* %trash, %struct.NodeStruct** %trash.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %trash.addr, metadata !131, metadata !85), !dbg !132
+  %0 = load %struct.NodeStruct*, %struct.NodeStruct** %trash.addr, align 8, !dbg !133
+  %tobool = icmp ne %struct.NodeStruct* %0, null, !dbg !133
+  br i1 %tobool, label %if.end, label %if.then, !dbg !135
+
+if.then:                                          ; preds = %entry
+  br label %return, !dbg !136
+
+if.end:                                           ; preds = %entry
+  %1 = load %struct.NodeStruct*, %struct.NodeStruct** %trash.addr, align 8, !dbg !137
+  %interiorNodes = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %1, i32 0, i32 6, !dbg !139
+  %2 = load %struct.NodeListStruct*, %struct.NodeListStruct** %interiorNodes, align 8, !dbg !139
+  %tobool1 = icmp ne %struct.NodeListStruct* %2, null, !dbg !137
+  br i1 %tobool1, label %if.then.2, label %if.end.4, !dbg !140
+
+if.then.2:                                        ; preds = %if.end
+  %3 = load %struct.NodeStruct*, %struct.NodeStruct** %trash.addr, align 8, !dbg !141
+  %interiorNodes3 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %3, i32 0, i32 6, !dbg !142
+  %4 = load %struct.NodeListStruct*, %struct.NodeListStruct** %interiorNodes3, align 8, !dbg !142
+  call void @NodeList_clear(%struct.NodeListStruct* %4, i1 zeroext true), !dbg !143
+  br label %if.end.4, !dbg !143
+
+if.end.4:                                         ; preds = %if.then.2, %if.end
+  %5 = load %struct.NodeStruct*, %struct.NodeStruct** %trash.addr, align 8, !dbg !144
+  %edges = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %5, i32 0, i32 7, !dbg !146
+  %6 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %edges, align 8, !dbg !146
+  %tobool5 = icmp ne %struct.EdgeListStruct* %6, null, !dbg !144
+  br i1 %tobool5, label %if.then.6, label %if.end.8, !dbg !147
+
+if.then.6:                                        ; preds = %if.end.4
+  %7 = load %struct.NodeStruct*, %struct.NodeStruct** %trash.addr, align 8, !dbg !148
+  %edges7 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %7, i32 0, i32 7, !dbg !149
+  %8 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %edges7, align 8, !dbg !149
+  call void @EdgeList_clear(%struct.EdgeListStruct* %8), !dbg !150
+  br label %if.end.8, !dbg !150
+
+if.end.8:                                         ; preds = %if.then.6, %if.end.4
+  %9 = load %struct.NodeStruct*, %struct.NodeStruct** %trash.addr, align 8, !dbg !151
+  %10 = bitcast %struct.NodeStruct* %9 to i8*, !dbg !151
+  call void @free(i8* %10) #3, !dbg !152
+  br label %return, !dbg !153
+
+return:                                           ; preds = %if.end.8, %if.then
+  ret void, !dbg !154
+}
+
+; Function Attrs: nounwind uwtable
+define void @NodeList_clear(%struct.NodeListStruct* %trash, i1 zeroext %deleteNodes) #0 {
+entry:
+  %trash.addr = alloca %struct.NodeListStruct*, align 8
+  %deleteNodes.addr = alloca i8, align 1
+  store %struct.NodeListStruct* %trash, %struct.NodeListStruct** %trash.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeListStruct** %trash.addr, metadata !156, metadata !85), !dbg !157
+  %frombool = zext i1 %deleteNodes to i8
+  store i8 %frombool, i8* %deleteNodes.addr, align 1
+  call void @llvm.dbg.declare(metadata i8* %deleteNodes.addr, metadata !158, metadata !85), !dbg !159
+  %0 = load %struct.NodeListStruct*, %struct.NodeListStruct** %trash.addr, align 8, !dbg !160
+  %tobool = icmp ne %struct.NodeListStruct* %0, null, !dbg !160
+  br i1 %tobool, label %if.end, label %if.then, !dbg !162
+
+if.then:                                          ; preds = %entry
+  br label %return, !dbg !163
+
+if.end:                                           ; preds = %entry
+  %1 = load %struct.NodeListStruct*, %struct.NodeListStruct** %trash.addr, align 8, !dbg !164
+  %nextNode = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %1, i32 0, i32 1, !dbg !166
+  %2 = load %struct.NodeListStruct*, %struct.NodeListStruct** %nextNode, align 8, !dbg !166
+  %tobool1 = icmp ne %struct.NodeListStruct* %2, null, !dbg !164
+  br i1 %tobool1, label %if.then.2, label %if.end.5, !dbg !167
+
+if.then.2:                                        ; preds = %if.end
+  %3 = load %struct.NodeListStruct*, %struct.NodeListStruct** %trash.addr, align 8, !dbg !168
+  %nextNode3 = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %3, i32 0, i32 1, !dbg !169
+  %4 = load %struct.NodeListStruct*, %struct.NodeListStruct** %nextNode3, align 8, !dbg !169
+  %5 = load i8, i8* %deleteNodes.addr, align 1, !dbg !170
+  %tobool4 = trunc i8 %5 to i1, !dbg !170
+  call void @NodeList_clear(%struct.NodeListStruct* %4, i1 zeroext %tobool4), !dbg !171
+  br label %if.end.5, !dbg !171
+
+if.end.5:                                         ; preds = %if.then.2, %if.end
+  %6 = load i8, i8* %deleteNodes.addr, align 1, !dbg !172
+  %tobool6 = trunc i8 %6 to i1, !dbg !172
+  br i1 %tobool6, label %if.then.7, label %if.end.8, !dbg !174
+
+if.then.7:                                        ; preds = %if.end.5
+  %7 = load %struct.NodeListStruct*, %struct.NodeListStruct** %trash.addr, align 8, !dbg !175
+  %node = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %7, i32 0, i32 0, !dbg !177
+  %8 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !177
+  call void @Node_delete(%struct.NodeStruct* %8), !dbg !178
+  br label %if.end.8, !dbg !179
+
+if.end.8:                                         ; preds = %if.then.7, %if.end.5
+  %9 = load %struct.NodeListStruct*, %struct.NodeListStruct** %trash.addr, align 8, !dbg !180
+  %10 = bitcast %struct.NodeListStruct* %9 to i8*, !dbg !180
+  call void @free(i8* %10) #3, !dbg !181
+  br label %return, !dbg !182
+
+return:                                           ; preds = %if.end.8, %if.then
+  ret void, !dbg !183
+}
+
+; Function Attrs: nounwind uwtable
+define void @EdgeList_clear(%struct.EdgeListStruct* %this) #0 {
+entry:
+  %this.addr = alloca %struct.EdgeListStruct*, align 8
+  store %struct.EdgeListStruct* %this, %struct.EdgeListStruct** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.EdgeListStruct** %this.addr, metadata !185, metadata !85), !dbg !186
+  %0 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %this.addr, align 8, !dbg !187
+  %tobool = icmp ne %struct.EdgeListStruct* %0, null, !dbg !187
+  br i1 %tobool, label %if.end, label %if.then, !dbg !189
+
+if.then:                                          ; preds = %entry
+  br label %return, !dbg !190
+
+if.end:                                           ; preds = %entry
+  %1 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %this.addr, align 8, !dbg !191
+  %nextEdge = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %1, i32 0, i32 2, !dbg !193
+  %2 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %nextEdge, align 8, !dbg !193
+  %tobool1 = icmp ne %struct.EdgeListStruct* %2, null, !dbg !191
+  br i1 %tobool1, label %if.then.2, label %if.end.4, !dbg !194
+
+if.then.2:                                        ; preds = %if.end
+  %3 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %this.addr, align 8, !dbg !195
+  %nextEdge3 = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %3, i32 0, i32 2, !dbg !196
+  %4 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %nextEdge3, align 8, !dbg !196
+  call void @EdgeList_clear(%struct.EdgeListStruct* %4), !dbg !197
+  br label %if.end.4, !dbg !197
+
+if.end.4:                                         ; preds = %if.then.2, %if.end
+  %5 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %this.addr, align 8, !dbg !198
+  %6 = bitcast %struct.EdgeListStruct* %5 to i8*, !dbg !198
+  call void @free(i8* %6) #3, !dbg !199
+  br label %return, !dbg !200
+
+return:                                           ; preds = %if.end.4, %if.then
+  ret void, !dbg !201
+}
+
+; Function Attrs: nounwind
+declare void @free(i8*) #2
+
+; Function Attrs: nounwind uwtable
+define %struct.NodeStruct* @Node_duplicate(%struct.NodeStruct* %from, i32 %newIndex) #0 {
+entry:
+  %retval = alloca %struct.NodeStruct*, align 8
+  %from.addr = alloca %struct.NodeStruct*, align 8
+  %newIndex.addr = alloca i32, align 4
+  %copy = alloca %struct.NodeStruct*, align 8
+  store %struct.NodeStruct* %from, %struct.NodeStruct** %from.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %from.addr, metadata !203, metadata !85), !dbg !204
+  store i32 %newIndex, i32* %newIndex.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %newIndex.addr, metadata !205, metadata !85), !dbg !206
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %copy, metadata !207, metadata !85), !dbg !208
+  %call = call noalias i8* @malloc(i64 56) #3, !dbg !209
+  %0 = bitcast i8* %call to %struct.NodeStruct*, !dbg !209
+  store %struct.NodeStruct* %0, %struct.NodeStruct** %copy, align 8, !dbg !208
+  %1 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !210
+  %tobool = icmp ne %struct.NodeStruct* %1, null, !dbg !210
+  br i1 %tobool, label %lor.lhs.false, label %if.then, !dbg !212
+
+lor.lhs.false:                                    ; preds = %entry
+  %2 = load %struct.NodeStruct*, %struct.NodeStruct** %from.addr, align 8, !dbg !213
+  %tobool1 = icmp ne %struct.NodeStruct* %2, null, !dbg !213
+  br i1 %tobool1, label %if.end, label %if.then, !dbg !215
+
+if.then:                                          ; preds = %lor.lhs.false, %entry
+  store %struct.NodeStruct* null, %struct.NodeStruct** %retval, !dbg !216
+  br label %return, !dbg !216
+
+if.end:                                           ; preds = %lor.lhs.false
+  %3 = load %struct.NodeStruct*, %struct.NodeStruct** %from.addr, align 8, !dbg !217
+  %id = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %3, i32 0, i32 0, !dbg !218
+  %4 = load i32, i32* %id, align 4, !dbg !218
+  %5 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !219
+  %id2 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %5, i32 0, i32 0, !dbg !220
+  store i32 %4, i32* %id2, align 4, !dbg !221
+  %6 = load i32, i32* %newIndex.addr, align 4, !dbg !222
+  %7 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !223
+  %nodeCount = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %7, i32 0, i32 1, !dbg !224
+  store i32 %6, i32* %nodeCount, align 4, !dbg !225
+  %8 = load %struct.NodeStruct*, %struct.NodeStruct** %from.addr, align 8, !dbg !226
+  %label = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %8, i32 0, i32 2, !dbg !227
+  %9 = load i8*, i8** %label, align 8, !dbg !227
+  %10 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !228
+  %label3 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %10, i32 0, i32 2, !dbg !229
+  store i8* %9, i8** %label3, align 8, !dbg !230
+  %11 = load %struct.NodeStruct*, %struct.NodeStruct** %from.addr, align 8, !dbg !231
+  %labelIdx = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %11, i32 0, i32 3, !dbg !232
+  %12 = load i32, i32* %labelIdx, align 4, !dbg !232
+  %13 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !233
+  %labelIdx4 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %13, i32 0, i32 3, !dbg !234
+  store i32 %12, i32* %labelIdx4, align 4, !dbg !235
+  %14 = load %struct.NodeStruct*, %struct.NodeStruct** %from.addr, align 8, !dbg !236
+  %type = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %14, i32 0, i32 4, !dbg !237
+  %15 = load i32, i32* %type, align 4, !dbg !237
+  %16 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !238
+  %type5 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %16, i32 0, i32 4, !dbg !239
+  store i32 %15, i32* %type5, align 4, !dbg !240
+  %17 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !241
+  %container = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %17, i32 0, i32 5, !dbg !242
+  store %struct.NodeStruct* null, %struct.NodeStruct** %container, align 8, !dbg !243
+  %18 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !244
+  %interiorNodes = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %18, i32 0, i32 6, !dbg !245
+  store %struct.NodeListStruct* null, %struct.NodeListStruct** %interiorNodes, align 8, !dbg !246
+  %19 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !247
+  %edges = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %19, i32 0, i32 7, !dbg !248
+  store %struct.EdgeListStruct* null, %struct.EdgeListStruct** %edges, align 8, !dbg !249
+  %20 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !250
+  %edgeCount = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %20, i32 0, i32 8, !dbg !251
+  store i32 0, i32* %edgeCount, align 4, !dbg !252
+  %21 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !253
+  %entranceCount = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %21, i32 0, i32 9, !dbg !254
+  store i32 0, i32* %entranceCount, align 4, !dbg !255
+  %22 = load %struct.NodeStruct*, %struct.NodeStruct** %copy, align 8, !dbg !256
+  store %struct.NodeStruct* %22, %struct.NodeStruct** %retval, !dbg !257
+  br label %return, !dbg !257
+
+return:                                           ; preds = %if.end, %if.then
+  %23 = load %struct.NodeStruct*, %struct.NodeStruct** %retval, !dbg !258
+  ret %struct.NodeStruct* %23, !dbg !258
+}
+
+; Function Attrs: nounwind uwtable
+define void @Node_setParent(%struct.NodeStruct* %this, %struct.NodeStruct* %parent) #0 {
+entry:
+  %this.addr = alloca %struct.NodeStruct*, align 8
+  %parent.addr = alloca %struct.NodeStruct*, align 8
+  store %struct.NodeStruct* %this, %struct.NodeStruct** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %this.addr, metadata !259, metadata !85), !dbg !260
+  store %struct.NodeStruct* %parent, %struct.NodeStruct** %parent.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %parent.addr, metadata !261, metadata !85), !dbg !262
+  %0 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !263
+  %tobool = icmp ne %struct.NodeStruct* %0, null, !dbg !263
+  br i1 %tobool, label %lor.lhs.false, label %if.then, !dbg !265
+
+lor.lhs.false:                                    ; preds = %entry
+  %1 = load %struct.NodeStruct*, %struct.NodeStruct** %parent.addr, align 8, !dbg !266
+  %tobool1 = icmp ne %struct.NodeStruct* %1, null, !dbg !266
+  br i1 %tobool1, label %if.end, label %if.then, !dbg !268
+
+if.then:                                          ; preds = %lor.lhs.false, %entry
+  br label %return, !dbg !269
+
+if.end:                                           ; preds = %lor.lhs.false
+  %2 = load %struct.NodeStruct*, %struct.NodeStruct** %parent.addr, align 8, !dbg !270
+  %3 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !271
+  %container = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %3, i32 0, i32 5, !dbg !272
+  store %struct.NodeStruct* %2, %struct.NodeStruct** %container, align 8, !dbg !273
+  %4 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !274
+  %type = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %4, i32 0, i32 4, !dbg !275
+  store i32 1, i32* %type, align 4, !dbg !276
+  br label %return, !dbg !277
+
+return:                                           ; preds = %if.end, %if.then
+  ret void, !dbg !278
+}
+
+; Function Attrs: nounwind uwtable
+define void @Node_addInteriorNode(%struct.NodeStruct* %this, %struct.NodeStruct* %interior) #0 {
+entry:
+  %this.addr = alloca %struct.NodeStruct*, align 8
+  %interior.addr = alloca %struct.NodeStruct*, align 8
+  store %struct.NodeStruct* %this, %struct.NodeStruct** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %this.addr, metadata !280, metadata !85), !dbg !281
+  store %struct.NodeStruct* %interior, %struct.NodeStruct** %interior.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %interior.addr, metadata !282, metadata !85), !dbg !283
+  %0 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !284
+  %tobool = icmp ne %struct.NodeStruct* %0, null, !dbg !284
+  br i1 %tobool, label %lor.lhs.false, label %if.then, !dbg !286
+
+lor.lhs.false:                                    ; preds = %entry
+  %1 = load %struct.NodeStruct*, %struct.NodeStruct** %interior.addr, align 8, !dbg !287
+  %tobool1 = icmp ne %struct.NodeStruct* %1, null, !dbg !287
+  br i1 %tobool1, label %if.end, label %if.then, !dbg !289
+
+if.then:                                          ; preds = %lor.lhs.false, %entry
+  br label %return, !dbg !290
+
+if.end:                                           ; preds = %lor.lhs.false
+  %2 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !291
+  %interiorNodes = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %2, i32 0, i32 6, !dbg !293
+  %3 = load %struct.NodeListStruct*, %struct.NodeListStruct** %interiorNodes, align 8, !dbg !293
+  %cmp = icmp eq %struct.NodeListStruct* %3, null, !dbg !294
+  br i1 %cmp, label %if.then.2, label %if.else, !dbg !295
+
+if.then.2:                                        ; preds = %if.end
+  %call = call %struct.NodeListStruct* @NodeList_new(), !dbg !296
+  %4 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !298
+  %interiorNodes3 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %4, i32 0, i32 6, !dbg !299
+  store %struct.NodeListStruct* %call, %struct.NodeListStruct** %interiorNodes3, align 8, !dbg !300
+  %5 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !301
+  %interiorNodes4 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %5, i32 0, i32 6, !dbg !303
+  %6 = load %struct.NodeListStruct*, %struct.NodeListStruct** %interiorNodes4, align 8, !dbg !303
+  %cmp5 = icmp eq %struct.NodeListStruct* %6, null, !dbg !304
+  br i1 %cmp5, label %if.then.6, label %if.end.7, !dbg !305
+
+if.then.6:                                        ; preds = %if.then.2
+  br label %return, !dbg !306
+
+if.end.7:                                         ; preds = %if.then.2
+  %7 = load %struct.NodeStruct*, %struct.NodeStruct** %interior.addr, align 8, !dbg !307
+  %8 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !308
+  %interiorNodes8 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %8, i32 0, i32 6, !dbg !309
+  %9 = load %struct.NodeListStruct*, %struct.NodeListStruct** %interiorNodes8, align 8, !dbg !309
+  %node = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %9, i32 0, i32 0, !dbg !310
+  store %struct.NodeStruct* %7, %struct.NodeStruct** %node, align 8, !dbg !311
+  br label %if.end.11, !dbg !312
+
+if.else:                                          ; preds = %if.end
+  %10 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !313
+  %interiorNodes9 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %10, i32 0, i32 6, !dbg !314
+  %11 = load %struct.NodeListStruct*, %struct.NodeListStruct** %interiorNodes9, align 8, !dbg !314
+  %12 = load %struct.NodeStruct*, %struct.NodeStruct** %interior.addr, align 8, !dbg !315
+  %call10 = call zeroext i1 @NodeList_insertBack(%struct.NodeListStruct* %11, %struct.NodeStruct* %12), !dbg !316
+  br label %if.end.11
+
+if.end.11:                                        ; preds = %if.else, %if.end.7
+  %13 = load %struct.NodeStruct*, %struct.NodeStruct** %interior.addr, align 8, !dbg !317
+  %14 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !318
+  call void @Node_setParent(%struct.NodeStruct* %13, %struct.NodeStruct* %14), !dbg !319
+  br label %return, !dbg !320
+
+return:                                           ; preds = %if.end.11, %if.then.6, %if.then
+  ret void, !dbg !321
+}
+
+; Function Attrs: nounwind uwtable
+define zeroext i1 @NodeList_insertBack(%struct.NodeListStruct* %this, %struct.NodeStruct* %newBack) #0 {
+entry:
+  %retval = alloca i1, align 1
+  %this.addr = alloca %struct.NodeListStruct*, align 8
+  %newBack.addr = alloca %struct.NodeStruct*, align 8
+  %end = alloca %struct.NodeListStruct*, align 8
+  %newElement = alloca %struct.NodeListStruct*, align 8
+  store %struct.NodeListStruct* %this, %struct.NodeListStruct** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeListStruct** %this.addr, metadata !322, metadata !85), !dbg !323
+  store %struct.NodeStruct* %newBack, %struct.NodeStruct** %newBack.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %newBack.addr, metadata !324, metadata !85), !dbg !325
+  call void @llvm.dbg.declare(metadata %struct.NodeListStruct** %end, metadata !326, metadata !85), !dbg !327
+  call void @llvm.dbg.declare(metadata %struct.NodeListStruct** %newElement, metadata !328, metadata !85), !dbg !329
+  %0 = load %struct.NodeListStruct*, %struct.NodeListStruct** %this.addr, align 8, !dbg !330
+  %tobool = icmp ne %struct.NodeListStruct* %0, null, !dbg !330
+  br i1 %tobool, label %lor.lhs.false, label %if.then, !dbg !332
+
+lor.lhs.false:                                    ; preds = %entry
+  %1 = load %struct.NodeStruct*, %struct.NodeStruct** %newBack.addr, align 8, !dbg !333
+  %tobool1 = icmp ne %struct.NodeStruct* %1, null, !dbg !333
+  br i1 %tobool1, label %if.end, label %if.then, !dbg !335
+
+if.then:                                          ; preds = %lor.lhs.false, %entry
+  store i1 false, i1* %retval, !dbg !336
+  br label %return, !dbg !336
+
+if.end:                                           ; preds = %lor.lhs.false
+  %2 = load %struct.NodeListStruct*, %struct.NodeListStruct** %this.addr, align 8, !dbg !337
+  %node = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %2, i32 0, i32 0, !dbg !339
+  %3 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !339
+  %cmp = icmp eq %struct.NodeStruct* %3, null, !dbg !340
+  br i1 %cmp, label %if.then.2, label %if.end.4, !dbg !341
+
+if.then.2:                                        ; preds = %if.end
+  %4 = load %struct.NodeStruct*, %struct.NodeStruct** %newBack.addr, align 8, !dbg !342
+  %5 = load %struct.NodeListStruct*, %struct.NodeListStruct** %this.addr, align 8, !dbg !344
+  %node3 = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %5, i32 0, i32 0, !dbg !345
+  store %struct.NodeStruct* %4, %struct.NodeStruct** %node3, align 8, !dbg !346
+  store i1 true, i1* %retval, !dbg !347
+  br label %return, !dbg !347
+
+if.end.4:                                         ; preds = %if.end
+  %6 = load %struct.NodeListStruct*, %struct.NodeListStruct** %this.addr, align 8, !dbg !348
+  store %struct.NodeListStruct* %6, %struct.NodeListStruct** %end, align 8, !dbg !350
+  br label %for.cond, !dbg !351
+
+for.cond:                                         ; preds = %for.inc, %if.end.4
+  %7 = load %struct.NodeListStruct*, %struct.NodeListStruct** %end, align 8, !dbg !352
+  %nextNode = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %7, i32 0, i32 1, !dbg !356
+  %8 = load %struct.NodeListStruct*, %struct.NodeListStruct** %nextNode, align 8, !dbg !356
+  %cmp5 = icmp ne %struct.NodeListStruct* %8, null, !dbg !357
+  br i1 %cmp5, label %for.body, label %for.end, !dbg !358
+
+for.body:                                         ; preds = %for.cond
+  br label %for.inc, !dbg !359
+
+for.inc:                                          ; preds = %for.body
+  %9 = load %struct.NodeListStruct*, %struct.NodeListStruct** %end, align 8, !dbg !361
+  %nextNode6 = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %9, i32 0, i32 1, !dbg !362
+  %10 = load %struct.NodeListStruct*, %struct.NodeListStruct** %nextNode6, align 8, !dbg !362
+  store %struct.NodeListStruct* %10, %struct.NodeListStruct** %end, align 8, !dbg !363
+  br label %for.cond, !dbg !364
+
+for.end:                                          ; preds = %for.cond
+  %call = call %struct.NodeListStruct* @NodeList_new(), !dbg !365
+  store %struct.NodeListStruct* %call, %struct.NodeListStruct** %newElement, align 8, !dbg !366
+  %11 = load %struct.NodeListStruct*, %struct.NodeListStruct** %newElement, align 8, !dbg !367
+  %tobool7 = icmp ne %struct.NodeListStruct* %11, null, !dbg !367
+  br i1 %tobool7, label %if.end.9, label %if.then.8, !dbg !369
+
+if.then.8:                                        ; preds = %for.end
+  store i1 false, i1* %retval, !dbg !370
+  br label %return, !dbg !370
+
+if.end.9:                                         ; preds = %for.end
+  %12 = load %struct.NodeStruct*, %struct.NodeStruct** %newBack.addr, align 8, !dbg !371
+  %13 = load %struct.NodeListStruct*, %struct.NodeListStruct** %newElement, align 8, !dbg !372
+  %node10 = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %13, i32 0, i32 0, !dbg !373
+  store %struct.NodeStruct* %12, %struct.NodeStruct** %node10, align 8, !dbg !374
+  %14 = load %struct.NodeListStruct*, %struct.NodeListStruct** %newElement, align 8, !dbg !375
+  %15 = load %struct.NodeListStruct*, %struct.NodeListStruct** %end, align 8, !dbg !376
+  %nextNode11 = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %15, i32 0, i32 1, !dbg !377
+  store %struct.NodeListStruct* %14, %struct.NodeListStruct** %nextNode11, align 8, !dbg !378
+  store i1 true, i1* %retval, !dbg !379
+  br label %return, !dbg !379
+
+return:                                           ; preds = %if.end.9, %if.then.8, %if.then.2, %if.then
+  %16 = load i1, i1* %retval, !dbg !380
+  ret i1 %16, !dbg !380
+}
+
+; Function Attrs: nounwind uwtable
+define zeroext i1 @Node_addEdgeToNode(%struct.NodeStruct* %this, %struct.NodeStruct* %node) #0 {
+entry:
+  %retval = alloca i1, align 1
+  %this.addr = alloca %struct.NodeStruct*, align 8
+  %node.addr = alloca %struct.NodeStruct*, align 8
+  %end = alloca %struct.EdgeListStruct*, align 8
+  %newEdge = alloca %struct.EdgeListStruct*, align 8
+  store %struct.NodeStruct* %this, %struct.NodeStruct** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %this.addr, metadata !381, metadata !85), !dbg !382
+  store %struct.NodeStruct* %node, %struct.NodeStruct** %node.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %node.addr, metadata !383, metadata !85), !dbg !384
+  call void @llvm.dbg.declare(metadata %struct.EdgeListStruct** %end, metadata !385, metadata !85), !dbg !386
+  store %struct.EdgeListStruct* null, %struct.EdgeListStruct** %end, align 8, !dbg !386
+  call void @llvm.dbg.declare(metadata %struct.EdgeListStruct** %newEdge, metadata !387, metadata !85), !dbg !388
+  store %struct.EdgeListStruct* null, %struct.EdgeListStruct** %newEdge, align 8, !dbg !388
+  %0 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !389
+  %tobool = icmp ne %struct.NodeStruct* %0, null, !dbg !389
+  br i1 %tobool, label %lor.lhs.false, label %if.then, !dbg !391
+
+lor.lhs.false:                                    ; preds = %entry
+  %1 = load %struct.NodeStruct*, %struct.NodeStruct** %node.addr, align 8, !dbg !392
+  %tobool1 = icmp ne %struct.NodeStruct* %1, null, !dbg !392
+  br i1 %tobool1, label %if.end, label %if.then, !dbg !394
+
+if.then:                                          ; preds = %lor.lhs.false, %entry
+  store i1 false, i1* %retval, !dbg !395
+  br label %return, !dbg !395
+
+if.end:                                           ; preds = %lor.lhs.false
+  %2 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !396
+  %edges = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %2, i32 0, i32 7, !dbg !398
+  %3 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %edges, align 8, !dbg !398
+  store %struct.EdgeListStruct* %3, %struct.EdgeListStruct** %end, align 8, !dbg !399
+  br label %for.cond, !dbg !400
+
+for.cond:                                         ; preds = %for.inc, %if.end
+  %4 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %end, align 8, !dbg !401
+  %cmp = icmp ne %struct.EdgeListStruct* %4, null, !dbg !405
+  br i1 %cmp, label %for.body, label %for.end, !dbg !406
+
+for.body:                                         ; preds = %for.cond
+  %5 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %end, align 8, !dbg !407
+  %targetNode = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %5, i32 0, i32 1, !dbg !409
+  %6 = load %struct.NodeStruct*, %struct.NodeStruct** %targetNode, align 8, !dbg !409
+  %7 = load %struct.NodeStruct*, %struct.NodeStruct** %node.addr, align 8, !dbg !410
+  %cmp2 = icmp eq %struct.NodeStruct* %6, %7, !dbg !411
+  br i1 %cmp2, label %if.then.3, label %if.end.4, !dbg !412
+
+if.then.3:                                        ; preds = %for.body
+  store i1 true, i1* %retval, !dbg !413
+  br label %return, !dbg !413
+
+if.end.4:                                         ; preds = %for.body
+  br label %for.inc, !dbg !414
+
+for.inc:                                          ; preds = %if.end.4
+  %8 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %end, align 8, !dbg !416
+  %nextEdge = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %8, i32 0, i32 2, !dbg !417
+  %9 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %nextEdge, align 8, !dbg !417
+  store %struct.EdgeListStruct* %9, %struct.EdgeListStruct** %end, align 8, !dbg !418
+  br label %for.cond, !dbg !419
+
+for.end:                                          ; preds = %for.cond
+  %call = call %struct.EdgeListStruct* @EdgeList_new(), !dbg !420
+  store %struct.EdgeListStruct* %call, %struct.EdgeListStruct** %newEdge, align 8, !dbg !421
+  %10 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newEdge, align 8, !dbg !422
+  %tobool5 = icmp ne %struct.EdgeListStruct* %10, null, !dbg !422
+  br i1 %tobool5, label %if.end.7, label %if.then.6, !dbg !424
+
+if.then.6:                                        ; preds = %for.end
+  store i1 false, i1* %retval, !dbg !425
+  br label %return, !dbg !425
+
+if.end.7:                                         ; preds = %for.end
+  %11 = load %struct.NodeStruct*, %struct.NodeStruct** %node.addr, align 8, !dbg !426
+  %12 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newEdge, align 8, !dbg !427
+  %targetNode8 = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %12, i32 0, i32 1, !dbg !428
+  store %struct.NodeStruct* %11, %struct.NodeStruct** %targetNode8, align 8, !dbg !429
+  %13 = load %struct.NodeStruct*, %struct.NodeStruct** %node.addr, align 8, !dbg !430
+  %id = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %13, i32 0, i32 0, !dbg !431
+  %14 = load i32, i32* %id, align 4, !dbg !431
+  %15 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newEdge, align 8, !dbg !432
+  %targetNodeId = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %15, i32 0, i32 0, !dbg !433
+  store i32 %14, i32* %targetNodeId, align 4, !dbg !434
+  %16 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !435
+  %edges9 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %16, i32 0, i32 7, !dbg !436
+  %17 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %edges9, align 8, !dbg !436
+  %18 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newEdge, align 8, !dbg !437
+  %nextEdge10 = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %18, i32 0, i32 2, !dbg !438
+  store %struct.EdgeListStruct* %17, %struct.EdgeListStruct** %nextEdge10, align 8, !dbg !439
+  %19 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newEdge, align 8, !dbg !440
+  %20 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !441
+  %edges11 = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %20, i32 0, i32 7, !dbg !442
+  store %struct.EdgeListStruct* %19, %struct.EdgeListStruct** %edges11, align 8, !dbg !443
+  %21 = load %struct.NodeStruct*, %struct.NodeStruct** %this.addr, align 8, !dbg !444
+  %edgeCount = getelementptr inbounds %struct.NodeStruct, %struct.NodeStruct* %21, i32 0, i32 8, !dbg !445
+  %22 = load i32, i32* %edgeCount, align 4, !dbg !446
+  %inc = add nsw i32 %22, 1, !dbg !446
+  store i32 %inc, i32* %edgeCount, align 4, !dbg !446
+  store i1 true, i1* %retval, !dbg !447
+  br label %return, !dbg !447
+
+return:                                           ; preds = %if.end.7, %if.then.6, %if.then.3, %if.then
+  %23 = load i1, i1* %retval, !dbg !448
+  ret i1 %23, !dbg !448
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.NodeListStruct* @NodeList_new() #0 {
+entry:
+  %retval = alloca %struct.NodeListStruct*, align 8
+  %list = alloca %struct.NodeListStruct*, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeListStruct** %list, metadata !449, metadata !85), !dbg !450
+  %call = call noalias i8* @malloc(i64 16) #3, !dbg !451
+  %0 = bitcast i8* %call to %struct.NodeListStruct*, !dbg !451
+  store %struct.NodeListStruct* %0, %struct.NodeListStruct** %list, align 8, !dbg !450
+  %1 = load %struct.NodeListStruct*, %struct.NodeListStruct** %list, align 8, !dbg !452
+  %tobool = icmp ne %struct.NodeListStruct* %1, null, !dbg !452
+  br i1 %tobool, label %if.end, label %if.then, !dbg !454
+
+if.then:                                          ; preds = %entry
+  store %struct.NodeListStruct* null, %struct.NodeListStruct** %retval, !dbg !455
+  br label %return, !dbg !455
+
+if.end:                                           ; preds = %entry
+  %2 = load %struct.NodeListStruct*, %struct.NodeListStruct** %list, align 8, !dbg !456
+  %node = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %2, i32 0, i32 0, !dbg !457
+  store %struct.NodeStruct* null, %struct.NodeStruct** %node, align 8, !dbg !458
+  %3 = load %struct.NodeListStruct*, %struct.NodeListStruct** %list, align 8, !dbg !459
+  %nextNode = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %3, i32 0, i32 1, !dbg !460
+  store %struct.NodeListStruct* null, %struct.NodeListStruct** %nextNode, align 8, !dbg !461
+  %4 = load %struct.NodeListStruct*, %struct.NodeListStruct** %list, align 8, !dbg !462
+  store %struct.NodeListStruct* %4, %struct.NodeListStruct** %retval, !dbg !463
+  br label %return, !dbg !463
+
+return:                                           ; preds = %if.end, %if.then
+  %5 = load %struct.NodeListStruct*, %struct.NodeListStruct** %retval, !dbg !464
+  ret %struct.NodeListStruct* %5, !dbg !464
+}
+
+; Function Attrs: nounwind uwtable
+define zeroext i1 @NodeList_insertFront(%struct.NodeListStruct* %this, %struct.NodeStruct* %newFront) #0 {
+entry:
+  %retval = alloca i1, align 1
+  %this.addr = alloca %struct.NodeListStruct*, align 8
+  %newFront.addr = alloca %struct.NodeStruct*, align 8
+  %oldFront = alloca %struct.NodeListStruct*, align 8
+  store %struct.NodeListStruct* %this, %struct.NodeListStruct** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeListStruct** %this.addr, metadata !465, metadata !85), !dbg !466
+  store %struct.NodeStruct* %newFront, %struct.NodeStruct** %newFront.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NodeStruct** %newFront.addr, metadata !467, metadata !85), !dbg !468
+  call void @llvm.dbg.declare(metadata %struct.NodeListStruct** %oldFront, metadata !469, metadata !85), !dbg !470
+  %call = call %struct.NodeListStruct* @NodeList_new(), !dbg !471
+  store %struct.NodeListStruct* %call, %struct.NodeListStruct** %oldFront, align 8, !dbg !470
+  %0 = load %struct.NodeListStruct*, %struct.NodeListStruct** %this.addr, align 8, !dbg !472
+  %tobool = icmp ne %struct.NodeListStruct* %0, null, !dbg !472
+  br i1 %tobool, label %lor.lhs.false, label %if.then, !dbg !474
+
+lor.lhs.false:                                    ; preds = %entry
+  %1 = load %struct.NodeStruct*, %struct.NodeStruct** %newFront.addr, align 8, !dbg !475
+  %tobool1 = icmp ne %struct.NodeStruct* %1, null, !dbg !475
+  br i1 %tobool1, label %lor.lhs.false.2, label %if.then, !dbg !477
+
+lor.lhs.false.2:                                  ; preds = %lor.lhs.false
+  %2 = load %struct.NodeListStruct*, %struct.NodeListStruct** %oldFront, align 8, !dbg !478
+  %tobool3 = icmp ne %struct.NodeListStruct* %2, null, !dbg !478
+  br i1 %tobool3, label %if.end, label %if.then, !dbg !480
+
+if.then:                                          ; preds = %lor.lhs.false.2, %lor.lhs.false, %entry
+  store i1 false, i1* %retval, !dbg !481
+  br label %return, !dbg !481
+
+if.end:                                           ; preds = %lor.lhs.false.2
+  %3 = load %struct.NodeListStruct*, %struct.NodeListStruct** %this.addr, align 8, !dbg !482
+  %node = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %3, i32 0, i32 0, !dbg !483
+  %4 = load %struct.NodeStruct*, %struct.NodeStruct** %node, align 8, !dbg !483
+  %5 = load %struct.NodeListStruct*, %struct.NodeListStruct** %oldFront, align 8, !dbg !484
+  %node4 = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %5, i32 0, i32 0, !dbg !485
+  store %struct.NodeStruct* %4, %struct.NodeStruct** %node4, align 8, !dbg !486
+  %6 = load %struct.NodeListStruct*, %struct.NodeListStruct** %this.addr, align 8, !dbg !487
+  %nextNode = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %6, i32 0, i32 1, !dbg !488
+  %7 = load %struct.NodeListStruct*, %struct.NodeListStruct** %nextNode, align 8, !dbg !488
+  %8 = load %struct.NodeListStruct*, %struct.NodeListStruct** %oldFront, align 8, !dbg !489
+  %nextNode5 = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %8, i32 0, i32 1, !dbg !490
+  store %struct.NodeListStruct* %7, %struct.NodeListStruct** %nextNode5, align 8, !dbg !491
+  %9 = load %struct.NodeStruct*, %struct.NodeStruct** %newFront.addr, align 8, !dbg !492
+  %10 = load %struct.NodeListStruct*, %struct.NodeListStruct** %this.addr, align 8, !dbg !493
+  %node6 = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %10, i32 0, i32 0, !dbg !494
+  store %struct.NodeStruct* %9, %struct.NodeStruct** %node6, align 8, !dbg !495
+  %11 = load %struct.NodeListStruct*, %struct.NodeListStruct** %oldFront, align 8, !dbg !496
+  %12 = load %struct.NodeListStruct*, %struct.NodeListStruct** %this.addr, align 8, !dbg !497
+  %nextNode7 = getelementptr inbounds %struct.NodeListStruct, %struct.NodeListStruct* %12, i32 0, i32 1, !dbg !498
+  store %struct.NodeListStruct* %11, %struct.NodeListStruct** %nextNode7, align 8, !dbg !499
+  store i1 true, i1* %retval, !dbg !500
+  br label %return, !dbg !500
+
+return:                                           ; preds = %if.end, %if.then
+  %13 = load i1, i1* %retval, !dbg !501
+  ret i1 %13, !dbg !501
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.EdgeListStruct* @EdgeList_new() #0 {
+entry:
+  %newNode = alloca %struct.EdgeListStruct*, align 8
+  call void @llvm.dbg.declare(metadata %struct.EdgeListStruct** %newNode, metadata !502, metadata !85), !dbg !503
+  %call = call noalias i8* @malloc(i64 24) #3, !dbg !504
+  %0 = bitcast i8* %call to %struct.EdgeListStruct*, !dbg !504
+  store %struct.EdgeListStruct* %0, %struct.EdgeListStruct** %newNode, align 8, !dbg !503
+  %1 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newNode, align 8, !dbg !505
+  %tobool = icmp ne %struct.EdgeListStruct* %1, null, !dbg !505
+  br i1 %tobool, label %if.then, label %if.end, !dbg !507
+
+if.then:                                          ; preds = %entry
+  %2 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newNode, align 8, !dbg !508
+  %targetNodeId = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %2, i32 0, i32 0, !dbg !510
+  store i32 -1, i32* %targetNodeId, align 4, !dbg !511
+  %3 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newNode, align 8, !dbg !512
+  %targetNode = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %3, i32 0, i32 1, !dbg !513
+  store %struct.NodeStruct* null, %struct.NodeStruct** %targetNode, align 8, !dbg !514
+  %4 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newNode, align 8, !dbg !515
+  %nextEdge = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %4, i32 0, i32 2, !dbg !516
+  store %struct.EdgeListStruct* null, %struct.EdgeListStruct** %nextEdge, align 8, !dbg !517
+  br label %if.end, !dbg !518
+
+if.end:                                           ; preds = %if.then, %entry
+  %5 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newNode, align 8, !dbg !519
+  ret %struct.EdgeListStruct* %5, !dbg !520
+}
+
+; Function Attrs: nounwind uwtable
+define zeroext i1 @EdgeList_insertNodeId(%struct.EdgeListStruct* %this, i32 %targetNodeId) #0 {
+entry:
+  %retval = alloca i1, align 1
+  %this.addr = alloca %struct.EdgeListStruct*, align 8
+  %targetNodeId.addr = alloca i32, align 4
+  %end = alloca %struct.EdgeListStruct*, align 8
+  %newElement = alloca %struct.EdgeListStruct*, align 8
+  store %struct.EdgeListStruct* %this, %struct.EdgeListStruct** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.EdgeListStruct** %this.addr, metadata !521, metadata !85), !dbg !522
+  store i32 %targetNodeId, i32* %targetNodeId.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %targetNodeId.addr, metadata !523, metadata !85), !dbg !524
+  call void @llvm.dbg.declare(metadata %struct.EdgeListStruct** %end, metadata !525, metadata !85), !dbg !526
+  call void @llvm.dbg.declare(metadata %struct.EdgeListStruct** %newElement, metadata !527, metadata !85), !dbg !528
+  %0 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %this.addr, align 8, !dbg !529
+  %tobool = icmp ne %struct.EdgeListStruct* %0, null, !dbg !529
+  br i1 %tobool, label %if.end, label %if.then, !dbg !531
+
+if.then:                                          ; preds = %entry
+  store i1 false, i1* %retval, !dbg !532
+  br label %return, !dbg !532
+
+if.end:                                           ; preds = %entry
+  %1 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %this.addr, align 8, !dbg !533
+  %targetNodeId1 = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %1, i32 0, i32 0, !dbg !535
+  %2 = load i32, i32* %targetNodeId1, align 4, !dbg !535
+  %cmp = icmp eq i32 %2, -1, !dbg !536
+  br i1 %cmp, label %if.then.2, label %if.end.4, !dbg !537
+
+if.then.2:                                        ; preds = %if.end
+  %3 = load i32, i32* %targetNodeId.addr, align 4, !dbg !538
+  %4 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %this.addr, align 8, !dbg !540
+  %targetNodeId3 = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %4, i32 0, i32 0, !dbg !541
+  store i32 %3, i32* %targetNodeId3, align 4, !dbg !542
+  store i1 true, i1* %retval, !dbg !543
+  br label %return, !dbg !543
+
+if.end.4:                                         ; preds = %if.end
+  %5 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %this.addr, align 8, !dbg !544
+  store %struct.EdgeListStruct* %5, %struct.EdgeListStruct** %end, align 8, !dbg !546
+  br label %for.cond, !dbg !547
+
+for.cond:                                         ; preds = %for.inc, %if.end.4
+  %6 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %end, align 8, !dbg !548
+  %nextEdge = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %6, i32 0, i32 2, !dbg !552
+  %7 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %nextEdge, align 8, !dbg !552
+  %cmp5 = icmp ne %struct.EdgeListStruct* %7, null, !dbg !553
+  br i1 %cmp5, label %for.body, label %for.end, !dbg !554
+
+for.body:                                         ; preds = %for.cond
+  br label %for.inc, !dbg !555
+
+for.inc:                                          ; preds = %for.body
+  %8 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %end, align 8, !dbg !557
+  %nextEdge6 = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %8, i32 0, i32 2, !dbg !558
+  %9 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %nextEdge6, align 8, !dbg !558
+  store %struct.EdgeListStruct* %9, %struct.EdgeListStruct** %end, align 8, !dbg !559
+  br label %for.cond, !dbg !560
+
+for.end:                                          ; preds = %for.cond
+  %call = call %struct.EdgeListStruct* @EdgeList_new(), !dbg !561
+  store %struct.EdgeListStruct* %call, %struct.EdgeListStruct** %newElement, align 8, !dbg !562
+  %10 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newElement, align 8, !dbg !563
+  %tobool7 = icmp ne %struct.EdgeListStruct* %10, null, !dbg !563
+  br i1 %tobool7, label %if.end.9, label %if.then.8, !dbg !565
+
+if.then.8:                                        ; preds = %for.end
+  store i1 false, i1* %retval, !dbg !566
+  br label %return, !dbg !566
+
+if.end.9:                                         ; preds = %for.end
+  %11 = load i32, i32* %targetNodeId.addr, align 4, !dbg !567
+  %12 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newElement, align 8, !dbg !568
+  %targetNodeId10 = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %12, i32 0, i32 0, !dbg !569
+  store i32 %11, i32* %targetNodeId10, align 4, !dbg !570
+  %13 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %newElement, align 8, !dbg !571
+  %14 = load %struct.EdgeListStruct*, %struct.EdgeListStruct** %end, align 8, !dbg !572
+  %nextEdge11 = getelementptr inbounds %struct.EdgeListStruct, %struct.EdgeListStruct* %14, i32 0, i32 2, !dbg !573
+  store %struct.EdgeListStruct* %13, %struct.EdgeListStruct** %nextEdge11, align 8, !dbg !574
+  store i1 true, i1* %retval, !dbg !575
+  br label %return, !dbg !575
+
+return:                                           ; preds = %if.end.9, %if.then.8, %if.then.2, %if.then
+  %15 = load i1, i1* %retval, !dbg !576
+  ret i1 %15, !dbg !576
+}
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { nounwind "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { nounwind }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!81, !82}
+!llvm.ident = !{!83}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, retainedTypes: !9, subprograms: !11)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/DOE_ProxyApps_C/Pathfinder")
+!2 = !{!3}
+!3 = !DICompositeType(tag: DW_TAG_enumeration_type, file: !4, line: 55, size: 32, align: 32, elements: !5)
+!4 = !DIFile(filename: "./node.h", directory: "/home/gleison/tf/Benchmarks/DOE_ProxyApps_C/Pathfinder")
+!5 = !{!6, !7, !8}
+!6 = !DIEnumerator(name: "exteriorNode", value: 0)
+!7 = !DIEnumerator(name: "interiorNode", value: 1)
+!8 = !DIEnumerator(name: "entranceNode", value: 2)
+!9 = !{!10}
+!10 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: null, size: 64, align: 64)
+!11 = !{!12, !48, !51, !54, !57, !58, !62, !65, !68, !71, !72, !75, !78}
+!12 = !DISubprogram(name: "Node_new", scope: !13, file: !13, line: 59, type: !14, isLocal: false, isDefinition: true, scopeLine: 59, flags: DIFlagPrototyped, isOptimized: false, function: %struct.NodeStruct* (i32, i32)* @Node_new, variables: !47)
+!13 = !DIFile(filename: "/home/gleison/tf/Benchmarks/DOE_ProxyApps_C/Pathfinder/tmp.c", directory: "/home/gleison/tf/Benchmarks/DOE_ProxyApps_C/Pathfinder")
+!14 = !DISubroutineType(types: !15)
+!15 = !{!16, !21, !21}
+!16 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !17, size: 64, align: 64)
+!17 = !DIDerivedType(tag: DW_TAG_typedef, name: "Node", file: !4, line: 70, baseType: !18)
+!18 = !DICompositeType(tag: DW_TAG_structure_type, name: "NodeStruct", file: !4, line: 78, size: 448, align: 64, elements: !19)
+!19 = !{!20, !22, !23, !26, !27, !29, !30, !37, !45, !46}
+!20 = !DIDerivedType(tag: DW_TAG_member, name: "id", scope: !18, file: !4, line: 80, baseType: !21, size: 32, align: 32)
+!21 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!22 = !DIDerivedType(tag: DW_TAG_member, name: "nodeCount", scope: !18, file: !4, line: 81, baseType: !21, size: 32, align: 32, offset: 32)
+!23 = !DIDerivedType(tag: DW_TAG_member, name: "label", scope: !18, file: !4, line: 82, baseType: !24, size: 64, align: 64, offset: 64)
+!24 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !25, size: 64, align: 64)
+!25 = !DIBasicType(name: "char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!26 = !DIDerivedType(tag: DW_TAG_member, name: "labelIdx", scope: !18, file: !4, line: 83, baseType: !21, size: 32, align: 32, offset: 128)
+!27 = !DIDerivedType(tag: DW_TAG_member, name: "type", scope: !18, file: !4, line: 84, baseType: !28, size: 32, align: 32, offset: 160)
+!28 = !DIDerivedType(tag: DW_TAG_typedef, name: "NodeType", file: !4, line: 60, baseType: !3)
+!29 = !DIDerivedType(tag: DW_TAG_member, name: "container", scope: !18, file: !4, line: 85, baseType: !16, size: 64, align: 64, offset: 192)
+!30 = !DIDerivedType(tag: DW_TAG_member, name: "interiorNodes", scope: !18, file: !4, line: 86, baseType: !31, size: 64, align: 64, offset: 256)
+!31 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !32, size: 64, align: 64)
+!32 = !DIDerivedType(tag: DW_TAG_typedef, name: "NodeList", file: !4, line: 71, baseType: !33)
+!33 = !DICompositeType(tag: DW_TAG_structure_type, name: "NodeListStruct", file: !4, line: 108, size: 128, align: 64, elements: !34)
+!34 = !{!35, !36}
+!35 = !DIDerivedType(tag: DW_TAG_member, name: "node", scope: !33, file: !4, line: 110, baseType: !16, size: 64, align: 64)
+!36 = !DIDerivedType(tag: DW_TAG_member, name: "nextNode", scope: !33, file: !4, line: 111, baseType: !31, size: 64, align: 64, offset: 64)
+!37 = !DIDerivedType(tag: DW_TAG_member, name: "edges", scope: !18, file: !4, line: 87, baseType: !38, size: 64, align: 64, offset: 320)
+!38 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !39, size: 64, align: 64)
+!39 = !DIDerivedType(tag: DW_TAG_typedef, name: "EdgeList", file: !4, line: 72, baseType: !40)
+!40 = !DICompositeType(tag: DW_TAG_structure_type, name: "EdgeListStruct", file: !4, line: 148, size: 192, align: 64, elements: !41)
+!41 = !{!42, !43, !44}
+!42 = !DIDerivedType(tag: DW_TAG_member, name: "targetNodeId", scope: !40, file: !4, line: 150, baseType: !21, size: 32, align: 32)
+!43 = !DIDerivedType(tag: DW_TAG_member, name: "targetNode", scope: !40, file: !4, line: 151, baseType: !16, size: 64, align: 64, offset: 64)
+!44 = !DIDerivedType(tag: DW_TAG_member, name: "nextEdge", scope: !40, file: !4, line: 152, baseType: !38, size: 64, align: 64, offset: 128)
+!45 = !DIDerivedType(tag: DW_TAG_member, name: "edgeCount", scope: !18, file: !4, line: 89, baseType: !21, size: 32, align: 32, offset: 384)
+!46 = !DIDerivedType(tag: DW_TAG_member, name: "entranceCount", scope: !18, file: !4, line: 90, baseType: !21, size: 32, align: 32, offset: 416)
+!47 = !{}
+!48 = !DISubprogram(name: "Node_delete", scope: !13, file: !13, line: 81, type: !49, isLocal: false, isDefinition: true, scopeLine: 81, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.NodeStruct*)* @Node_delete, variables: !47)
+!49 = !DISubroutineType(types: !50)
+!50 = !{null, !16}
+!51 = !DISubprogram(name: "Node_duplicate", scope: !13, file: !13, line: 96, type: !52, isLocal: false, isDefinition: true, scopeLine: 96, flags: DIFlagPrototyped, isOptimized: false, function: %struct.NodeStruct* (%struct.NodeStruct*, i32)* @Node_duplicate, variables: !47)
+!52 = !DISubroutineType(types: !53)
+!53 = !{!16, !16, !21}
+!54 = !DISubprogram(name: "Node_setParent", scope: !13, file: !13, line: 118, type: !55, isLocal: false, isDefinition: true, scopeLine: 118, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.NodeStruct*, %struct.NodeStruct*)* @Node_setParent, variables: !47)
+!55 = !DISubroutineType(types: !56)
+!56 = !{null, !16, !16}
+!57 = !DISubprogram(name: "Node_addInteriorNode", scope: !13, file: !13, line: 128, type: !55, isLocal: false, isDefinition: true, scopeLine: 128, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.NodeStruct*, %struct.NodeStruct*)* @Node_addInteriorNode, variables: !47)
+!58 = !DISubprogram(name: "Node_addEdgeToNode", scope: !13, file: !13, line: 149, type: !59, isLocal: false, isDefinition: true, scopeLine: 149, flags: DIFlagPrototyped, isOptimized: false, function: i1 (%struct.NodeStruct*, %struct.NodeStruct*)* @Node_addEdgeToNode, variables: !47)
+!59 = !DISubroutineType(types: !60)
+!60 = !{!61, !16, !16}
+!61 = !DIBasicType(name: "_Bool", size: 8, align: 8, encoding: DW_ATE_boolean)
+!62 = !DISubprogram(name: "NodeList_new", scope: !13, file: !13, line: 179, type: !63, isLocal: false, isDefinition: true, scopeLine: 179, isOptimized: false, function: %struct.NodeListStruct* ()* @NodeList_new, variables: !47)
+!63 = !DISubroutineType(types: !64)
+!64 = !{!31}
+!65 = !DISubprogram(name: "NodeList_clear", scope: !13, file: !13, line: 194, type: !66, isLocal: false, isDefinition: true, scopeLine: 194, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.NodeListStruct*, i1)* @NodeList_clear, variables: !47)
+!66 = !DISubroutineType(types: !67)
+!67 = !{null, !31, !61}
+!68 = !DISubprogram(name: "NodeList_insertFront", scope: !13, file: !13, line: 214, type: !69, isLocal: false, isDefinition: true, scopeLine: 214, flags: DIFlagPrototyped, isOptimized: false, function: i1 (%struct.NodeListStruct*, %struct.NodeStruct*)* @NodeList_insertFront, variables: !47)
+!69 = !DISubroutineType(types: !70)
+!70 = !{!61, !31, !16}
+!71 = !DISubprogram(name: "NodeList_insertBack", scope: !13, file: !13, line: 238, type: !69, isLocal: false, isDefinition: true, scopeLine: 238, flags: DIFlagPrototyped, isOptimized: false, function: i1 (%struct.NodeListStruct*, %struct.NodeStruct*)* @NodeList_insertBack, variables: !47)
+!72 = !DISubprogram(name: "EdgeList_new", scope: !13, file: !13, line: 275, type: !73, isLocal: false, isDefinition: true, scopeLine: 275, isOptimized: false, function: %struct.EdgeListStruct* ()* @EdgeList_new, variables: !47)
+!73 = !DISubroutineType(types: !74)
+!74 = !{!38}
+!75 = !DISubprogram(name: "EdgeList_clear", scope: !13, file: !13, line: 286, type: !76, isLocal: false, isDefinition: true, scopeLine: 286, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.EdgeListStruct*)* @EdgeList_clear, variables: !47)
+!76 = !DISubroutineType(types: !77)
+!77 = !{null, !38}
+!78 = !DISubprogram(name: "EdgeList_insertNodeId", scope: !13, file: !13, line: 302, type: !79, isLocal: false, isDefinition: true, scopeLine: 302, flags: DIFlagPrototyped, isOptimized: false, function: i1 (%struct.EdgeListStruct*, i32)* @EdgeList_insertNodeId, variables: !47)
+!79 = !DISubroutineType(types: !80)
+!80 = !{!61, !38, !21}
+!81 = !{i32 2, !"Dwarf Version", i32 4}
+!82 = !{i32 2, !"Debug Info Version", i32 3}
+!83 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!84 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "id", arg: 1, scope: !12, file: !13, line: 59, type: !21)
+!85 = !DIExpression()
+!86 = !DILocation(line: 59, column: 20, scope: !12)
+!87 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "nodeCount", arg: 2, scope: !12, file: !13, line: 59, type: !21)
+!88 = !DILocation(line: 59, column: 28, scope: !12)
+!89 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "node", scope: !12, file: !13, line: 60, type: !16)
+!90 = !DILocation(line: 60, column: 9, scope: !12)
+!91 = !DILocation(line: 60, column: 16, scope: !12)
+!92 = !DILocation(line: 62, column: 8, scope: !93)
+!93 = distinct !DILexicalBlock(scope: !12, file: !13, line: 62, column: 7)
+!94 = !DILocation(line: 62, column: 7, scope: !12)
+!95 = !DILocation(line: 63, column: 5, scope: !93)
+!96 = !DILocation(line: 65, column: 14, scope: !12)
+!97 = !DILocation(line: 65, column: 3, scope: !12)
+!98 = !DILocation(line: 65, column: 9, scope: !12)
+!99 = !DILocation(line: 65, column: 12, scope: !12)
+!100 = !DILocation(line: 66, column: 21, scope: !12)
+!101 = !DILocation(line: 66, column: 3, scope: !12)
+!102 = !DILocation(line: 66, column: 9, scope: !12)
+!103 = !DILocation(line: 66, column: 19, scope: !12)
+!104 = !DILocation(line: 67, column: 3, scope: !12)
+!105 = !DILocation(line: 67, column: 9, scope: !12)
+!106 = !DILocation(line: 67, column: 15, scope: !12)
+!107 = !DILocation(line: 68, column: 3, scope: !12)
+!108 = !DILocation(line: 68, column: 9, scope: !12)
+!109 = !DILocation(line: 68, column: 18, scope: !12)
+!110 = !DILocation(line: 69, column: 3, scope: !12)
+!111 = !DILocation(line: 69, column: 9, scope: !12)
+!112 = !DILocation(line: 69, column: 14, scope: !12)
+!113 = !DILocation(line: 70, column: 3, scope: !12)
+!114 = !DILocation(line: 70, column: 9, scope: !12)
+!115 = !DILocation(line: 70, column: 19, scope: !12)
+!116 = !DILocation(line: 71, column: 3, scope: !12)
+!117 = !DILocation(line: 71, column: 9, scope: !12)
+!118 = !DILocation(line: 71, column: 23, scope: !12)
+!119 = !DILocation(line: 72, column: 3, scope: !12)
+!120 = !DILocation(line: 72, column: 9, scope: !12)
+!121 = !DILocation(line: 72, column: 15, scope: !12)
+!122 = !DILocation(line: 74, column: 3, scope: !12)
+!123 = !DILocation(line: 74, column: 9, scope: !12)
+!124 = !DILocation(line: 74, column: 19, scope: !12)
+!125 = !DILocation(line: 75, column: 3, scope: !12)
+!126 = !DILocation(line: 75, column: 9, scope: !12)
+!127 = !DILocation(line: 75, column: 23, scope: !12)
+!128 = !DILocation(line: 77, column: 11, scope: !12)
+!129 = !DILocation(line: 77, column: 3, scope: !12)
+!130 = !DILocation(line: 78, column: 1, scope: !12)
+!131 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "trash", arg: 1, scope: !48, file: !13, line: 81, type: !16)
+!132 = !DILocation(line: 81, column: 24, scope: !48)
+!133 = !DILocation(line: 83, column: 8, scope: !134)
+!134 = distinct !DILexicalBlock(scope: !48, file: !13, line: 83, column: 7)
+!135 = !DILocation(line: 83, column: 7, scope: !48)
+!136 = !DILocation(line: 84, column: 5, scope: !134)
+!137 = !DILocation(line: 86, column: 7, scope: !138)
+!138 = distinct !DILexicalBlock(scope: !48, file: !13, line: 86, column: 7)
+!139 = !DILocation(line: 86, column: 14, scope: !138)
+!140 = !DILocation(line: 86, column: 7, scope: !48)
+!141 = !DILocation(line: 87, column: 20, scope: !138)
+!142 = !DILocation(line: 87, column: 27, scope: !138)
+!143 = !DILocation(line: 87, column: 5, scope: !138)
+!144 = !DILocation(line: 89, column: 7, scope: !145)
+!145 = distinct !DILexicalBlock(scope: !48, file: !13, line: 89, column: 7)
+!146 = !DILocation(line: 89, column: 14, scope: !145)
+!147 = !DILocation(line: 89, column: 7, scope: !48)
+!148 = !DILocation(line: 90, column: 20, scope: !145)
+!149 = !DILocation(line: 90, column: 27, scope: !145)
+!150 = !DILocation(line: 90, column: 5, scope: !145)
+!151 = !DILocation(line: 92, column: 8, scope: !48)
+!152 = !DILocation(line: 92, column: 3, scope: !48)
+!153 = !DILocation(line: 93, column: 1, scope: !48)
+!154 = !DILocation(line: 93, column: 1, scope: !155)
+!155 = !DILexicalBlockFile(scope: !48, file: !13, discriminator: 1)
+!156 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "trash", arg: 1, scope: !65, file: !13, line: 194, type: !31)
+!157 = !DILocation(line: 194, column: 31, scope: !65)
+!158 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "deleteNodes", arg: 2, scope: !65, file: !13, line: 194, type: !61)
+!159 = !DILocation(line: 194, column: 43, scope: !65)
+!160 = !DILocation(line: 196, column: 8, scope: !161)
+!161 = distinct !DILexicalBlock(scope: !65, file: !13, line: 196, column: 7)
+!162 = !DILocation(line: 196, column: 7, scope: !65)
+!163 = !DILocation(line: 197, column: 5, scope: !161)
+!164 = !DILocation(line: 199, column: 7, scope: !165)
+!165 = distinct !DILexicalBlock(scope: !65, file: !13, line: 199, column: 7)
+!166 = !DILocation(line: 199, column: 14, scope: !165)
+!167 = !DILocation(line: 199, column: 7, scope: !65)
+!168 = !DILocation(line: 200, column: 20, scope: !165)
+!169 = !DILocation(line: 200, column: 27, scope: !165)
+!170 = !DILocation(line: 200, column: 37, scope: !165)
+!171 = !DILocation(line: 200, column: 5, scope: !165)
+!172 = !DILocation(line: 202, column: 7, scope: !173)
+!173 = distinct !DILexicalBlock(scope: !65, file: !13, line: 202, column: 7)
+!174 = !DILocation(line: 202, column: 7, scope: !65)
+!175 = !DILocation(line: 203, column: 17, scope: !176)
+!176 = distinct !DILexicalBlock(scope: !173, file: !13, line: 202, column: 20)
+!177 = !DILocation(line: 203, column: 24, scope: !176)
+!178 = !DILocation(line: 203, column: 5, scope: !176)
+!179 = !DILocation(line: 204, column: 3, scope: !176)
+!180 = !DILocation(line: 205, column: 8, scope: !65)
+!181 = !DILocation(line: 205, column: 3, scope: !65)
+!182 = !DILocation(line: 206, column: 1, scope: !65)
+!183 = !DILocation(line: 206, column: 1, scope: !184)
+!184 = !DILexicalBlockFile(scope: !65, file: !13, discriminator: 1)
+!185 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !75, file: !13, line: 286, type: !38)
+!186 = !DILocation(line: 286, column: 31, scope: !75)
+!187 = !DILocation(line: 288, column: 8, scope: !188)
+!188 = distinct !DILexicalBlock(scope: !75, file: !13, line: 288, column: 7)
+!189 = !DILocation(line: 288, column: 7, scope: !75)
+!190 = !DILocation(line: 289, column: 5, scope: !188)
+!191 = !DILocation(line: 291, column: 7, scope: !192)
+!192 = distinct !DILexicalBlock(scope: !75, file: !13, line: 291, column: 7)
+!193 = !DILocation(line: 291, column: 13, scope: !192)
+!194 = !DILocation(line: 291, column: 7, scope: !75)
+!195 = !DILocation(line: 292, column: 20, scope: !192)
+!196 = !DILocation(line: 292, column: 26, scope: !192)
+!197 = !DILocation(line: 292, column: 5, scope: !192)
+!198 = !DILocation(line: 294, column: 8, scope: !75)
+!199 = !DILocation(line: 294, column: 3, scope: !75)
+!200 = !DILocation(line: 295, column: 1, scope: !75)
+!201 = !DILocation(line: 295, column: 1, scope: !202)
+!202 = !DILexicalBlockFile(scope: !75, file: !13, discriminator: 1)
+!203 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "from", arg: 1, scope: !51, file: !13, line: 96, type: !16)
+!204 = !DILocation(line: 96, column: 28, scope: !51)
+!205 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "newIndex", arg: 2, scope: !51, file: !13, line: 96, type: !21)
+!206 = !DILocation(line: 96, column: 38, scope: !51)
+!207 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "copy", scope: !51, file: !13, line: 97, type: !16)
+!208 = !DILocation(line: 97, column: 9, scope: !51)
+!209 = !DILocation(line: 97, column: 16, scope: !51)
+!210 = !DILocation(line: 99, column: 8, scope: !211)
+!211 = distinct !DILexicalBlock(scope: !51, file: !13, line: 99, column: 7)
+!212 = !DILocation(line: 99, column: 13, scope: !211)
+!213 = !DILocation(line: 99, column: 17, scope: !214)
+!214 = !DILexicalBlockFile(scope: !211, file: !13, discriminator: 1)
+!215 = !DILocation(line: 99, column: 7, scope: !51)
+!216 = !DILocation(line: 100, column: 5, scope: !211)
+!217 = !DILocation(line: 102, column: 14, scope: !51)
+!218 = !DILocation(line: 102, column: 20, scope: !51)
+!219 = !DILocation(line: 102, column: 3, scope: !51)
+!220 = !DILocation(line: 102, column: 9, scope: !51)
+!221 = !DILocation(line: 102, column: 12, scope: !51)
+!222 = !DILocation(line: 103, column: 21, scope: !51)
+!223 = !DILocation(line: 103, column: 3, scope: !51)
+!224 = !DILocation(line: 103, column: 9, scope: !51)
+!225 = !DILocation(line: 103, column: 19, scope: !51)
+!226 = !DILocation(line: 104, column: 17, scope: !51)
+!227 = !DILocation(line: 104, column: 23, scope: !51)
+!228 = !DILocation(line: 104, column: 3, scope: !51)
+!229 = !DILocation(line: 104, column: 9, scope: !51)
+!230 = !DILocation(line: 104, column: 15, scope: !51)
+!231 = !DILocation(line: 105, column: 20, scope: !51)
+!232 = !DILocation(line: 105, column: 26, scope: !51)
+!233 = !DILocation(line: 105, column: 3, scope: !51)
+!234 = !DILocation(line: 105, column: 9, scope: !51)
+!235 = !DILocation(line: 105, column: 18, scope: !51)
+!236 = !DILocation(line: 106, column: 16, scope: !51)
+!237 = !DILocation(line: 106, column: 22, scope: !51)
+!238 = !DILocation(line: 106, column: 3, scope: !51)
+!239 = !DILocation(line: 106, column: 9, scope: !51)
+!240 = !DILocation(line: 106, column: 14, scope: !51)
+!241 = !DILocation(line: 107, column: 3, scope: !51)
+!242 = !DILocation(line: 107, column: 9, scope: !51)
+!243 = !DILocation(line: 107, column: 19, scope: !51)
+!244 = !DILocation(line: 108, column: 3, scope: !51)
+!245 = !DILocation(line: 108, column: 9, scope: !51)
+!246 = !DILocation(line: 108, column: 23, scope: !51)
+!247 = !DILocation(line: 109, column: 3, scope: !51)
+!248 = !DILocation(line: 109, column: 9, scope: !51)
+!249 = !DILocation(line: 109, column: 15, scope: !51)
+!250 = !DILocation(line: 111, column: 3, scope: !51)
+!251 = !DILocation(line: 111, column: 9, scope: !51)
+!252 = !DILocation(line: 111, column: 19, scope: !51)
+!253 = !DILocation(line: 112, column: 3, scope: !51)
+!254 = !DILocation(line: 112, column: 9, scope: !51)
+!255 = !DILocation(line: 112, column: 23, scope: !51)
+!256 = !DILocation(line: 114, column: 11, scope: !51)
+!257 = !DILocation(line: 114, column: 3, scope: !51)
+!258 = !DILocation(line: 115, column: 1, scope: !51)
+!259 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !54, file: !13, line: 118, type: !16)
+!260 = !DILocation(line: 118, column: 27, scope: !54)
+!261 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "parent", arg: 2, scope: !54, file: !13, line: 118, type: !16)
+!262 = !DILocation(line: 118, column: 39, scope: !54)
+!263 = !DILocation(line: 120, column: 8, scope: !264)
+!264 = distinct !DILexicalBlock(scope: !54, file: !13, line: 120, column: 7)
+!265 = !DILocation(line: 120, column: 13, scope: !264)
+!266 = !DILocation(line: 120, column: 17, scope: !267)
+!267 = !DILexicalBlockFile(scope: !264, file: !13, discriminator: 1)
+!268 = !DILocation(line: 120, column: 7, scope: !54)
+!269 = !DILocation(line: 121, column: 5, scope: !264)
+!270 = !DILocation(line: 123, column: 21, scope: !54)
+!271 = !DILocation(line: 123, column: 3, scope: !54)
+!272 = !DILocation(line: 123, column: 9, scope: !54)
+!273 = !DILocation(line: 123, column: 19, scope: !54)
+!274 = !DILocation(line: 124, column: 3, scope: !54)
+!275 = !DILocation(line: 124, column: 9, scope: !54)
+!276 = !DILocation(line: 124, column: 14, scope: !54)
+!277 = !DILocation(line: 125, column: 1, scope: !54)
+!278 = !DILocation(line: 125, column: 1, scope: !279)
+!279 = !DILexicalBlockFile(scope: !54, file: !13, discriminator: 1)
+!280 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !57, file: !13, line: 128, type: !16)
+!281 = !DILocation(line: 128, column: 33, scope: !57)
+!282 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "interior", arg: 2, scope: !57, file: !13, line: 128, type: !16)
+!283 = !DILocation(line: 128, column: 45, scope: !57)
+!284 = !DILocation(line: 130, column: 8, scope: !285)
+!285 = distinct !DILexicalBlock(scope: !57, file: !13, line: 130, column: 7)
+!286 = !DILocation(line: 130, column: 13, scope: !285)
+!287 = !DILocation(line: 130, column: 17, scope: !288)
+!288 = !DILexicalBlockFile(scope: !285, file: !13, discriminator: 1)
+!289 = !DILocation(line: 130, column: 7, scope: !57)
+!290 = !DILocation(line: 131, column: 5, scope: !285)
+!291 = !DILocation(line: 133, column: 7, scope: !292)
+!292 = distinct !DILexicalBlock(scope: !57, file: !13, line: 133, column: 7)
+!293 = !DILocation(line: 133, column: 13, scope: !292)
+!294 = !DILocation(line: 133, column: 27, scope: !292)
+!295 = !DILocation(line: 133, column: 7, scope: !57)
+!296 = !DILocation(line: 134, column: 27, scope: !297)
+!297 = distinct !DILexicalBlock(scope: !292, file: !13, line: 133, column: 36)
+!298 = !DILocation(line: 134, column: 5, scope: !297)
+!299 = !DILocation(line: 134, column: 11, scope: !297)
+!300 = !DILocation(line: 134, column: 25, scope: !297)
+!301 = !DILocation(line: 135, column: 9, scope: !302)
+!302 = distinct !DILexicalBlock(scope: !297, file: !13, line: 135, column: 9)
+!303 = !DILocation(line: 135, column: 15, scope: !302)
+!304 = !DILocation(line: 135, column: 29, scope: !302)
+!305 = !DILocation(line: 135, column: 9, scope: !297)
+!306 = !DILocation(line: 136, column: 7, scope: !302)
+!307 = !DILocation(line: 137, column: 33, scope: !297)
+!308 = !DILocation(line: 137, column: 5, scope: !297)
+!309 = !DILocation(line: 137, column: 11, scope: !297)
+!310 = !DILocation(line: 137, column: 26, scope: !297)
+!311 = !DILocation(line: 137, column: 31, scope: !297)
+!312 = !DILocation(line: 138, column: 3, scope: !297)
+!313 = !DILocation(line: 139, column: 25, scope: !292)
+!314 = !DILocation(line: 139, column: 31, scope: !292)
+!315 = !DILocation(line: 139, column: 46, scope: !292)
+!316 = !DILocation(line: 139, column: 5, scope: !292)
+!317 = !DILocation(line: 141, column: 18, scope: !57)
+!318 = !DILocation(line: 141, column: 28, scope: !57)
+!319 = !DILocation(line: 141, column: 3, scope: !57)
+!320 = !DILocation(line: 142, column: 3, scope: !57)
+!321 = !DILocation(line: 143, column: 1, scope: !57)
+!322 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !71, file: !13, line: 238, type: !31)
+!323 = !DILocation(line: 238, column: 36, scope: !71)
+!324 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "newBack", arg: 2, scope: !71, file: !13, line: 238, type: !16)
+!325 = !DILocation(line: 238, column: 48, scope: !71)
+!326 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "end", scope: !71, file: !13, line: 239, type: !31)
+!327 = !DILocation(line: 239, column: 13, scope: !71)
+!328 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "newElement", scope: !71, file: !13, line: 240, type: !31)
+!329 = !DILocation(line: 240, column: 13, scope: !71)
+!330 = !DILocation(line: 243, column: 8, scope: !331)
+!331 = distinct !DILexicalBlock(scope: !71, file: !13, line: 243, column: 7)
+!332 = !DILocation(line: 243, column: 13, scope: !331)
+!333 = !DILocation(line: 243, column: 17, scope: !334)
+!334 = !DILexicalBlockFile(scope: !331, file: !13, discriminator: 1)
+!335 = !DILocation(line: 243, column: 7, scope: !71)
+!336 = !DILocation(line: 244, column: 5, scope: !331)
+!337 = !DILocation(line: 250, column: 7, scope: !338)
+!338 = distinct !DILexicalBlock(scope: !71, file: !13, line: 250, column: 7)
+!339 = !DILocation(line: 250, column: 13, scope: !338)
+!340 = !DILocation(line: 250, column: 18, scope: !338)
+!341 = !DILocation(line: 250, column: 7, scope: !71)
+!342 = !DILocation(line: 251, column: 18, scope: !343)
+!343 = distinct !DILexicalBlock(scope: !338, file: !13, line: 250, column: 27)
+!344 = !DILocation(line: 251, column: 5, scope: !343)
+!345 = !DILocation(line: 251, column: 11, scope: !343)
+!346 = !DILocation(line: 251, column: 16, scope: !343)
+!347 = !DILocation(line: 252, column: 5, scope: !343)
+!348 = !DILocation(line: 256, column: 14, scope: !349)
+!349 = distinct !DILexicalBlock(scope: !71, file: !13, line: 256, column: 3)
+!350 = !DILocation(line: 256, column: 12, scope: !349)
+!351 = !DILocation(line: 256, column: 8, scope: !349)
+!352 = !DILocation(line: 256, column: 20, scope: !353)
+!353 = !DILexicalBlockFile(scope: !354, file: !13, discriminator: 2)
+!354 = !DILexicalBlockFile(scope: !355, file: !13, discriminator: 1)
+!355 = distinct !DILexicalBlock(scope: !349, file: !13, line: 256, column: 3)
+!356 = !DILocation(line: 256, column: 25, scope: !355)
+!357 = !DILocation(line: 256, column: 34, scope: !355)
+!358 = !DILocation(line: 256, column: 3, scope: !349)
+!359 = !DILocation(line: 257, column: 3, scope: !360)
+!360 = distinct !DILexicalBlock(scope: !355, file: !13, line: 256, column: 64)
+!361 = !DILocation(line: 256, column: 49, scope: !355)
+!362 = !DILocation(line: 256, column: 54, scope: !355)
+!363 = !DILocation(line: 256, column: 47, scope: !355)
+!364 = !DILocation(line: 256, column: 3, scope: !355)
+!365 = !DILocation(line: 259, column: 16, scope: !71)
+!366 = !DILocation(line: 259, column: 14, scope: !71)
+!367 = !DILocation(line: 260, column: 8, scope: !368)
+!368 = distinct !DILexicalBlock(scope: !71, file: !13, line: 260, column: 7)
+!369 = !DILocation(line: 260, column: 7, scope: !71)
+!370 = !DILocation(line: 261, column: 5, scope: !368)
+!371 = !DILocation(line: 263, column: 22, scope: !71)
+!372 = !DILocation(line: 263, column: 3, scope: !71)
+!373 = !DILocation(line: 263, column: 15, scope: !71)
+!374 = !DILocation(line: 263, column: 20, scope: !71)
+!375 = !DILocation(line: 264, column: 19, scope: !71)
+!376 = !DILocation(line: 264, column: 3, scope: !71)
+!377 = !DILocation(line: 264, column: 8, scope: !71)
+!378 = !DILocation(line: 264, column: 17, scope: !71)
+!379 = !DILocation(line: 266, column: 3, scope: !71)
+!380 = !DILocation(line: 267, column: 1, scope: !71)
+!381 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !58, file: !13, line: 149, type: !16)
+!382 = !DILocation(line: 149, column: 31, scope: !58)
+!383 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "node", arg: 2, scope: !58, file: !13, line: 149, type: !16)
+!384 = !DILocation(line: 149, column: 43, scope: !58)
+!385 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "end", scope: !58, file: !13, line: 150, type: !38)
+!386 = !DILocation(line: 150, column: 13, scope: !58)
+!387 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "newEdge", scope: !58, file: !13, line: 151, type: !38)
+!388 = !DILocation(line: 151, column: 13, scope: !58)
+!389 = !DILocation(line: 153, column: 8, scope: !390)
+!390 = distinct !DILexicalBlock(scope: !58, file: !13, line: 153, column: 7)
+!391 = !DILocation(line: 153, column: 13, scope: !390)
+!392 = !DILocation(line: 153, column: 17, scope: !393)
+!393 = !DILexicalBlockFile(scope: !390, file: !13, discriminator: 1)
+!394 = !DILocation(line: 153, column: 7, scope: !58)
+!395 = !DILocation(line: 154, column: 5, scope: !390)
+!396 = !DILocation(line: 157, column: 14, scope: !397)
+!397 = distinct !DILexicalBlock(scope: !58, file: !13, line: 157, column: 3)
+!398 = !DILocation(line: 157, column: 20, scope: !397)
+!399 = !DILocation(line: 157, column: 12, scope: !397)
+!400 = !DILocation(line: 157, column: 8, scope: !397)
+!401 = !DILocation(line: 157, column: 27, scope: !402)
+!402 = !DILexicalBlockFile(scope: !403, file: !13, discriminator: 2)
+!403 = !DILexicalBlockFile(scope: !404, file: !13, discriminator: 1)
+!404 = distinct !DILexicalBlock(scope: !397, file: !13, line: 157, column: 3)
+!405 = !DILocation(line: 157, column: 31, scope: !404)
+!406 = !DILocation(line: 157, column: 3, scope: !397)
+!407 = !DILocation(line: 158, column: 9, scope: !408)
+!408 = distinct !DILexicalBlock(scope: !404, file: !13, line: 158, column: 9)
+!409 = !DILocation(line: 158, column: 14, scope: !408)
+!410 = !DILocation(line: 158, column: 28, scope: !408)
+!411 = !DILocation(line: 158, column: 25, scope: !408)
+!412 = !DILocation(line: 158, column: 9, scope: !404)
+!413 = !DILocation(line: 159, column: 7, scope: !408)
+!414 = !DILocation(line: 158, column: 28, scope: !415)
+!415 = !DILexicalBlockFile(scope: !408, file: !13, discriminator: 1)
+!416 = !DILocation(line: 157, column: 46, scope: !404)
+!417 = !DILocation(line: 157, column: 51, scope: !404)
+!418 = !DILocation(line: 157, column: 44, scope: !404)
+!419 = !DILocation(line: 157, column: 3, scope: !404)
+!420 = !DILocation(line: 162, column: 13, scope: !58)
+!421 = !DILocation(line: 162, column: 11, scope: !58)
+!422 = !DILocation(line: 163, column: 8, scope: !423)
+!423 = distinct !DILexicalBlock(scope: !58, file: !13, line: 163, column: 7)
+!424 = !DILocation(line: 163, column: 7, scope: !58)
+!425 = !DILocation(line: 164, column: 5, scope: !423)
+!426 = !DILocation(line: 165, column: 25, scope: !58)
+!427 = !DILocation(line: 165, column: 3, scope: !58)
+!428 = !DILocation(line: 165, column: 12, scope: !58)
+!429 = !DILocation(line: 165, column: 23, scope: !58)
+!430 = !DILocation(line: 166, column: 27, scope: !58)
+!431 = !DILocation(line: 166, column: 33, scope: !58)
+!432 = !DILocation(line: 166, column: 3, scope: !58)
+!433 = !DILocation(line: 166, column: 12, scope: !58)
+!434 = !DILocation(line: 166, column: 25, scope: !58)
+!435 = !DILocation(line: 167, column: 23, scope: !58)
+!436 = !DILocation(line: 167, column: 29, scope: !58)
+!437 = !DILocation(line: 167, column: 3, scope: !58)
+!438 = !DILocation(line: 167, column: 12, scope: !58)
+!439 = !DILocation(line: 167, column: 21, scope: !58)
+!440 = !DILocation(line: 168, column: 17, scope: !58)
+!441 = !DILocation(line: 168, column: 3, scope: !58)
+!442 = !DILocation(line: 168, column: 9, scope: !58)
+!443 = !DILocation(line: 168, column: 15, scope: !58)
+!444 = !DILocation(line: 169, column: 5, scope: !58)
+!445 = !DILocation(line: 169, column: 11, scope: !58)
+!446 = !DILocation(line: 169, column: 3, scope: !58)
+!447 = !DILocation(line: 170, column: 3, scope: !58)
+!448 = !DILocation(line: 171, column: 1, scope: !58)
+!449 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "list", scope: !62, file: !13, line: 180, type: !31)
+!450 = !DILocation(line: 180, column: 13, scope: !62)
+!451 = !DILocation(line: 180, column: 20, scope: !62)
+!452 = !DILocation(line: 182, column: 8, scope: !453)
+!453 = distinct !DILexicalBlock(scope: !62, file: !13, line: 182, column: 7)
+!454 = !DILocation(line: 182, column: 7, scope: !62)
+!455 = !DILocation(line: 183, column: 5, scope: !453)
+!456 = !DILocation(line: 185, column: 3, scope: !62)
+!457 = !DILocation(line: 185, column: 9, scope: !62)
+!458 = !DILocation(line: 185, column: 14, scope: !62)
+!459 = !DILocation(line: 186, column: 3, scope: !62)
+!460 = !DILocation(line: 186, column: 9, scope: !62)
+!461 = !DILocation(line: 186, column: 18, scope: !62)
+!462 = !DILocation(line: 188, column: 11, scope: !62)
+!463 = !DILocation(line: 188, column: 3, scope: !62)
+!464 = !DILocation(line: 189, column: 1, scope: !62)
+!465 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !68, file: !13, line: 214, type: !31)
+!466 = !DILocation(line: 214, column: 37, scope: !68)
+!467 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "newFront", arg: 2, scope: !68, file: !13, line: 214, type: !16)
+!468 = !DILocation(line: 214, column: 49, scope: !68)
+!469 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "oldFront", scope: !68, file: !13, line: 218, type: !31)
+!470 = !DILocation(line: 218, column: 13, scope: !68)
+!471 = !DILocation(line: 218, column: 24, scope: !68)
+!472 = !DILocation(line: 221, column: 8, scope: !473)
+!473 = distinct !DILexicalBlock(scope: !68, file: !13, line: 221, column: 7)
+!474 = !DILocation(line: 221, column: 13, scope: !473)
+!475 = !DILocation(line: 221, column: 17, scope: !476)
+!476 = !DILexicalBlockFile(scope: !473, file: !13, discriminator: 1)
+!477 = !DILocation(line: 221, column: 26, scope: !473)
+!478 = !DILocation(line: 221, column: 30, scope: !479)
+!479 = !DILexicalBlockFile(scope: !473, file: !13, discriminator: 2)
+!480 = !DILocation(line: 221, column: 7, scope: !68)
+!481 = !DILocation(line: 222, column: 5, scope: !473)
+!482 = !DILocation(line: 225, column: 20, scope: !68)
+!483 = !DILocation(line: 225, column: 26, scope: !68)
+!484 = !DILocation(line: 225, column: 3, scope: !68)
+!485 = !DILocation(line: 225, column: 13, scope: !68)
+!486 = !DILocation(line: 225, column: 18, scope: !68)
+!487 = !DILocation(line: 226, column: 24, scope: !68)
+!488 = !DILocation(line: 226, column: 30, scope: !68)
+!489 = !DILocation(line: 226, column: 3, scope: !68)
+!490 = !DILocation(line: 226, column: 13, scope: !68)
+!491 = !DILocation(line: 226, column: 22, scope: !68)
+!492 = !DILocation(line: 229, column: 16, scope: !68)
+!493 = !DILocation(line: 229, column: 3, scope: !68)
+!494 = !DILocation(line: 229, column: 9, scope: !68)
+!495 = !DILocation(line: 229, column: 14, scope: !68)
+!496 = !DILocation(line: 230, column: 20, scope: !68)
+!497 = !DILocation(line: 230, column: 3, scope: !68)
+!498 = !DILocation(line: 230, column: 9, scope: !68)
+!499 = !DILocation(line: 230, column: 18, scope: !68)
+!500 = !DILocation(line: 232, column: 3, scope: !68)
+!501 = !DILocation(line: 233, column: 1, scope: !68)
+!502 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "newNode", scope: !72, file: !13, line: 276, type: !38)
+!503 = !DILocation(line: 276, column: 13, scope: !72)
+!504 = !DILocation(line: 276, column: 23, scope: !72)
+!505 = !DILocation(line: 277, column: 7, scope: !506)
+!506 = distinct !DILexicalBlock(scope: !72, file: !13, line: 277, column: 7)
+!507 = !DILocation(line: 277, column: 7, scope: !72)
+!508 = !DILocation(line: 278, column: 5, scope: !509)
+!509 = distinct !DILexicalBlock(scope: !506, file: !13, line: 277, column: 16)
+!510 = !DILocation(line: 278, column: 14, scope: !509)
+!511 = !DILocation(line: 278, column: 27, scope: !509)
+!512 = !DILocation(line: 279, column: 5, scope: !509)
+!513 = !DILocation(line: 279, column: 14, scope: !509)
+!514 = !DILocation(line: 279, column: 25, scope: !509)
+!515 = !DILocation(line: 280, column: 5, scope: !509)
+!516 = !DILocation(line: 280, column: 14, scope: !509)
+!517 = !DILocation(line: 280, column: 23, scope: !509)
+!518 = !DILocation(line: 281, column: 3, scope: !509)
+!519 = !DILocation(line: 282, column: 11, scope: !72)
+!520 = !DILocation(line: 282, column: 3, scope: !72)
+!521 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !78, file: !13, line: 302, type: !38)
+!522 = !DILocation(line: 302, column: 38, scope: !78)
+!523 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "targetNodeId", arg: 2, scope: !78, file: !13, line: 302, type: !21)
+!524 = !DILocation(line: 302, column: 48, scope: !78)
+!525 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "end", scope: !78, file: !13, line: 303, type: !38)
+!526 = !DILocation(line: 303, column: 13, scope: !78)
+!527 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "newElement", scope: !78, file: !13, line: 304, type: !38)
+!528 = !DILocation(line: 304, column: 13, scope: !78)
+!529 = !DILocation(line: 307, column: 8, scope: !530)
+!530 = distinct !DILexicalBlock(scope: !78, file: !13, line: 307, column: 7)
+!531 = !DILocation(line: 307, column: 7, scope: !78)
+!532 = !DILocation(line: 308, column: 5, scope: !530)
+!533 = !DILocation(line: 313, column: 7, scope: !534)
+!534 = distinct !DILexicalBlock(scope: !78, file: !13, line: 313, column: 7)
+!535 = !DILocation(line: 313, column: 13, scope: !534)
+!536 = !DILocation(line: 313, column: 26, scope: !534)
+!537 = !DILocation(line: 313, column: 7, scope: !78)
+!538 = !DILocation(line: 314, column: 26, scope: !539)
+!539 = distinct !DILexicalBlock(scope: !534, file: !13, line: 313, column: 33)
+!540 = !DILocation(line: 314, column: 5, scope: !539)
+!541 = !DILocation(line: 314, column: 11, scope: !539)
+!542 = !DILocation(line: 314, column: 24, scope: !539)
+!543 = !DILocation(line: 315, column: 5, scope: !539)
+!544 = !DILocation(line: 319, column: 14, scope: !545)
+!545 = distinct !DILexicalBlock(scope: !78, file: !13, line: 319, column: 3)
+!546 = !DILocation(line: 319, column: 12, scope: !545)
+!547 = !DILocation(line: 319, column: 8, scope: !545)
+!548 = !DILocation(line: 319, column: 20, scope: !549)
+!549 = !DILexicalBlockFile(scope: !550, file: !13, discriminator: 2)
+!550 = !DILexicalBlockFile(scope: !551, file: !13, discriminator: 1)
+!551 = distinct !DILexicalBlock(scope: !545, file: !13, line: 319, column: 3)
+!552 = !DILocation(line: 319, column: 25, scope: !551)
+!553 = !DILocation(line: 319, column: 34, scope: !551)
+!554 = !DILocation(line: 319, column: 3, scope: !545)
+!555 = !DILocation(line: 320, column: 3, scope: !556)
+!556 = distinct !DILexicalBlock(scope: !551, file: !13, line: 319, column: 64)
+!557 = !DILocation(line: 319, column: 49, scope: !551)
+!558 = !DILocation(line: 319, column: 54, scope: !551)
+!559 = !DILocation(line: 319, column: 47, scope: !551)
+!560 = !DILocation(line: 319, column: 3, scope: !551)
+!561 = !DILocation(line: 322, column: 16, scope: !78)
+!562 = !DILocation(line: 322, column: 14, scope: !78)
+!563 = !DILocation(line: 323, column: 8, scope: !564)
+!564 = distinct !DILexicalBlock(scope: !78, file: !13, line: 323, column: 7)
+!565 = !DILocation(line: 323, column: 7, scope: !78)
+!566 = !DILocation(line: 324, column: 5, scope: !564)
+!567 = !DILocation(line: 326, column: 30, scope: !78)
+!568 = !DILocation(line: 326, column: 3, scope: !78)
+!569 = !DILocation(line: 326, column: 15, scope: !78)
+!570 = !DILocation(line: 326, column: 28, scope: !78)
+!571 = !DILocation(line: 327, column: 19, scope: !78)
+!572 = !DILocation(line: 327, column: 3, scope: !78)
+!573 = !DILocation(line: 327, column: 8, scope: !78)
+!574 = !DILocation(line: 327, column: 17, scope: !78)
+!575 = !DILocation(line: 329, column: 3, scope: !78)
+!576 = !DILocation(line: 330, column: 1, scope: !78)

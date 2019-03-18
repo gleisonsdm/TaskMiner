@@ -1,0 +1,567 @@
+; ModuleID = '/home/gleison/tf/Benchmarks/Shootout/methcall/tmp.c'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct.Toggle = type { i8, {}*, %struct.Toggle* (%struct.Toggle*)* }
+%struct.NthToggle = type { i8, i8 (%struct.Toggle*)*, %struct.Toggle* (%struct.Toggle*)*, i32, i32 }
+
+@.str = private unnamed_addr constant [6 x i8] c"true\0A\00", align 1
+@.str.1 = private unnamed_addr constant [7 x i8] c"false\0A\00", align 1
+
+; Function Attrs: nounwind uwtable
+define signext i8 @toggle_value(%struct.Toggle* %this) #0 {
+entry:
+  %this.addr = alloca %struct.Toggle*, align 8
+  store %struct.Toggle* %this, %struct.Toggle** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.Toggle** %this.addr, metadata !66, metadata !67), !dbg !68
+  %0 = load %struct.Toggle*, %struct.Toggle** %this.addr, align 8, !dbg !69
+  %state = getelementptr inbounds %struct.Toggle, %struct.Toggle* %0, i32 0, i32 0, !dbg !70
+  %1 = load i8, i8* %state, align 1, !dbg !70
+  ret i8 %1, !dbg !71
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind uwtable
+define %struct.Toggle* @toggle_activate(%struct.Toggle* %this) #0 {
+entry:
+  %this.addr = alloca %struct.Toggle*, align 8
+  store %struct.Toggle* %this, %struct.Toggle** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.Toggle** %this.addr, metadata !72, metadata !67), !dbg !73
+  %0 = load %struct.Toggle*, %struct.Toggle** %this.addr, align 8, !dbg !74
+  %state = getelementptr inbounds %struct.Toggle, %struct.Toggle* %0, i32 0, i32 0, !dbg !75
+  %1 = load i8, i8* %state, align 1, !dbg !75
+  %tobool = icmp ne i8 %1, 0, !dbg !76
+  %lnot = xor i1 %tobool, true, !dbg !76
+  %lnot.ext = zext i1 %lnot to i32, !dbg !76
+  %conv = trunc i32 %lnot.ext to i8, !dbg !76
+  %2 = load %struct.Toggle*, %struct.Toggle** %this.addr, align 8, !dbg !77
+  %state1 = getelementptr inbounds %struct.Toggle, %struct.Toggle* %2, i32 0, i32 0, !dbg !78
+  store i8 %conv, i8* %state1, align 1, !dbg !79
+  %3 = load %struct.Toggle*, %struct.Toggle** %this.addr, align 8, !dbg !80
+  ret %struct.Toggle* %3, !dbg !81
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.Toggle* @init_Toggle(%struct.Toggle* %this, i8 signext %start_state) #0 {
+entry:
+  %this.addr = alloca %struct.Toggle*, align 8
+  %start_state.addr = alloca i8, align 1
+  store %struct.Toggle* %this, %struct.Toggle** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.Toggle** %this.addr, metadata !82, metadata !67), !dbg !83
+  store i8 %start_state, i8* %start_state.addr, align 1
+  call void @llvm.dbg.declare(metadata i8* %start_state.addr, metadata !84, metadata !67), !dbg !85
+  %0 = load i8, i8* %start_state.addr, align 1, !dbg !86
+  %1 = load %struct.Toggle*, %struct.Toggle** %this.addr, align 8, !dbg !87
+  %state = getelementptr inbounds %struct.Toggle, %struct.Toggle* %1, i32 0, i32 0, !dbg !88
+  store i8 %0, i8* %state, align 1, !dbg !89
+  %2 = load %struct.Toggle*, %struct.Toggle** %this.addr, align 8, !dbg !90
+  %value = getelementptr inbounds %struct.Toggle, %struct.Toggle* %2, i32 0, i32 1, !dbg !91
+  %value1 = bitcast {}** %value to i8 (%struct.Toggle*)**, !dbg !91
+  store i8 (%struct.Toggle*)* @toggle_value, i8 (%struct.Toggle*)** %value1, align 8, !dbg !92
+  %3 = load %struct.Toggle*, %struct.Toggle** %this.addr, align 8, !dbg !93
+  %activate = getelementptr inbounds %struct.Toggle, %struct.Toggle* %3, i32 0, i32 2, !dbg !94
+  store %struct.Toggle* (%struct.Toggle*)* @toggle_activate, %struct.Toggle* (%struct.Toggle*)** %activate, align 8, !dbg !95
+  %4 = load %struct.Toggle*, %struct.Toggle** %this.addr, align 8, !dbg !96
+  ret %struct.Toggle* %4, !dbg !97
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.Toggle* @new_Toggle(i8 signext %start_state) #0 {
+entry:
+  %start_state.addr = alloca i8, align 1
+  %this = alloca %struct.Toggle*, align 8
+  store i8 %start_state, i8* %start_state.addr, align 1
+  call void @llvm.dbg.declare(metadata i8* %start_state.addr, metadata !98, metadata !67), !dbg !99
+  call void @llvm.dbg.declare(metadata %struct.Toggle** %this, metadata !100, metadata !67), !dbg !101
+  %call = call noalias i8* @malloc(i64 24) #5, !dbg !102
+  %0 = bitcast i8* %call to %struct.Toggle*, !dbg !103
+  store %struct.Toggle* %0, %struct.Toggle** %this, align 8, !dbg !101
+  %1 = load %struct.Toggle*, %struct.Toggle** %this, align 8, !dbg !104
+  %2 = load i8, i8* %start_state.addr, align 1, !dbg !105
+  %call1 = call %struct.Toggle* @init_Toggle(%struct.Toggle* %1, i8 signext %2), !dbg !106
+  ret %struct.Toggle* %call1, !dbg !107
+}
+
+; Function Attrs: nounwind
+declare noalias i8* @malloc(i64) #2
+
+; Function Attrs: nounwind uwtable
+define %struct.NthToggle* @nth_toggle_activate(%struct.NthToggle* %this) #0 {
+entry:
+  %this.addr = alloca %struct.NthToggle*, align 8
+  store %struct.NthToggle* %this, %struct.NthToggle** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NthToggle** %this.addr, metadata !108, metadata !67), !dbg !109
+  %0 = load %struct.NthToggle*, %struct.NthToggle** %this.addr, align 8, !dbg !110
+  %counter = getelementptr inbounds %struct.NthToggle, %struct.NthToggle* %0, i32 0, i32 4, !dbg !112
+  %1 = load i32, i32* %counter, align 4, !dbg !113
+  %inc = add nsw i32 %1, 1, !dbg !113
+  store i32 %inc, i32* %counter, align 4, !dbg !113
+  %2 = load %struct.NthToggle*, %struct.NthToggle** %this.addr, align 8, !dbg !114
+  %count_max = getelementptr inbounds %struct.NthToggle, %struct.NthToggle* %2, i32 0, i32 3, !dbg !115
+  %3 = load i32, i32* %count_max, align 4, !dbg !115
+  %cmp = icmp sge i32 %inc, %3, !dbg !116
+  br i1 %cmp, label %if.then, label %if.end, !dbg !117
+
+if.then:                                          ; preds = %entry
+  %4 = load %struct.NthToggle*, %struct.NthToggle** %this.addr, align 8, !dbg !118
+  %state = getelementptr inbounds %struct.NthToggle, %struct.NthToggle* %4, i32 0, i32 0, !dbg !120
+  %5 = load i8, i8* %state, align 1, !dbg !120
+  %tobool = icmp ne i8 %5, 0, !dbg !121
+  %lnot = xor i1 %tobool, true, !dbg !121
+  %lnot.ext = zext i1 %lnot to i32, !dbg !121
+  %conv = trunc i32 %lnot.ext to i8, !dbg !121
+  %6 = load %struct.NthToggle*, %struct.NthToggle** %this.addr, align 8, !dbg !122
+  %state1 = getelementptr inbounds %struct.NthToggle, %struct.NthToggle* %6, i32 0, i32 0, !dbg !123
+  store i8 %conv, i8* %state1, align 1, !dbg !124
+  %7 = load %struct.NthToggle*, %struct.NthToggle** %this.addr, align 8, !dbg !125
+  %counter2 = getelementptr inbounds %struct.NthToggle, %struct.NthToggle* %7, i32 0, i32 4, !dbg !126
+  store i32 0, i32* %counter2, align 4, !dbg !127
+  br label %if.end, !dbg !128
+
+if.end:                                           ; preds = %if.then, %entry
+  %8 = load %struct.NthToggle*, %struct.NthToggle** %this.addr, align 8, !dbg !129
+  ret %struct.NthToggle* %8, !dbg !130
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.NthToggle* @init_NthToggle(%struct.NthToggle* %this, i32 %max_count) #0 {
+entry:
+  %this.addr = alloca %struct.NthToggle*, align 8
+  %max_count.addr = alloca i32, align 4
+  store %struct.NthToggle* %this, %struct.NthToggle** %this.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.NthToggle** %this.addr, metadata !131, metadata !67), !dbg !132
+  store i32 %max_count, i32* %max_count.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %max_count.addr, metadata !133, metadata !67), !dbg !134
+  %0 = load i32, i32* %max_count.addr, align 4, !dbg !135
+  %1 = load %struct.NthToggle*, %struct.NthToggle** %this.addr, align 8, !dbg !136
+  %count_max = getelementptr inbounds %struct.NthToggle, %struct.NthToggle* %1, i32 0, i32 3, !dbg !137
+  store i32 %0, i32* %count_max, align 4, !dbg !138
+  %2 = load %struct.NthToggle*, %struct.NthToggle** %this.addr, align 8, !dbg !139
+  %counter = getelementptr inbounds %struct.NthToggle, %struct.NthToggle* %2, i32 0, i32 4, !dbg !140
+  store i32 0, i32* %counter, align 4, !dbg !141
+  %3 = load %struct.NthToggle*, %struct.NthToggle** %this.addr, align 8, !dbg !142
+  %activate = getelementptr inbounds %struct.NthToggle, %struct.NthToggle* %3, i32 0, i32 2, !dbg !143
+  store %struct.Toggle* (%struct.Toggle*)* bitcast (%struct.NthToggle* (%struct.NthToggle*)* @nth_toggle_activate to %struct.Toggle* (%struct.Toggle*)*), %struct.Toggle* (%struct.Toggle*)** %activate, align 8, !dbg !144
+  %4 = load %struct.NthToggle*, %struct.NthToggle** %this.addr, align 8, !dbg !145
+  ret %struct.NthToggle* %4, !dbg !146
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.NthToggle* @new_NthToggle(i8 signext %start_state, i32 %max_count) #0 {
+entry:
+  %start_state.addr = alloca i8, align 1
+  %max_count.addr = alloca i32, align 4
+  %this = alloca %struct.NthToggle*, align 8
+  store i8 %start_state, i8* %start_state.addr, align 1
+  call void @llvm.dbg.declare(metadata i8* %start_state.addr, metadata !147, metadata !67), !dbg !148
+  store i32 %max_count, i32* %max_count.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %max_count.addr, metadata !149, metadata !67), !dbg !150
+  call void @llvm.dbg.declare(metadata %struct.NthToggle** %this, metadata !151, metadata !67), !dbg !152
+  %call = call noalias i8* @malloc(i64 32) #5, !dbg !153
+  %0 = bitcast i8* %call to %struct.NthToggle*, !dbg !154
+  store %struct.NthToggle* %0, %struct.NthToggle** %this, align 8, !dbg !152
+  %1 = load %struct.NthToggle*, %struct.NthToggle** %this, align 8, !dbg !155
+  %2 = bitcast %struct.NthToggle* %1 to %struct.Toggle*, !dbg !156
+  %3 = load i8, i8* %start_state.addr, align 1, !dbg !157
+  %call1 = call %struct.Toggle* @init_Toggle(%struct.Toggle* %2, i8 signext %3), !dbg !158
+  %4 = bitcast %struct.Toggle* %call1 to %struct.NthToggle*, !dbg !159
+  store %struct.NthToggle* %4, %struct.NthToggle** %this, align 8, !dbg !160
+  %5 = load %struct.NthToggle*, %struct.NthToggle** %this, align 8, !dbg !161
+  %6 = load i32, i32* %max_count.addr, align 4, !dbg !162
+  %call2 = call %struct.NthToggle* @init_NthToggle(%struct.NthToggle* %5, i32 %6), !dbg !163
+  ret %struct.NthToggle* %call2, !dbg !164
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @main(i32 %argc, i8** %argv) #0 {
+entry:
+  %retval = alloca i32, align 4
+  %argc.addr = alloca i32, align 4
+  %argv.addr = alloca i8**, align 8
+  %i = alloca i32, align 4
+  %n = alloca i32, align 4
+  %tog = alloca %struct.Toggle*, align 8
+  %ntog = alloca %struct.NthToggle*, align 8
+  %val = alloca i8, align 1
+  store i32 0, i32* %retval
+  store i32 %argc, i32* %argc.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %argc.addr, metadata !165, metadata !67), !dbg !166
+  store i8** %argv, i8*** %argv.addr, align 8
+  call void @llvm.dbg.declare(metadata i8*** %argv.addr, metadata !167, metadata !67), !dbg !168
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !169, metadata !67), !dbg !170
+  call void @llvm.dbg.declare(metadata i32* %n, metadata !171, metadata !67), !dbg !172
+  %0 = load i32, i32* %argc.addr, align 4, !dbg !173
+  %cmp = icmp eq i32 %0, 2, !dbg !174
+  br i1 %cmp, label %cond.true, label %cond.false, !dbg !175
+
+cond.true:                                        ; preds = %entry
+  %1 = load i8**, i8*** %argv.addr, align 8, !dbg !176
+  %arrayidx = getelementptr inbounds i8*, i8** %1, i64 1, !dbg !176
+  %2 = load i8*, i8** %arrayidx, align 8, !dbg !176
+  %call = call i32 @atoi(i8* %2) #6, !dbg !178
+  br label %cond.end, !dbg !175
+
+cond.false:                                       ; preds = %entry
+  br label %cond.end, !dbg !179
+
+cond.end:                                         ; preds = %cond.false, %cond.true
+  %cond = phi i32 [ %call, %cond.true ], [ 500000000, %cond.false ], !dbg !175
+  store i32 %cond, i32* %n, align 4, !dbg !181
+  call void @llvm.dbg.declare(metadata %struct.Toggle** %tog, metadata !184, metadata !67), !dbg !185
+  call void @llvm.dbg.declare(metadata %struct.NthToggle** %ntog, metadata !186, metadata !67), !dbg !187
+  call void @llvm.dbg.declare(metadata i8* %val, metadata !188, metadata !67), !dbg !189
+  store i8 1, i8* %val, align 1, !dbg !189
+  %call1 = call %struct.Toggle* @new_Toggle(i8 signext 1), !dbg !190
+  store %struct.Toggle* %call1, %struct.Toggle** %tog, align 8, !dbg !191
+  store i32 0, i32* %i, align 4, !dbg !192
+  br label %for.cond, !dbg !194
+
+for.cond:                                         ; preds = %for.inc, %cond.end
+  %3 = load i32, i32* %i, align 4, !dbg !195
+  %4 = load i32, i32* %n, align 4, !dbg !199
+  %cmp2 = icmp slt i32 %3, %4, !dbg !200
+  br i1 %cmp2, label %for.body, label %for.end, !dbg !201
+
+for.body:                                         ; preds = %for.cond
+  %5 = load %struct.Toggle*, %struct.Toggle** %tog, align 8, !dbg !202
+  %activate = getelementptr inbounds %struct.Toggle, %struct.Toggle* %5, i32 0, i32 2, !dbg !204
+  %6 = load %struct.Toggle* (%struct.Toggle*)*, %struct.Toggle* (%struct.Toggle*)** %activate, align 8, !dbg !204
+  %7 = load %struct.Toggle*, %struct.Toggle** %tog, align 8, !dbg !205
+  %call3 = call %struct.Toggle* %6(%struct.Toggle* %7), !dbg !202
+  %value = getelementptr inbounds %struct.Toggle, %struct.Toggle* %call3, i32 0, i32 1, !dbg !206
+  %value4 = bitcast {}** %value to i8 (%struct.Toggle*)**, !dbg !206
+  %8 = load i8 (%struct.Toggle*)*, i8 (%struct.Toggle*)** %value4, align 8, !dbg !206
+  %9 = load %struct.Toggle*, %struct.Toggle** %tog, align 8, !dbg !207
+  %call5 = call signext i8 %8(%struct.Toggle* %9), !dbg !202
+  store i8 %call5, i8* %val, align 1, !dbg !208
+  br label %for.inc, !dbg !209
+
+for.inc:                                          ; preds = %for.body
+  %10 = load i32, i32* %i, align 4, !dbg !210
+  %inc = add nsw i32 %10, 1, !dbg !210
+  store i32 %inc, i32* %i, align 4, !dbg !210
+  br label %for.cond, !dbg !211
+
+for.end:                                          ; preds = %for.cond
+  %11 = load i8, i8* %val, align 1, !dbg !212
+  %conv = sext i8 %11 to i32, !dbg !212
+  %tobool = icmp ne i32 %conv, 0, !dbg !212
+  %cond6 = select i1 %tobool, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str, i32 0, i32 0), i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.1, i32 0, i32 0), !dbg !212
+  %call7 = call i32 @puts(i8* %cond6), !dbg !213
+  %12 = load %struct.Toggle*, %struct.Toggle** %tog, align 8, !dbg !214
+  %13 = bitcast %struct.Toggle* %12 to i8*, !dbg !214
+  call void @free(i8* %13) #5, !dbg !215
+  store i8 1, i8* %val, align 1, !dbg !216
+  %14 = load i8, i8* %val, align 1, !dbg !217
+  %call8 = call %struct.NthToggle* @new_NthToggle(i8 signext %14, i32 3), !dbg !218
+  store %struct.NthToggle* %call8, %struct.NthToggle** %ntog, align 8, !dbg !219
+  store i32 0, i32* %i, align 4, !dbg !220
+  br label %for.cond.9, !dbg !222
+
+for.cond.9:                                       ; preds = %for.inc.18, %for.end
+  %15 = load i32, i32* %i, align 4, !dbg !223
+  %16 = load i32, i32* %n, align 4, !dbg !227
+  %cmp10 = icmp slt i32 %15, %16, !dbg !228
+  br i1 %cmp10, label %for.body.12, label %for.end.20, !dbg !229
+
+for.body.12:                                      ; preds = %for.cond.9
+  %17 = load %struct.NthToggle*, %struct.NthToggle** %ntog, align 8, !dbg !230
+  %activate13 = getelementptr inbounds %struct.NthToggle, %struct.NthToggle* %17, i32 0, i32 2, !dbg !232
+  %18 = load %struct.Toggle* (%struct.Toggle*)*, %struct.Toggle* (%struct.Toggle*)** %activate13, align 8, !dbg !232
+  %19 = load %struct.NthToggle*, %struct.NthToggle** %ntog, align 8, !dbg !233
+  %20 = bitcast %struct.NthToggle* %19 to %struct.Toggle*, !dbg !233
+  %call14 = call %struct.Toggle* %18(%struct.Toggle* %20), !dbg !230
+  %value15 = getelementptr inbounds %struct.Toggle, %struct.Toggle* %call14, i32 0, i32 1, !dbg !234
+  %value16 = bitcast {}** %value15 to i8 (%struct.Toggle*)**, !dbg !234
+  %21 = load i8 (%struct.Toggle*)*, i8 (%struct.Toggle*)** %value16, align 8, !dbg !234
+  %22 = load %struct.NthToggle*, %struct.NthToggle** %ntog, align 8, !dbg !235
+  %23 = bitcast %struct.NthToggle* %22 to %struct.Toggle*, !dbg !235
+  %call17 = call signext i8 %21(%struct.Toggle* %23), !dbg !230
+  store i8 %call17, i8* %val, align 1, !dbg !236
+  br label %for.inc.18, !dbg !237
+
+for.inc.18:                                       ; preds = %for.body.12
+  %24 = load i32, i32* %i, align 4, !dbg !238
+  %inc19 = add nsw i32 %24, 1, !dbg !238
+  store i32 %inc19, i32* %i, align 4, !dbg !238
+  br label %for.cond.9, !dbg !239
+
+for.end.20:                                       ; preds = %for.cond.9
+  %25 = load i8, i8* %val, align 1, !dbg !240
+  %conv21 = sext i8 %25 to i32, !dbg !240
+  %tobool22 = icmp ne i32 %conv21, 0, !dbg !240
+  %cond23 = select i1 %tobool22, i8* getelementptr inbounds ([6 x i8], [6 x i8]* @.str, i32 0, i32 0), i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.1, i32 0, i32 0), !dbg !240
+  %call24 = call i32 @puts(i8* %cond23), !dbg !241
+  %26 = load %struct.NthToggle*, %struct.NthToggle** %ntog, align 8, !dbg !242
+  %27 = bitcast %struct.NthToggle* %26 to i8*, !dbg !242
+  call void @free(i8* %27) #5, !dbg !243
+  ret i32 0, !dbg !244
+}
+
+; Function Attrs: nounwind readonly
+declare i32 @atoi(i8*) #3
+
+declare i32 @puts(i8*) #4
+
+; Function Attrs: nounwind
+declare void @free(i8*) #2
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { nounwind "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { nounwind readonly "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #4 = { "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #5 = { nounwind }
+attributes #6 = { nounwind readonly }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!63, !64}
+!llvm.ident = !{!65}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, retainedTypes: !8, subprograms: !37)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/Shootout/methcall")
+!2 = !{!3}
+!3 = !DICompositeType(tag: DW_TAG_enumeration_type, file: !4, line: 9, size: 32, align: 32, elements: !5)
+!4 = !DIFile(filename: "/home/gleison/tf/Benchmarks/Shootout/methcall/tmp.c", directory: "/home/gleison/tf/Benchmarks/Shootout/methcall")
+!5 = !{!6, !7}
+!6 = !DIEnumerator(name: "false", value: 0)
+!7 = !DIEnumerator(name: "true", value: 1)
+!8 = !{!9, !24, !27}
+!9 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !10, size: 64, align: 64)
+!10 = !DIDerivedType(tag: DW_TAG_typedef, name: "Toggle", file: !4, line: 21, baseType: !11)
+!11 = !DICompositeType(tag: DW_TAG_structure_type, name: "Toggle", file: !4, line: 19, size: 192, align: 64, elements: !12)
+!12 = !{!13, !15, !20}
+!13 = !DIDerivedType(tag: DW_TAG_member, name: "state", scope: !11, file: !4, line: 20, baseType: !14, size: 8, align: 8)
+!14 = !DIBasicType(name: "char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!15 = !DIDerivedType(tag: DW_TAG_member, name: "value", scope: !11, file: !4, line: 20, baseType: !16, size: 64, align: 64, offset: 64)
+!16 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !17, size: 64, align: 64)
+!17 = !DISubroutineType(types: !18)
+!18 = !{!14, !19}
+!19 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !11, size: 64, align: 64)
+!20 = !DIDerivedType(tag: DW_TAG_member, name: "activate", scope: !11, file: !4, line: 20, baseType: !21, size: 64, align: 64, offset: 128)
+!21 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !22, size: 64, align: 64)
+!22 = !DISubroutineType(types: !23)
+!23 = !{!19, !19}
+!24 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !25, size: 64, align: 64)
+!25 = !DISubroutineType(types: !26)
+!26 = !{!9, !9}
+!27 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !28, size: 64, align: 64)
+!28 = !DIDerivedType(tag: DW_TAG_typedef, name: "NthToggle", file: !4, line: 45, baseType: !29)
+!29 = !DICompositeType(tag: DW_TAG_structure_type, name: "NthToggle", file: !4, line: 41, size: 256, align: 64, elements: !30)
+!30 = !{!31, !32, !33, !34, !36}
+!31 = !DIDerivedType(tag: DW_TAG_member, name: "state", scope: !29, file: !4, line: 42, baseType: !14, size: 8, align: 8)
+!32 = !DIDerivedType(tag: DW_TAG_member, name: "value", scope: !29, file: !4, line: 42, baseType: !16, size: 64, align: 64, offset: 64)
+!33 = !DIDerivedType(tag: DW_TAG_member, name: "activate", scope: !29, file: !4, line: 42, baseType: !21, size: 64, align: 64, offset: 128)
+!34 = !DIDerivedType(tag: DW_TAG_member, name: "count_max", scope: !29, file: !4, line: 43, baseType: !35, size: 32, align: 32, offset: 192)
+!35 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!36 = !DIDerivedType(tag: DW_TAG_member, name: "counter", scope: !29, file: !4, line: 44, baseType: !35, size: 32, align: 32, offset: 224)
+!37 = !{!38, !42, !43, !46, !49, !52, !55, !58}
+!38 = !DISubprogram(name: "toggle_value", scope: !4, file: !4, line: 23, type: !39, isLocal: false, isDefinition: true, scopeLine: 23, flags: DIFlagPrototyped, isOptimized: false, function: i8 (%struct.Toggle*)* @toggle_value, variables: !41)
+!39 = !DISubroutineType(types: !40)
+!40 = !{!14, !9}
+!41 = !{}
+!42 = !DISubprogram(name: "toggle_activate", scope: !4, file: !4, line: 26, type: !25, isLocal: false, isDefinition: true, scopeLine: 26, flags: DIFlagPrototyped, isOptimized: false, function: %struct.Toggle* (%struct.Toggle*)* @toggle_activate, variables: !41)
+!43 = !DISubprogram(name: "init_Toggle", scope: !4, file: !4, line: 30, type: !44, isLocal: false, isDefinition: true, scopeLine: 30, flags: DIFlagPrototyped, isOptimized: false, function: %struct.Toggle* (%struct.Toggle*, i8)* @init_Toggle, variables: !41)
+!44 = !DISubroutineType(types: !45)
+!45 = !{!9, !9, !14}
+!46 = !DISubprogram(name: "new_Toggle", scope: !4, file: !4, line: 36, type: !47, isLocal: false, isDefinition: true, scopeLine: 36, flags: DIFlagPrototyped, isOptimized: false, function: %struct.Toggle* (i8)* @new_Toggle, variables: !41)
+!47 = !DISubroutineType(types: !48)
+!48 = !{!9, !14}
+!49 = !DISubprogram(name: "nth_toggle_activate", scope: !4, file: !4, line: 47, type: !50, isLocal: false, isDefinition: true, scopeLine: 47, flags: DIFlagPrototyped, isOptimized: false, function: %struct.NthToggle* (%struct.NthToggle*)* @nth_toggle_activate, variables: !41)
+!50 = !DISubroutineType(types: !51)
+!51 = !{!27, !27}
+!52 = !DISubprogram(name: "init_NthToggle", scope: !4, file: !4, line: 54, type: !53, isLocal: false, isDefinition: true, scopeLine: 54, flags: DIFlagPrototyped, isOptimized: false, function: %struct.NthToggle* (%struct.NthToggle*, i32)* @init_NthToggle, variables: !41)
+!53 = !DISubroutineType(types: !54)
+!54 = !{!27, !27, !35}
+!55 = !DISubprogram(name: "new_NthToggle", scope: !4, file: !4, line: 60, type: !56, isLocal: false, isDefinition: true, scopeLine: 60, flags: DIFlagPrototyped, isOptimized: false, function: %struct.NthToggle* (i8, i32)* @new_NthToggle, variables: !41)
+!56 = !DISubroutineType(types: !57)
+!57 = !{!27, !14, !35}
+!58 = !DISubprogram(name: "main", scope: !4, file: !4, line: 66, type: !59, isLocal: false, isDefinition: true, scopeLine: 66, flags: DIFlagPrototyped, isOptimized: false, function: i32 (i32, i8**)* @main, variables: !41)
+!59 = !DISubroutineType(types: !60)
+!60 = !{!35, !35, !61}
+!61 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !62, size: 64, align: 64)
+!62 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !14, size: 64, align: 64)
+!63 = !{i32 2, !"Dwarf Version", i32 4}
+!64 = !{i32 2, !"Debug Info Version", i32 3}
+!65 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!66 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !38, file: !4, line: 23, type: !9)
+!67 = !DIExpression()
+!68 = !DILocation(line: 23, column: 27, scope: !38)
+!69 = !DILocation(line: 24, column: 11, scope: !38)
+!70 = !DILocation(line: 24, column: 17, scope: !38)
+!71 = !DILocation(line: 24, column: 3, scope: !38)
+!72 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !42, file: !4, line: 26, type: !9)
+!73 = !DILocation(line: 26, column: 33, scope: !42)
+!74 = !DILocation(line: 27, column: 18, scope: !42)
+!75 = !DILocation(line: 27, column: 24, scope: !42)
+!76 = !DILocation(line: 27, column: 17, scope: !42)
+!77 = !DILocation(line: 27, column: 3, scope: !42)
+!78 = !DILocation(line: 27, column: 9, scope: !42)
+!79 = !DILocation(line: 27, column: 15, scope: !42)
+!80 = !DILocation(line: 28, column: 11, scope: !42)
+!81 = !DILocation(line: 28, column: 3, scope: !42)
+!82 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !43, file: !4, line: 30, type: !9)
+!83 = !DILocation(line: 30, column: 29, scope: !43)
+!84 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "start_state", arg: 2, scope: !43, file: !4, line: 30, type: !14)
+!85 = !DILocation(line: 30, column: 40, scope: !43)
+!86 = !DILocation(line: 31, column: 17, scope: !43)
+!87 = !DILocation(line: 31, column: 3, scope: !43)
+!88 = !DILocation(line: 31, column: 9, scope: !43)
+!89 = !DILocation(line: 31, column: 15, scope: !43)
+!90 = !DILocation(line: 32, column: 3, scope: !43)
+!91 = !DILocation(line: 32, column: 9, scope: !43)
+!92 = !DILocation(line: 32, column: 15, scope: !43)
+!93 = !DILocation(line: 33, column: 3, scope: !43)
+!94 = !DILocation(line: 33, column: 9, scope: !43)
+!95 = !DILocation(line: 33, column: 18, scope: !43)
+!96 = !DILocation(line: 34, column: 11, scope: !43)
+!97 = !DILocation(line: 34, column: 3, scope: !43)
+!98 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "start_state", arg: 1, scope: !46, file: !4, line: 36, type: !14)
+!99 = !DILocation(line: 36, column: 25, scope: !46)
+!100 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "this", scope: !46, file: !4, line: 37, type: !9)
+!101 = !DILocation(line: 37, column: 11, scope: !46)
+!102 = !DILocation(line: 37, column: 28, scope: !46)
+!103 = !DILocation(line: 37, column: 18, scope: !46)
+!104 = !DILocation(line: 38, column: 23, scope: !46)
+!105 = !DILocation(line: 38, column: 29, scope: !46)
+!106 = !DILocation(line: 38, column: 11, scope: !46)
+!107 = !DILocation(line: 38, column: 3, scope: !46)
+!108 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !49, file: !4, line: 47, type: !27)
+!109 = !DILocation(line: 47, column: 43, scope: !49)
+!110 = !DILocation(line: 48, column: 9, scope: !111)
+!111 = distinct !DILexicalBlock(scope: !49, file: !4, line: 48, column: 7)
+!112 = !DILocation(line: 48, column: 15, scope: !111)
+!113 = !DILocation(line: 48, column: 7, scope: !111)
+!114 = !DILocation(line: 48, column: 26, scope: !111)
+!115 = !DILocation(line: 48, column: 32, scope: !111)
+!116 = !DILocation(line: 48, column: 23, scope: !111)
+!117 = !DILocation(line: 48, column: 7, scope: !49)
+!118 = !DILocation(line: 49, column: 20, scope: !119)
+!119 = distinct !DILexicalBlock(scope: !111, file: !4, line: 48, column: 43)
+!120 = !DILocation(line: 49, column: 26, scope: !119)
+!121 = !DILocation(line: 49, column: 19, scope: !119)
+!122 = !DILocation(line: 49, column: 5, scope: !119)
+!123 = !DILocation(line: 49, column: 11, scope: !119)
+!124 = !DILocation(line: 49, column: 17, scope: !119)
+!125 = !DILocation(line: 50, column: 5, scope: !119)
+!126 = !DILocation(line: 50, column: 11, scope: !119)
+!127 = !DILocation(line: 50, column: 19, scope: !119)
+!128 = !DILocation(line: 51, column: 3, scope: !119)
+!129 = !DILocation(line: 52, column: 11, scope: !49)
+!130 = !DILocation(line: 52, column: 3, scope: !49)
+!131 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "this", arg: 1, scope: !52, file: !4, line: 54, type: !27)
+!132 = !DILocation(line: 54, column: 38, scope: !52)
+!133 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "max_count", arg: 2, scope: !52, file: !4, line: 54, type: !35)
+!134 = !DILocation(line: 54, column: 48, scope: !52)
+!135 = !DILocation(line: 55, column: 21, scope: !52)
+!136 = !DILocation(line: 55, column: 3, scope: !52)
+!137 = !DILocation(line: 55, column: 9, scope: !52)
+!138 = !DILocation(line: 55, column: 19, scope: !52)
+!139 = !DILocation(line: 56, column: 3, scope: !52)
+!140 = !DILocation(line: 56, column: 9, scope: !52)
+!141 = !DILocation(line: 56, column: 17, scope: !52)
+!142 = !DILocation(line: 57, column: 3, scope: !52)
+!143 = !DILocation(line: 57, column: 9, scope: !52)
+!144 = !DILocation(line: 57, column: 18, scope: !52)
+!145 = !DILocation(line: 58, column: 11, scope: !52)
+!146 = !DILocation(line: 58, column: 3, scope: !52)
+!147 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "start_state", arg: 1, scope: !55, file: !4, line: 60, type: !14)
+!148 = !DILocation(line: 60, column: 31, scope: !55)
+!149 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "max_count", arg: 2, scope: !55, file: !4, line: 60, type: !35)
+!150 = !DILocation(line: 60, column: 48, scope: !55)
+!151 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "this", scope: !55, file: !4, line: 61, type: !27)
+!152 = !DILocation(line: 61, column: 14, scope: !55)
+!153 = !DILocation(line: 61, column: 34, scope: !55)
+!154 = !DILocation(line: 61, column: 21, scope: !55)
+!155 = !DILocation(line: 62, column: 45, scope: !55)
+!156 = !DILocation(line: 62, column: 35, scope: !55)
+!157 = !DILocation(line: 62, column: 51, scope: !55)
+!158 = !DILocation(line: 62, column: 23, scope: !55)
+!159 = !DILocation(line: 62, column: 10, scope: !55)
+!160 = !DILocation(line: 62, column: 8, scope: !55)
+!161 = !DILocation(line: 63, column: 26, scope: !55)
+!162 = !DILocation(line: 63, column: 32, scope: !55)
+!163 = !DILocation(line: 63, column: 11, scope: !55)
+!164 = !DILocation(line: 63, column: 3, scope: !55)
+!165 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "argc", arg: 1, scope: !58, file: !4, line: 66, type: !35)
+!166 = !DILocation(line: 66, column: 14, scope: !58)
+!167 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "argv", arg: 2, scope: !58, file: !4, line: 66, type: !61)
+!168 = !DILocation(line: 66, column: 26, scope: !58)
+!169 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !58, file: !4, line: 72, type: !35)
+!170 = !DILocation(line: 72, column: 7, scope: !58)
+!171 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "n", scope: !58, file: !4, line: 72, type: !35)
+!172 = !DILocation(line: 72, column: 10, scope: !58)
+!173 = !DILocation(line: 72, column: 16, scope: !58)
+!174 = !DILocation(line: 72, column: 21, scope: !58)
+!175 = !DILocation(line: 72, column: 15, scope: !58)
+!176 = !DILocation(line: 72, column: 34, scope: !177)
+!177 = !DILexicalBlockFile(scope: !58, file: !4, discriminator: 1)
+!178 = !DILocation(line: 72, column: 29, scope: !58)
+!179 = !DILocation(line: 72, column: 15, scope: !180)
+!180 = !DILexicalBlockFile(scope: !58, file: !4, discriminator: 2)
+!181 = !DILocation(line: 72, column: 10, scope: !182)
+!182 = !DILexicalBlockFile(scope: !183, file: !4, discriminator: 4)
+!183 = !DILexicalBlockFile(scope: !58, file: !4, discriminator: 3)
+!184 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "tog", scope: !58, file: !4, line: 73, type: !9)
+!185 = !DILocation(line: 73, column: 11, scope: !58)
+!186 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ntog", scope: !58, file: !4, line: 74, type: !27)
+!187 = !DILocation(line: 74, column: 14, scope: !58)
+!188 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "val", scope: !58, file: !4, line: 75, type: !14)
+!189 = !DILocation(line: 75, column: 8, scope: !58)
+!190 = !DILocation(line: 77, column: 9, scope: !58)
+!191 = !DILocation(line: 77, column: 7, scope: !58)
+!192 = !DILocation(line: 78, column: 10, scope: !193)
+!193 = distinct !DILexicalBlock(scope: !58, file: !4, line: 78, column: 3)
+!194 = !DILocation(line: 78, column: 8, scope: !193)
+!195 = !DILocation(line: 78, column: 15, scope: !196)
+!196 = !DILexicalBlockFile(scope: !197, file: !4, discriminator: 2)
+!197 = !DILexicalBlockFile(scope: !198, file: !4, discriminator: 1)
+!198 = distinct !DILexicalBlock(scope: !193, file: !4, line: 78, column: 3)
+!199 = !DILocation(line: 78, column: 19, scope: !198)
+!200 = !DILocation(line: 78, column: 17, scope: !198)
+!201 = !DILocation(line: 78, column: 3, scope: !193)
+!202 = !DILocation(line: 79, column: 11, scope: !203)
+!203 = distinct !DILexicalBlock(scope: !198, file: !4, line: 78, column: 27)
+!204 = !DILocation(line: 79, column: 16, scope: !203)
+!205 = !DILocation(line: 79, column: 25, scope: !203)
+!206 = !DILocation(line: 79, column: 31, scope: !203)
+!207 = !DILocation(line: 79, column: 37, scope: !203)
+!208 = !DILocation(line: 79, column: 9, scope: !203)
+!209 = !DILocation(line: 80, column: 3, scope: !203)
+!210 = !DILocation(line: 78, column: 23, scope: !198)
+!211 = !DILocation(line: 78, column: 3, scope: !198)
+!212 = !DILocation(line: 81, column: 8, scope: !58)
+!213 = !DILocation(line: 81, column: 3, scope: !58)
+!214 = !DILocation(line: 82, column: 11, scope: !58)
+!215 = !DILocation(line: 82, column: 3, scope: !58)
+!216 = !DILocation(line: 84, column: 7, scope: !58)
+!217 = !DILocation(line: 85, column: 24, scope: !58)
+!218 = !DILocation(line: 85, column: 10, scope: !58)
+!219 = !DILocation(line: 85, column: 8, scope: !58)
+!220 = !DILocation(line: 86, column: 10, scope: !221)
+!221 = distinct !DILexicalBlock(scope: !58, file: !4, line: 86, column: 3)
+!222 = !DILocation(line: 86, column: 8, scope: !221)
+!223 = !DILocation(line: 86, column: 15, scope: !224)
+!224 = !DILexicalBlockFile(scope: !225, file: !4, discriminator: 2)
+!225 = !DILexicalBlockFile(scope: !226, file: !4, discriminator: 1)
+!226 = distinct !DILexicalBlock(scope: !221, file: !4, line: 86, column: 3)
+!227 = !DILocation(line: 86, column: 19, scope: !226)
+!228 = !DILocation(line: 86, column: 17, scope: !226)
+!229 = !DILocation(line: 86, column: 3, scope: !221)
+!230 = !DILocation(line: 87, column: 11, scope: !231)
+!231 = distinct !DILexicalBlock(scope: !226, file: !4, line: 86, column: 27)
+!232 = !DILocation(line: 87, column: 17, scope: !231)
+!233 = !DILocation(line: 87, column: 26, scope: !231)
+!234 = !DILocation(line: 87, column: 33, scope: !231)
+!235 = !DILocation(line: 87, column: 39, scope: !231)
+!236 = !DILocation(line: 87, column: 9, scope: !231)
+!237 = !DILocation(line: 88, column: 3, scope: !231)
+!238 = !DILocation(line: 86, column: 23, scope: !226)
+!239 = !DILocation(line: 86, column: 3, scope: !226)
+!240 = !DILocation(line: 89, column: 8, scope: !58)
+!241 = !DILocation(line: 89, column: 3, scope: !58)
+!242 = !DILocation(line: 90, column: 11, scope: !58)
+!243 = !DILocation(line: 90, column: 3, scope: !58)
+!244 = !DILocation(line: 91, column: 3, scope: !58)

@@ -1,0 +1,230 @@
+; ModuleID = 'result.bc'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [32 x i8] c"\0ASequoia benchmark version 1.0\0A\00", align 1
+@.str.1 = private unnamed_addr constant [17 x i8] c"\0A***** results \0A\00", align 1
+@.str.2 = private unnamed_addr constant [17 x i8] c"returnVal = %f \0A\00", align 1
+@.str.3 = private unnamed_addr constant [41 x i8] c"i = %5d j = %5d    dtcdgd[i][j]   = %e \0A\00", align 1
+
+; Function Attrs: nounwind uwtable
+define i32 @main() #0 {
+entry:
+  %slipRate = alloca [12 x double], align 16
+  %dSlipRate = alloca [12 x double], align 16
+  %tau = alloca [12 x double], align 16
+  %tauc = alloca [12 x double], align 16
+  %rhs = alloca [12 x double], align 16
+  %dtcdgd = alloca [12 x [12 x double]], align 16
+  %dtdg = alloca [12 x [12 x double]], align 16
+  %matrix = alloca [12 x [12 x double]], align 16
+  call void @llvm.dbg.declare(metadata !2, metadata !16, metadata !26), !dbg !27
+  call void @llvm.dbg.declare(metadata !2, metadata !28, metadata !26), !dbg !29
+  call void @llvm.dbg.value(metadata i64 0, i64 0, metadata !30, metadata !26), !dbg !34
+  call void @llvm.dbg.value(metadata i64 0, i64 0, metadata !35, metadata !26), !dbg !36
+  call void @llvm.dbg.declare(metadata [12 x double]* %slipRate, metadata !37, metadata !26), !dbg !42
+  call void @llvm.dbg.declare(metadata [12 x double]* %dSlipRate, metadata !43, metadata !26), !dbg !44
+  call void @llvm.dbg.declare(metadata [12 x double]* %tau, metadata !45, metadata !26), !dbg !46
+  call void @llvm.dbg.declare(metadata [12 x double]* %tauc, metadata !47, metadata !26), !dbg !48
+  call void @llvm.dbg.declare(metadata [12 x double]* %rhs, metadata !49, metadata !26), !dbg !50
+  call void @llvm.dbg.declare(metadata [12 x [12 x double]]* %dtcdgd, metadata !51, metadata !26), !dbg !54
+  call void @llvm.dbg.declare(metadata [12 x [12 x double]]* %dtdg, metadata !55, metadata !26), !dbg !56
+  call void @llvm.dbg.declare(metadata [12 x [12 x double]]* %matrix, metadata !57, metadata !26), !dbg !58
+  call void @llvm.dbg.value(metadata double 0.000000e+00, i64 0, metadata !59, metadata !26), !dbg !60
+  call void @llvm.dbg.value(metadata double 0.000000e+00, i64 0, metadata !61, metadata !26), !dbg !62
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !63, metadata !26), !dbg !64
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !65, metadata !26), !dbg !66
+  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([32 x i8], [32 x i8]* @.str, i32 0, i32 0)), !dbg !67
+  %arraydecay = getelementptr inbounds [12 x double], [12 x double]* %slipRate, i32 0, i32 0, !dbg !68
+  %arraydecay1 = getelementptr inbounds [12 x double], [12 x double]* %dSlipRate, i32 0, i32 0, !dbg !69
+  %arraydecay2 = getelementptr inbounds [12 x double], [12 x double]* %tau, i32 0, i32 0, !dbg !70
+  %arraydecay3 = getelementptr inbounds [12 x double], [12 x double]* %tauc, i32 0, i32 0, !dbg !71
+  %arraydecay4 = getelementptr inbounds [12 x double], [12 x double]* %rhs, i32 0, i32 0, !dbg !72
+  %arraydecay5 = getelementptr inbounds [12 x [12 x double]], [12 x [12 x double]]* %dtcdgd, i32 0, i32 0, !dbg !73
+  %arraydecay6 = getelementptr inbounds [12 x [12 x double]], [12 x [12 x double]]* %dtdg, i32 0, i32 0, !dbg !74
+  %arraydecay7 = getelementptr inbounds [12 x [12 x double]], [12 x [12 x double]]* %matrix, i32 0, i32 0, !dbg !75
+  call void @init(double* %arraydecay, double* %arraydecay1, double* %arraydecay2, double* %arraydecay3, double* %arraydecay4, [12 x double]* %arraydecay5, [12 x double]* %arraydecay6, [12 x double]* %arraydecay7), !dbg !76
+  %arraydecay8 = getelementptr inbounds [12 x double], [12 x double]* %slipRate, i32 0, i32 0, !dbg !77
+  %arraydecay9 = getelementptr inbounds [12 x double], [12 x double]* %dSlipRate, i32 0, i32 0, !dbg !78
+  %arraydecay10 = getelementptr inbounds [12 x double], [12 x double]* %tau, i32 0, i32 0, !dbg !79
+  %arraydecay11 = getelementptr inbounds [12 x double], [12 x double]* %tauc, i32 0, i32 0, !dbg !80
+  %arraydecay12 = getelementptr inbounds [12 x double], [12 x double]* %rhs, i32 0, i32 0, !dbg !81
+  %arraydecay13 = getelementptr inbounds [12 x [12 x double]], [12 x [12 x double]]* %dtcdgd, i32 0, i32 0, !dbg !82
+  %arraydecay14 = getelementptr inbounds [12 x [12 x double]], [12 x [12 x double]]* %dtdg, i32 0, i32 0, !dbg !83
+  %arraydecay15 = getelementptr inbounds [12 x [12 x double]], [12 x [12 x double]]* %matrix, i32 0, i32 0, !dbg !84
+  %call16 = call double @SPEdriver(double* %arraydecay8, double* %arraydecay9, double* %arraydecay10, double* %arraydecay11, double* %arraydecay12, [12 x double]* %arraydecay13, [12 x double]* %arraydecay14, [12 x double]* %arraydecay15), !dbg !85
+  call void @llvm.dbg.value(metadata double %call16, i64 0, metadata !61, metadata !26), !dbg !62
+  %call17 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.str.1, i32 0, i32 0)), !dbg !86
+  %call18 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.str.2, i32 0, i32 0), double %call16), !dbg !87
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !63, metadata !26), !dbg !64
+  br label %for.cond, !dbg !88
+
+for.cond:                                         ; preds = %for.inc.25, %entry
+  %i.0 = phi i32 [ 0, %entry ], [ %add26, %for.inc.25 ]
+  %cmp = icmp slt i32 %i.0, 12, !dbg !90
+  br i1 %cmp, label %for.body, label %for.end.27, !dbg !92
+
+for.body:                                         ; preds = %for.cond
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !65, metadata !26), !dbg !66
+  br label %for.cond.19, !dbg !93
+
+for.cond.19:                                      ; preds = %for.inc, %for.body
+  %j.0 = phi i32 [ 0, %for.body ], [ %add, %for.inc ]
+  %cmp20 = icmp slt i32 %j.0, 12, !dbg !96
+  br i1 %cmp20, label %for.body.21, label %for.end, !dbg !98
+
+for.body.21:                                      ; preds = %for.cond.19
+  %idxprom = sext i32 %j.0 to i64, !dbg !99
+  %idxprom22 = sext i32 %i.0 to i64, !dbg !99
+  %arrayidx = getelementptr inbounds [12 x [12 x double]], [12 x [12 x double]]* %dtcdgd, i32 0, i64 %idxprom22, !dbg !99
+  %arrayidx23 = getelementptr inbounds [12 x double], [12 x double]* %arrayidx, i32 0, i64 %idxprom, !dbg !99
+  %tmp7 = load double, double* %arrayidx23, align 8, !dbg !99
+  %call24 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([41 x i8], [41 x i8]* @.str.3, i32 0, i32 0), i32 %i.0, i32 %j.0, double %tmp7), !dbg !101
+  br label %for.inc, !dbg !102
+
+for.inc:                                          ; preds = %for.body.21
+  %add = add nsw i32 %j.0, 4, !dbg !103
+  call void @llvm.dbg.value(metadata i32 %add, i64 0, metadata !65, metadata !26), !dbg !66
+  br label %for.cond.19, !dbg !104
+
+for.end:                                          ; preds = %for.cond.19
+  br label %for.inc.25, !dbg !105
+
+for.inc.25:                                       ; preds = %for.end
+  %add26 = add nsw i32 %i.0, 4, !dbg !106
+  call void @llvm.dbg.value(metadata i32 %add26, i64 0, metadata !63, metadata !26), !dbg !64
+  br label %for.cond, !dbg !107
+
+for.end.27:                                       ; preds = %for.cond
+  ret i32 0, !dbg !108
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+declare i32 @printf(i8*, ...) #2
+
+declare void @init(double*, double*, double*, double*, double*, [12 x double]*, [12 x double]*, [12 x double]*) #2
+
+declare double @SPEdriver(double*, double*, double*, double*, double*, [12 x double]*, [12 x double]*, [12 x double]*) #2
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.value(metadata, i64, metadata, metadata) #1
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!13, !14}
+!llvm.ident = !{!15}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, subprograms: !3, globals: !9)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/CrystalMk")
+!2 = !{}
+!3 = !{!4}
+!4 = !DISubprogram(name: "main", scope: !5, file: !5, line: 35, type: !6, isLocal: false, isDefinition: true, scopeLine: 35, isOptimized: false, function: i32 ()* @main, variables: !2)
+!5 = !DIFile(filename: "/home/gleison/tf/Benchmarks/ASC_Sequoia/CrystalMk/tmp.c", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/CrystalMk")
+!6 = !DISubroutineType(types: !7)
+!7 = !{!8}
+!8 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!9 = !{!10}
+!10 = !DIGlobalVariable(name: "MS_XTAL_NSLIP_MAX", scope: !0, file: !11, line: 8, type: !12, isLocal: true, isDefinition: true, variable: i32 12)
+!11 = !DIFile(filename: "./Crystal.h", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/CrystalMk")
+!12 = !DIDerivedType(tag: DW_TAG_const_type, baseType: !8)
+!13 = !{i32 2, !"Dwarf Version", i32 4}
+!14 = !{i32 2, !"Debug Info Version", i32 3}
+!15 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!16 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "t0", scope: !4, file: !5, line: 36, type: !17)
+!17 = !DICompositeType(tag: DW_TAG_structure_type, name: "timeval", file: !18, line: 30, size: 128, align: 64, elements: !19)
+!18 = !DIFile(filename: "/usr/include/x86_64-linux-gnu/bits/time.h", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/CrystalMk")
+!19 = !{!20, !24}
+!20 = !DIDerivedType(tag: DW_TAG_member, name: "tv_sec", scope: !17, file: !18, line: 32, baseType: !21, size: 64, align: 64)
+!21 = !DIDerivedType(tag: DW_TAG_typedef, name: "__time_t", file: !22, line: 139, baseType: !23)
+!22 = !DIFile(filename: "/usr/include/x86_64-linux-gnu/bits/types.h", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/CrystalMk")
+!23 = !DIBasicType(name: "long int", size: 64, align: 64, encoding: DW_ATE_signed)
+!24 = !DIDerivedType(tag: DW_TAG_member, name: "tv_usec", scope: !17, file: !18, line: 33, baseType: !25, size: 64, align: 64, offset: 64)
+!25 = !DIDerivedType(tag: DW_TAG_typedef, name: "__suseconds_t", file: !22, line: 141, baseType: !23)
+!26 = !DIExpression()
+!27 = !DILocation(line: 36, column: 18, scope: !4)
+!28 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "t1", scope: !4, file: !5, line: 36, type: !17)
+!29 = !DILocation(line: 36, column: 22, scope: !4)
+!30 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "t0_cpu", scope: !4, file: !5, line: 37, type: !31)
+!31 = !DIDerivedType(tag: DW_TAG_typedef, name: "clock_t", file: !32, line: 59, baseType: !33)
+!32 = !DIFile(filename: "/usr/include/time.h", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/CrystalMk")
+!33 = !DIDerivedType(tag: DW_TAG_typedef, name: "__clock_t", file: !22, line: 135, baseType: !23)
+!34 = !DILocation(line: 37, column: 11, scope: !4)
+!35 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "t1_cpu", scope: !4, file: !5, line: 38, type: !31)
+!36 = !DILocation(line: 38, column: 11, scope: !4)
+!37 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "slipRate", scope: !4, file: !5, line: 40, type: !38)
+!38 = !DICompositeType(tag: DW_TAG_array_type, baseType: !39, size: 768, align: 64, elements: !40)
+!39 = !DIBasicType(name: "double", size: 64, align: 64, encoding: DW_ATE_float)
+!40 = !{!41}
+!41 = !DISubrange(count: 12)
+!42 = !DILocation(line: 40, column: 10, scope: !4)
+!43 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "dSlipRate", scope: !4, file: !5, line: 41, type: !38)
+!44 = !DILocation(line: 41, column: 10, scope: !4)
+!45 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "tau", scope: !4, file: !5, line: 42, type: !38)
+!46 = !DILocation(line: 42, column: 10, scope: !4)
+!47 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "tauc", scope: !4, file: !5, line: 43, type: !38)
+!48 = !DILocation(line: 43, column: 10, scope: !4)
+!49 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "rhs", scope: !4, file: !5, line: 44, type: !38)
+!50 = !DILocation(line: 44, column: 10, scope: !4)
+!51 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "dtcdgd", scope: !4, file: !5, line: 45, type: !52)
+!52 = !DICompositeType(tag: DW_TAG_array_type, baseType: !39, size: 9216, align: 64, elements: !53)
+!53 = !{!41, !41}
+!54 = !DILocation(line: 45, column: 10, scope: !4)
+!55 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "dtdg", scope: !4, file: !5, line: 46, type: !52)
+!56 = !DILocation(line: 46, column: 10, scope: !4)
+!57 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "matrix", scope: !4, file: !5, line: 47, type: !52)
+!58 = !DILocation(line: 47, column: 10, scope: !4)
+!59 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "del_wtime", scope: !4, file: !5, line: 49, type: !39)
+!60 = !DILocation(line: 49, column: 10, scope: !4)
+!61 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "returnVal", scope: !4, file: !5, line: 50, type: !39)
+!62 = !DILocation(line: 50, column: 10, scope: !4)
+!63 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !4, file: !5, line: 52, type: !8)
+!64 = !DILocation(line: 52, column: 7, scope: !4)
+!65 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "j", scope: !4, file: !5, line: 53, type: !8)
+!66 = !DILocation(line: 53, column: 7, scope: !4)
+!67 = !DILocation(line: 55, column: 3, scope: !4)
+!68 = !DILocation(line: 57, column: 8, scope: !4)
+!69 = !DILocation(line: 57, column: 18, scope: !4)
+!70 = !DILocation(line: 57, column: 29, scope: !4)
+!71 = !DILocation(line: 57, column: 34, scope: !4)
+!72 = !DILocation(line: 57, column: 40, scope: !4)
+!73 = !DILocation(line: 57, column: 45, scope: !4)
+!74 = !DILocation(line: 57, column: 53, scope: !4)
+!75 = !DILocation(line: 57, column: 59, scope: !4)
+!76 = !DILocation(line: 57, column: 3, scope: !4)
+!77 = !DILocation(line: 59, column: 25, scope: !4)
+!78 = !DILocation(line: 59, column: 35, scope: !4)
+!79 = !DILocation(line: 59, column: 46, scope: !4)
+!80 = !DILocation(line: 59, column: 51, scope: !4)
+!81 = !DILocation(line: 59, column: 57, scope: !4)
+!82 = !DILocation(line: 59, column: 62, scope: !4)
+!83 = !DILocation(line: 59, column: 70, scope: !4)
+!84 = !DILocation(line: 59, column: 76, scope: !4)
+!85 = !DILocation(line: 59, column: 15, scope: !4)
+!86 = !DILocation(line: 61, column: 3, scope: !4)
+!87 = !DILocation(line: 63, column: 3, scope: !4)
+!88 = !DILocation(line: 65, column: 8, scope: !89)
+!89 = distinct !DILexicalBlock(scope: !4, file: !5, line: 65, column: 3)
+!90 = !DILocation(line: 65, column: 17, scope: !91)
+!91 = distinct !DILexicalBlock(scope: !89, file: !5, line: 65, column: 3)
+!92 = !DILocation(line: 65, column: 3, scope: !89)
+!93 = !DILocation(line: 66, column: 10, scope: !94)
+!94 = distinct !DILexicalBlock(scope: !95, file: !5, line: 66, column: 5)
+!95 = distinct !DILexicalBlock(scope: !91, file: !5, line: 65, column: 66)
+!96 = !DILocation(line: 66, column: 19, scope: !97)
+!97 = distinct !DILexicalBlock(scope: !94, file: !5, line: 66, column: 5)
+!98 = !DILocation(line: 66, column: 5, scope: !94)
+!99 = !DILocation(line: 67, column: 65, scope: !100)
+!100 = distinct !DILexicalBlock(scope: !97, file: !5, line: 66, column: 68)
+!101 = !DILocation(line: 67, column: 7, scope: !100)
+!102 = !DILocation(line: 68, column: 5, scope: !100)
+!103 = !DILocation(line: 66, column: 42, scope: !97)
+!104 = !DILocation(line: 66, column: 5, scope: !97)
+!105 = !DILocation(line: 69, column: 3, scope: !95)
+!106 = !DILocation(line: 65, column: 40, scope: !91)
+!107 = !DILocation(line: 65, column: 3, scope: !91)
+!108 = !DILocation(line: 71, column: 3, scope: !4)

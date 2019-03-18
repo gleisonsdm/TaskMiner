@@ -1,0 +1,154 @@
+; ModuleID = '/home/gleison/tf/Benchmarks/McCat/05-eks/tmp.c'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
+@.str.1 = private unnamed_addr constant [4 x i8] c"%f \00", align 1
+
+; Function Attrs: nounwind uwtable
+define void @printMatrix(double** %A) #0 {
+entry:
+  %A.addr = alloca double**, align 8
+  %i = alloca i32, align 4
+  store double** %A, double*** %A.addr, align 8
+  call void @llvm.dbg.declare(metadata double*** %A.addr, metadata !20, metadata !21), !dbg !22
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !23, metadata !21), !dbg !25
+  store i32 0, i32* %i, align 4, !dbg !26
+  br label %for.cond, !dbg !28
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %0 = load i32, i32* %i, align 4, !dbg !29
+  %cmp = icmp slt i32 %0, 51, !dbg !33
+  br i1 %cmp, label %for.body, label %for.end, !dbg !34
+
+for.body:                                         ; preds = %for.cond
+  %1 = load i32, i32* %i, align 4, !dbg !35
+  %idxprom = sext i32 %1 to i64, !dbg !36
+  %2 = load double**, double*** %A.addr, align 8, !dbg !36
+  %arrayidx = getelementptr inbounds double*, double** %2, i64 %idxprom, !dbg !36
+  %3 = load double*, double** %arrayidx, align 8, !dbg !36
+  call void @printVector(double* %3), !dbg !37
+  br label %for.inc, !dbg !37
+
+for.inc:                                          ; preds = %for.body
+  %4 = load i32, i32* %i, align 4, !dbg !38
+  %inc = add nsw i32 %4, 1, !dbg !38
+  store i32 %inc, i32* %i, align 4, !dbg !38
+  br label %for.cond, !dbg !39
+
+for.end:                                          ; preds = %for.cond
+  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i32 0, i32 0)), !dbg !40
+  ret void, !dbg !41
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind uwtable
+define void @printVector(double* %v) #0 {
+entry:
+  %v.addr = alloca double*, align 8
+  %i = alloca i32, align 4
+  store double* %v, double** %v.addr, align 8
+  call void @llvm.dbg.declare(metadata double** %v.addr, metadata !42, metadata !21), !dbg !43
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !44, metadata !21), !dbg !45
+  store i32 0, i32* %i, align 4, !dbg !46
+  br label %for.cond, !dbg !48
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %0 = load i32, i32* %i, align 4, !dbg !49
+  %cmp = icmp slt i32 %0, 51, !dbg !53
+  br i1 %cmp, label %for.body, label %for.end, !dbg !54
+
+for.body:                                         ; preds = %for.cond
+  %1 = load i32, i32* %i, align 4, !dbg !55
+  %idxprom = sext i32 %1 to i64, !dbg !56
+  %2 = load double*, double** %v.addr, align 8, !dbg !56
+  %arrayidx = getelementptr inbounds double, double* %2, i64 %idxprom, !dbg !56
+  %3 = load double, double* %arrayidx, align 8, !dbg !56
+  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.1, i32 0, i32 0), double %3), !dbg !57
+  br label %for.inc, !dbg !57
+
+for.inc:                                          ; preds = %for.body
+  %4 = load i32, i32* %i, align 4, !dbg !58
+  %inc = add nsw i32 %4, 1, !dbg !58
+  store i32 %inc, i32* %i, align 4, !dbg !58
+  br label %for.cond, !dbg !59
+
+for.end:                                          ; preds = %for.cond
+  %call1 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i32 0, i32 0)), !dbg !60
+  ret void, !dbg !61
+}
+
+declare i32 @printf(i8*, ...) #2
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!17, !18}
+!llvm.ident = !{!19}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, subprograms: !3)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/McCat/05-eks")
+!2 = !{}
+!3 = !{!4, !13}
+!4 = !DISubprogram(name: "printMatrix", scope: !5, file: !5, line: 37, type: !6, isLocal: false, isDefinition: true, scopeLine: 37, flags: DIFlagPrototyped, isOptimized: false, function: void (double**)* @printMatrix, variables: !2)
+!5 = !DIFile(filename: "/home/gleison/tf/Benchmarks/McCat/05-eks/tmp.c", directory: "/home/gleison/tf/Benchmarks/McCat/05-eks")
+!6 = !DISubroutineType(types: !7)
+!7 = !{null, !8}
+!8 = !DIDerivedType(tag: DW_TAG_typedef, name: "Matrix", file: !9, line: 27, baseType: !10)
+!9 = !DIFile(filename: "./main.h", directory: "/home/gleison/tf/Benchmarks/McCat/05-eks")
+!10 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !11, size: 64, align: 64)
+!11 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !12, size: 64, align: 64)
+!12 = !DIBasicType(name: "double", size: 64, align: 64, encoding: DW_ATE_float)
+!13 = !DISubprogram(name: "printVector", scope: !5, file: !5, line: 45, type: !14, isLocal: false, isDefinition: true, scopeLine: 45, flags: DIFlagPrototyped, isOptimized: false, function: void (double*)* @printVector, variables: !2)
+!14 = !DISubroutineType(types: !15)
+!15 = !{null, !16}
+!16 = !DIDerivedType(tag: DW_TAG_typedef, name: "Vector", file: !9, line: 28, baseType: !11)
+!17 = !{i32 2, !"Dwarf Version", i32 4}
+!18 = !{i32 2, !"Debug Info Version", i32 3}
+!19 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!20 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "A", arg: 1, scope: !4, file: !5, line: 37, type: !8)
+!21 = !DIExpression()
+!22 = !DILocation(line: 37, column: 25, scope: !4)
+!23 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !4, file: !5, line: 38, type: !24)
+!24 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!25 = !DILocation(line: 38, column: 7, scope: !4)
+!26 = !DILocation(line: 40, column: 10, scope: !27)
+!27 = distinct !DILexicalBlock(scope: !4, file: !5, line: 40, column: 3)
+!28 = !DILocation(line: 40, column: 8, scope: !27)
+!29 = !DILocation(line: 40, column: 15, scope: !30)
+!30 = !DILexicalBlockFile(scope: !31, file: !5, discriminator: 2)
+!31 = !DILexicalBlockFile(scope: !32, file: !5, discriminator: 1)
+!32 = distinct !DILexicalBlock(scope: !27, file: !5, line: 40, column: 3)
+!33 = !DILocation(line: 40, column: 17, scope: !32)
+!34 = !DILocation(line: 40, column: 3, scope: !27)
+!35 = !DILocation(line: 41, column: 19, scope: !32)
+!36 = !DILocation(line: 41, column: 17, scope: !32)
+!37 = !DILocation(line: 41, column: 5, scope: !32)
+!38 = !DILocation(line: 40, column: 23, scope: !32)
+!39 = !DILocation(line: 40, column: 3, scope: !32)
+!40 = !DILocation(line: 42, column: 3, scope: !4)
+!41 = !DILocation(line: 43, column: 1, scope: !4)
+!42 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "v", arg: 1, scope: !13, file: !5, line: 45, type: !16)
+!43 = !DILocation(line: 45, column: 25, scope: !13)
+!44 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !13, file: !5, line: 46, type: !24)
+!45 = !DILocation(line: 46, column: 7, scope: !13)
+!46 = !DILocation(line: 48, column: 10, scope: !47)
+!47 = distinct !DILexicalBlock(scope: !13, file: !5, line: 48, column: 3)
+!48 = !DILocation(line: 48, column: 8, scope: !47)
+!49 = !DILocation(line: 48, column: 15, scope: !50)
+!50 = !DILexicalBlockFile(scope: !51, file: !5, discriminator: 2)
+!51 = !DILexicalBlockFile(scope: !52, file: !5, discriminator: 1)
+!52 = distinct !DILexicalBlock(scope: !47, file: !5, line: 48, column: 3)
+!53 = !DILocation(line: 48, column: 17, scope: !52)
+!54 = !DILocation(line: 48, column: 3, scope: !47)
+!55 = !DILocation(line: 49, column: 21, scope: !52)
+!56 = !DILocation(line: 49, column: 19, scope: !52)
+!57 = !DILocation(line: 49, column: 5, scope: !52)
+!58 = !DILocation(line: 48, column: 23, scope: !52)
+!59 = !DILocation(line: 48, column: 3, scope: !52)
+!60 = !DILocation(line: 50, column: 3, scope: !13)
+!61 = !DILocation(line: 51, column: 1, scope: !13)

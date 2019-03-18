@@ -1,0 +1,1240 @@
+; ModuleID = '/home/gleison/tf/Benchmarks/McCat/08-main/tmp.c'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct.HPointStruct = type { double, double, double, double }
+%struct.ObjPointStruct = type { double, double, double, double, double, double }
+
+@.str = private unnamed_addr constant [30 x i8] c" [[ %.2f, %.2f, %.2f, %.2f] \0A\00", align 1
+@.str.1 = private unnamed_addr constant [30 x i8] c"  [ %.2f, %.2f, %.2f, %.2f] \0A\00", align 1
+@.str.2 = private unnamed_addr constant [30 x i8] c"  [ %.2f, %.2f, %.2f, %.2f]]\0A\00", align 1
+
+; Function Attrs: nounwind uwtable
+define void @MultMatrixMatrix([4 x [4 x double]]* %A, [4 x [4 x double]]* %B, [4 x [4 x double]]* %C) #0 {
+entry:
+  %A.addr = alloca [4 x [4 x double]]*, align 8
+  %B.addr = alloca [4 x [4 x double]]*, align 8
+  %C.addr = alloca [4 x [4 x double]]*, align 8
+  %i = alloca i32, align 4
+  %j = alloca i32, align 4
+  %k = alloca i32, align 4
+  store [4 x [4 x double]]* %A, [4 x [4 x double]]** %A.addr, align 8
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %A.addr, metadata !59, metadata !60), !dbg !61
+  store [4 x [4 x double]]* %B, [4 x [4 x double]]** %B.addr, align 8
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %B.addr, metadata !62, metadata !60), !dbg !63
+  store [4 x [4 x double]]* %C, [4 x [4 x double]]** %C.addr, align 8
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %C.addr, metadata !64, metadata !60), !dbg !65
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !66, metadata !60), !dbg !68
+  store i32 0, i32* %i, align 4, !dbg !68
+  call void @llvm.dbg.declare(metadata i32* %j, metadata !69, metadata !60), !dbg !70
+  store i32 0, i32* %j, align 4, !dbg !70
+  call void @llvm.dbg.declare(metadata i32* %k, metadata !71, metadata !60), !dbg !72
+  store i32 0, i32* %k, align 4, !dbg !72
+  store i32 0, i32* %i, align 4, !dbg !73
+  br label %for.cond, !dbg !75
+
+for.cond:                                         ; preds = %for.inc.24, %entry
+  %0 = load i32, i32* %i, align 4, !dbg !76
+  %cmp = icmp slt i32 %0, 4, !dbg !80
+  br i1 %cmp, label %for.body, label %for.end.26, !dbg !81
+
+for.body:                                         ; preds = %for.cond
+  store i32 0, i32* %j, align 4, !dbg !82
+  br label %for.cond.1, !dbg !85
+
+for.cond.1:                                       ; preds = %for.inc.21, %for.body
+  %1 = load i32, i32* %j, align 4, !dbg !86
+  %cmp2 = icmp slt i32 %1, 4, !dbg !90
+  br i1 %cmp2, label %for.body.3, label %for.end.23, !dbg !91
+
+for.body.3:                                       ; preds = %for.cond.1
+  %2 = load i32, i32* %j, align 4, !dbg !92
+  %idxprom = sext i32 %2 to i64, !dbg !94
+  %3 = load i32, i32* %i, align 4, !dbg !95
+  %idxprom4 = sext i32 %3 to i64, !dbg !94
+  %4 = load [4 x [4 x double]]*, [4 x [4 x double]]** %C.addr, align 8, !dbg !96
+  %arrayidx = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %4, i32 0, i64 %idxprom4, !dbg !94
+  %arrayidx5 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx, i32 0, i64 %idxprom, !dbg !94
+  store double 0.000000e+00, double* %arrayidx5, align 8, !dbg !97
+  store i32 0, i32* %k, align 4, !dbg !98
+  br label %for.cond.6, !dbg !100
+
+for.cond.6:                                       ; preds = %for.inc, %for.body.3
+  %5 = load i32, i32* %k, align 4, !dbg !101
+  %cmp7 = icmp slt i32 %5, 4, !dbg !105
+  br i1 %cmp7, label %for.body.8, label %for.end, !dbg !106
+
+for.body.8:                                       ; preds = %for.cond.6
+  %6 = load i32, i32* %k, align 4, !dbg !107
+  %idxprom9 = sext i32 %6 to i64, !dbg !109
+  %7 = load i32, i32* %i, align 4, !dbg !110
+  %idxprom10 = sext i32 %7 to i64, !dbg !109
+  %8 = load [4 x [4 x double]]*, [4 x [4 x double]]** %A.addr, align 8, !dbg !111
+  %arrayidx11 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %8, i32 0, i64 %idxprom10, !dbg !109
+  %arrayidx12 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx11, i32 0, i64 %idxprom9, !dbg !109
+  %9 = load double, double* %arrayidx12, align 8, !dbg !109
+  %10 = load i32, i32* %j, align 4, !dbg !112
+  %idxprom13 = sext i32 %10 to i64, !dbg !113
+  %11 = load i32, i32* %k, align 4, !dbg !114
+  %idxprom14 = sext i32 %11 to i64, !dbg !113
+  %12 = load [4 x [4 x double]]*, [4 x [4 x double]]** %B.addr, align 8, !dbg !115
+  %arrayidx15 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %12, i32 0, i64 %idxprom14, !dbg !113
+  %arrayidx16 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx15, i32 0, i64 %idxprom13, !dbg !113
+  %13 = load double, double* %arrayidx16, align 8, !dbg !113
+  %mul = fmul double %9, %13, !dbg !116
+  %14 = load i32, i32* %j, align 4, !dbg !117
+  %idxprom17 = sext i32 %14 to i64, !dbg !118
+  %15 = load i32, i32* %i, align 4, !dbg !119
+  %idxprom18 = sext i32 %15 to i64, !dbg !118
+  %16 = load [4 x [4 x double]]*, [4 x [4 x double]]** %C.addr, align 8, !dbg !120
+  %arrayidx19 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %16, i32 0, i64 %idxprom18, !dbg !118
+  %arrayidx20 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx19, i32 0, i64 %idxprom17, !dbg !118
+  %17 = load double, double* %arrayidx20, align 8, !dbg !121
+  %add = fadd double %17, %mul, !dbg !121
+  store double %add, double* %arrayidx20, align 8, !dbg !121
+  br label %for.inc, !dbg !122
+
+for.inc:                                          ; preds = %for.body.8
+  %18 = load i32, i32* %k, align 4, !dbg !123
+  %inc = add nsw i32 %18, 1, !dbg !123
+  store i32 %inc, i32* %k, align 4, !dbg !123
+  br label %for.cond.6, !dbg !124
+
+for.end:                                          ; preds = %for.cond.6
+  br label %for.inc.21, !dbg !125
+
+for.inc.21:                                       ; preds = %for.end
+  %19 = load i32, i32* %j, align 4, !dbg !126
+  %inc22 = add nsw i32 %19, 1, !dbg !126
+  store i32 %inc22, i32* %j, align 4, !dbg !126
+  br label %for.cond.1, !dbg !127
+
+for.end.23:                                       ; preds = %for.cond.1
+  br label %for.inc.24, !dbg !128
+
+for.inc.24:                                       ; preds = %for.end.23
+  %20 = load i32, i32* %i, align 4, !dbg !129
+  %inc25 = add nsw i32 %20, 1, !dbg !129
+  store i32 %inc25, i32* %i, align 4, !dbg !129
+  br label %for.cond, !dbg !130
+
+for.end.26:                                       ; preds = %for.cond
+  ret void, !dbg !131
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind uwtable
+define void @MultMatrixHPoint(%struct.HPointStruct* noalias sret %agg.result, [4 x [4 x double]]* %mat, %struct.HPointStruct* byval align 8 %P) #0 {
+entry:
+  %mat.addr = alloca [4 x [4 x double]]*, align 8
+  %Res = alloca %struct.HPointStruct, align 8
+  store [4 x [4 x double]]* %mat, [4 x [4 x double]]** %mat.addr, align 8
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %mat.addr, metadata !132, metadata !60), !dbg !133
+  call void @llvm.dbg.declare(metadata %struct.HPointStruct* %P, metadata !134, metadata !60), !dbg !135
+  call void @llvm.dbg.declare(metadata %struct.HPointStruct* %Res, metadata !136, metadata !60), !dbg !137
+  %x = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 0, !dbg !138
+  %0 = load double, double* %x, align 8, !dbg !138
+  %1 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !139
+  %arrayidx = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %1, i32 0, i64 0, !dbg !140
+  %arrayidx1 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx, i32 0, i64 0, !dbg !140
+  %2 = load double, double* %arrayidx1, align 8, !dbg !140
+  %mul = fmul double %0, %2, !dbg !141
+  %y = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 1, !dbg !142
+  %3 = load double, double* %y, align 8, !dbg !142
+  %4 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !143
+  %arrayidx2 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %4, i32 0, i64 0, !dbg !144
+  %arrayidx3 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx2, i32 0, i64 1, !dbg !144
+  %5 = load double, double* %arrayidx3, align 8, !dbg !144
+  %mul4 = fmul double %3, %5, !dbg !145
+  %add = fadd double %mul, %mul4, !dbg !146
+  %z = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 2, !dbg !147
+  %6 = load double, double* %z, align 8, !dbg !147
+  %7 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !148
+  %arrayidx5 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %7, i32 0, i64 0, !dbg !149
+  %arrayidx6 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx5, i32 0, i64 2, !dbg !149
+  %8 = load double, double* %arrayidx6, align 8, !dbg !149
+  %mul7 = fmul double %6, %8, !dbg !150
+  %add8 = fadd double %add, %mul7, !dbg !151
+  %w = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 3, !dbg !152
+  %9 = load double, double* %w, align 8, !dbg !152
+  %10 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !153
+  %arrayidx9 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %10, i32 0, i64 0, !dbg !154
+  %arrayidx10 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx9, i32 0, i64 3, !dbg !154
+  %11 = load double, double* %arrayidx10, align 8, !dbg !154
+  %mul11 = fmul double %9, %11, !dbg !155
+  %add12 = fadd double %add8, %mul11, !dbg !156
+  %x13 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %Res, i32 0, i32 0, !dbg !157
+  store double %add12, double* %x13, align 8, !dbg !158
+  %x14 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 0, !dbg !159
+  %12 = load double, double* %x14, align 8, !dbg !159
+  %13 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !160
+  %arrayidx15 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %13, i32 0, i64 1, !dbg !161
+  %arrayidx16 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx15, i32 0, i64 0, !dbg !161
+  %14 = load double, double* %arrayidx16, align 8, !dbg !161
+  %mul17 = fmul double %12, %14, !dbg !162
+  %y18 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 1, !dbg !163
+  %15 = load double, double* %y18, align 8, !dbg !163
+  %16 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !164
+  %arrayidx19 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %16, i32 0, i64 1, !dbg !165
+  %arrayidx20 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx19, i32 0, i64 1, !dbg !165
+  %17 = load double, double* %arrayidx20, align 8, !dbg !165
+  %mul21 = fmul double %15, %17, !dbg !166
+  %add22 = fadd double %mul17, %mul21, !dbg !167
+  %z23 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 2, !dbg !168
+  %18 = load double, double* %z23, align 8, !dbg !168
+  %19 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !169
+  %arrayidx24 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %19, i32 0, i64 1, !dbg !170
+  %arrayidx25 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx24, i32 0, i64 2, !dbg !170
+  %20 = load double, double* %arrayidx25, align 8, !dbg !170
+  %mul26 = fmul double %18, %20, !dbg !171
+  %add27 = fadd double %add22, %mul26, !dbg !172
+  %w28 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 3, !dbg !173
+  %21 = load double, double* %w28, align 8, !dbg !173
+  %22 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !174
+  %arrayidx29 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %22, i32 0, i64 1, !dbg !175
+  %arrayidx30 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx29, i32 0, i64 3, !dbg !175
+  %23 = load double, double* %arrayidx30, align 8, !dbg !175
+  %mul31 = fmul double %21, %23, !dbg !176
+  %add32 = fadd double %add27, %mul31, !dbg !177
+  %y33 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %Res, i32 0, i32 1, !dbg !178
+  store double %add32, double* %y33, align 8, !dbg !179
+  %x34 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 0, !dbg !180
+  %24 = load double, double* %x34, align 8, !dbg !180
+  %25 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !181
+  %arrayidx35 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %25, i32 0, i64 2, !dbg !182
+  %arrayidx36 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx35, i32 0, i64 0, !dbg !182
+  %26 = load double, double* %arrayidx36, align 8, !dbg !182
+  %mul37 = fmul double %24, %26, !dbg !183
+  %y38 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 1, !dbg !184
+  %27 = load double, double* %y38, align 8, !dbg !184
+  %28 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !185
+  %arrayidx39 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %28, i32 0, i64 2, !dbg !186
+  %arrayidx40 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx39, i32 0, i64 1, !dbg !186
+  %29 = load double, double* %arrayidx40, align 8, !dbg !186
+  %mul41 = fmul double %27, %29, !dbg !187
+  %add42 = fadd double %mul37, %mul41, !dbg !188
+  %z43 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 2, !dbg !189
+  %30 = load double, double* %z43, align 8, !dbg !189
+  %31 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !190
+  %arrayidx44 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %31, i32 0, i64 2, !dbg !191
+  %arrayidx45 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx44, i32 0, i64 2, !dbg !191
+  %32 = load double, double* %arrayidx45, align 8, !dbg !191
+  %mul46 = fmul double %30, %32, !dbg !192
+  %add47 = fadd double %add42, %mul46, !dbg !193
+  %w48 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 3, !dbg !194
+  %33 = load double, double* %w48, align 8, !dbg !194
+  %34 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !195
+  %arrayidx49 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %34, i32 0, i64 2, !dbg !196
+  %arrayidx50 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx49, i32 0, i64 3, !dbg !196
+  %35 = load double, double* %arrayidx50, align 8, !dbg !196
+  %mul51 = fmul double %33, %35, !dbg !197
+  %add52 = fadd double %add47, %mul51, !dbg !198
+  %z53 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %Res, i32 0, i32 2, !dbg !199
+  store double %add52, double* %z53, align 8, !dbg !200
+  %x54 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 0, !dbg !201
+  %36 = load double, double* %x54, align 8, !dbg !201
+  %37 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !202
+  %arrayidx55 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %37, i32 0, i64 3, !dbg !203
+  %arrayidx56 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx55, i32 0, i64 0, !dbg !203
+  %38 = load double, double* %arrayidx56, align 8, !dbg !203
+  %mul57 = fmul double %36, %38, !dbg !204
+  %y58 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 1, !dbg !205
+  %39 = load double, double* %y58, align 8, !dbg !205
+  %40 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !206
+  %arrayidx59 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %40, i32 0, i64 3, !dbg !207
+  %arrayidx60 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx59, i32 0, i64 1, !dbg !207
+  %41 = load double, double* %arrayidx60, align 8, !dbg !207
+  %mul61 = fmul double %39, %41, !dbg !208
+  %add62 = fadd double %mul57, %mul61, !dbg !209
+  %z63 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 2, !dbg !210
+  %42 = load double, double* %z63, align 8, !dbg !210
+  %43 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !211
+  %arrayidx64 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %43, i32 0, i64 3, !dbg !212
+  %arrayidx65 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx64, i32 0, i64 2, !dbg !212
+  %44 = load double, double* %arrayidx65, align 8, !dbg !212
+  %mul66 = fmul double %42, %44, !dbg !213
+  %add67 = fadd double %add62, %mul66, !dbg !214
+  %w68 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %P, i32 0, i32 3, !dbg !215
+  %45 = load double, double* %w68, align 8, !dbg !215
+  %46 = load [4 x [4 x double]]*, [4 x [4 x double]]** %mat.addr, align 8, !dbg !216
+  %arrayidx69 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %46, i32 0, i64 3, !dbg !217
+  %arrayidx70 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx69, i32 0, i64 3, !dbg !217
+  %47 = load double, double* %arrayidx70, align 8, !dbg !217
+  %mul71 = fmul double %45, %47, !dbg !218
+  %add72 = fadd double %add67, %mul71, !dbg !219
+  %w73 = getelementptr inbounds %struct.HPointStruct, %struct.HPointStruct* %Res, i32 0, i32 3, !dbg !220
+  store double %add72, double* %w73, align 8, !dbg !221
+  %48 = bitcast %struct.HPointStruct* %agg.result to i8*, !dbg !222
+  %49 = bitcast %struct.HPointStruct* %Res to i8*, !dbg !222
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %48, i8* %49, i64 32, i32 8, i1 false), !dbg !222
+  ret void, !dbg !223
+}
+
+; Function Attrs: nounwind
+declare void @llvm.memcpy.p0i8.p0i8.i64(i8* nocapture, i8* nocapture readonly, i64, i32, i1) #2
+
+; Function Attrs: nounwind uwtable
+define [4 x [4 x double]]* @CopyMatrix([4 x [4 x double]]* %Mat) #0 {
+entry:
+  %Mat.addr = alloca [4 x [4 x double]]*, align 8
+  %i = alloca i32, align 4
+  %j = alloca i32, align 4
+  %Res = alloca [4 x [4 x double]]*, align 8
+  store [4 x [4 x double]]* %Mat, [4 x [4 x double]]** %Mat.addr, align 8
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %Mat.addr, metadata !224, metadata !60), !dbg !225
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !226, metadata !60), !dbg !227
+  call void @llvm.dbg.declare(metadata i32* %j, metadata !228, metadata !60), !dbg !229
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %Res, metadata !230, metadata !60), !dbg !231
+  store [4 x [4 x double]]* null, [4 x [4 x double]]** %Res, align 8, !dbg !231
+  %0 = load [4 x [4 x double]]*, [4 x [4 x double]]** %Mat.addr, align 8, !dbg !232
+  %cmp = icmp ne [4 x [4 x double]]* %0, null, !dbg !234
+  br i1 %cmp, label %if.then, label %if.end, !dbg !235
+
+if.then:                                          ; preds = %entry
+  %call = call noalias i8* @malloc(i64 128) #2, !dbg !236
+  %1 = bitcast i8* %call to [4 x [4 x double]]*, !dbg !236
+  store [4 x [4 x double]]* %1, [4 x [4 x double]]** %Res, align 8, !dbg !238
+  store i32 0, i32* %i, align 4, !dbg !239
+  br label %for.cond, !dbg !241
+
+for.cond:                                         ; preds = %for.inc.11, %if.then
+  %2 = load i32, i32* %i, align 4, !dbg !242
+  %cmp1 = icmp slt i32 %2, 4, !dbg !246
+  br i1 %cmp1, label %for.body, label %for.end.13, !dbg !247
+
+for.body:                                         ; preds = %for.cond
+  store i32 0, i32* %j, align 4, !dbg !248
+  br label %for.cond.2, !dbg !251
+
+for.cond.2:                                       ; preds = %for.inc, %for.body
+  %3 = load i32, i32* %j, align 4, !dbg !252
+  %cmp3 = icmp slt i32 %3, 4, !dbg !256
+  br i1 %cmp3, label %for.body.4, label %for.end, !dbg !257
+
+for.body.4:                                       ; preds = %for.cond.2
+  %4 = load i32, i32* %j, align 4, !dbg !258
+  %idxprom = sext i32 %4 to i64, !dbg !260
+  %5 = load i32, i32* %i, align 4, !dbg !261
+  %idxprom5 = sext i32 %5 to i64, !dbg !260
+  %6 = load [4 x [4 x double]]*, [4 x [4 x double]]** %Mat.addr, align 8, !dbg !262
+  %arrayidx = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %6, i32 0, i64 %idxprom5, !dbg !260
+  %arrayidx6 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx, i32 0, i64 %idxprom, !dbg !260
+  %7 = load double, double* %arrayidx6, align 8, !dbg !260
+  %8 = load i32, i32* %j, align 4, !dbg !263
+  %idxprom7 = sext i32 %8 to i64, !dbg !264
+  %9 = load i32, i32* %i, align 4, !dbg !265
+  %idxprom8 = sext i32 %9 to i64, !dbg !264
+  %10 = load [4 x [4 x double]]*, [4 x [4 x double]]** %Res, align 8, !dbg !266
+  %arrayidx9 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %10, i32 0, i64 %idxprom8, !dbg !264
+  %arrayidx10 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx9, i32 0, i64 %idxprom7, !dbg !264
+  store double %7, double* %arrayidx10, align 8, !dbg !267
+  br label %for.inc, !dbg !268
+
+for.inc:                                          ; preds = %for.body.4
+  %11 = load i32, i32* %j, align 4, !dbg !269
+  %inc = add nsw i32 %11, 1, !dbg !269
+  store i32 %inc, i32* %j, align 4, !dbg !269
+  br label %for.cond.2, !dbg !270
+
+for.end:                                          ; preds = %for.cond.2
+  br label %for.inc.11, !dbg !271
+
+for.inc.11:                                       ; preds = %for.end
+  %12 = load i32, i32* %i, align 4, !dbg !272
+  %inc12 = add nsw i32 %12, 1, !dbg !272
+  store i32 %inc12, i32* %i, align 4, !dbg !272
+  br label %for.cond, !dbg !273
+
+for.end.13:                                       ; preds = %for.cond
+  br label %if.end, !dbg !274
+
+if.end:                                           ; preds = %for.end.13, %entry
+  %13 = load [4 x [4 x double]]*, [4 x [4 x double]]** %Res, align 8, !dbg !275
+  ret [4 x [4 x double]]* %13, !dbg !276
+}
+
+; Function Attrs: nounwind
+declare noalias i8* @malloc(i64) #3
+
+; Function Attrs: nounwind uwtable
+define [4 x [4 x double]]* @IdentMatrix() #0 {
+entry:
+  %SI = alloca [4 x [4 x double]], align 16
+  %I = alloca [4 x [4 x double]]*, align 8
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]* %SI, metadata !277, metadata !60), !dbg !278
+  %0 = bitcast [4 x [4 x double]]* %SI to i8*, !dbg !278
+  call void @llvm.memset.p0i8.i64(i8* %0, i8 0, i64 128, i32 16, i1 false), !dbg !278
+  %1 = bitcast i8* %0 to [4 x [4 x double]]*, !dbg !278
+  %2 = getelementptr [4 x [4 x double]], [4 x [4 x double]]* %1, i32 0, i32 0, !dbg !278
+  %3 = getelementptr [4 x double], [4 x double]* %2, i32 0, i32 0, !dbg !278
+  store double 1.000000e+00, double* %3, !dbg !278
+  %4 = getelementptr [4 x [4 x double]], [4 x [4 x double]]* %1, i32 0, i32 1, !dbg !278
+  %5 = getelementptr [4 x double], [4 x double]* %4, i32 0, i32 1, !dbg !278
+  store double 1.000000e+00, double* %5, !dbg !278
+  %6 = getelementptr [4 x [4 x double]], [4 x [4 x double]]* %1, i32 0, i32 2, !dbg !278
+  %7 = getelementptr [4 x double], [4 x double]* %6, i32 0, i32 2, !dbg !278
+  store double 1.000000e+00, double* %7, !dbg !278
+  %8 = getelementptr [4 x [4 x double]], [4 x [4 x double]]* %1, i32 0, i32 3, !dbg !278
+  %9 = getelementptr [4 x double], [4 x double]* %8, i32 0, i32 3, !dbg !278
+  store double 1.000000e+00, double* %9, !dbg !278
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %I, metadata !279, metadata !60), !dbg !280
+  %call = call noalias i8* @malloc(i64 128) #2, !dbg !281
+  %10 = bitcast i8* %call to [4 x [4 x double]]*, !dbg !281
+  store [4 x [4 x double]]* %10, [4 x [4 x double]]** %I, align 8, !dbg !282
+  %call1 = call [4 x [4 x double]]* @CopyMatrix([4 x [4 x double]]* %SI), !dbg !283
+  store [4 x [4 x double]]* %call1, [4 x [4 x double]]** %I, align 8, !dbg !284
+  %11 = load [4 x [4 x double]]*, [4 x [4 x double]]** %I, align 8, !dbg !285
+  ret [4 x [4 x double]]* %11, !dbg !286
+}
+
+; Function Attrs: nounwind
+declare void @llvm.memset.p0i8.i64(i8* nocapture, i8, i64, i32, i1) #2
+
+; Function Attrs: nounwind uwtable
+define [4 x [4 x double]]* @TranslateMatrix(double %dx, double %dy, double %dz) #0 {
+entry:
+  %dx.addr = alloca double, align 8
+  %dy.addr = alloca double, align 8
+  %dz.addr = alloca double, align 8
+  %TMat = alloca [4 x [4 x double]]*, align 8
+  store double %dx, double* %dx.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %dx.addr, metadata !287, metadata !60), !dbg !288
+  store double %dy, double* %dy.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %dy.addr, metadata !289, metadata !60), !dbg !290
+  store double %dz, double* %dz.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %dz.addr, metadata !291, metadata !60), !dbg !292
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %TMat, metadata !293, metadata !60), !dbg !294
+  %call = call [4 x [4 x double]]* @IdentMatrix(), !dbg !295
+  store [4 x [4 x double]]* %call, [4 x [4 x double]]** %TMat, align 8, !dbg !296
+  %0 = load double, double* %dx.addr, align 8, !dbg !297
+  %1 = load [4 x [4 x double]]*, [4 x [4 x double]]** %TMat, align 8, !dbg !298
+  %arrayidx = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %1, i32 0, i64 0, !dbg !299
+  %arrayidx1 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx, i32 0, i64 3, !dbg !299
+  store double %0, double* %arrayidx1, align 8, !dbg !300
+  %2 = load double, double* %dy.addr, align 8, !dbg !301
+  %3 = load [4 x [4 x double]]*, [4 x [4 x double]]** %TMat, align 8, !dbg !302
+  %arrayidx2 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %3, i32 0, i64 1, !dbg !303
+  %arrayidx3 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx2, i32 0, i64 3, !dbg !303
+  store double %2, double* %arrayidx3, align 8, !dbg !304
+  %4 = load double, double* %dz.addr, align 8, !dbg !305
+  %5 = load [4 x [4 x double]]*, [4 x [4 x double]]** %TMat, align 8, !dbg !306
+  %arrayidx4 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %5, i32 0, i64 2, !dbg !307
+  %arrayidx5 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx4, i32 0, i64 3, !dbg !307
+  store double %4, double* %arrayidx5, align 8, !dbg !308
+  %6 = load [4 x [4 x double]]*, [4 x [4 x double]]** %TMat, align 8, !dbg !309
+  ret [4 x [4 x double]]* %6, !dbg !310
+}
+
+; Function Attrs: nounwind uwtable
+define [4 x [4 x double]]* @RotateMatrix(double %rx, double %ry, double %rz) #0 {
+entry:
+  %rx.addr = alloca double, align 8
+  %ry.addr = alloca double, align 8
+  %rz.addr = alloca double, align 8
+  %RMatX = alloca [4 x [4 x double]]*, align 8
+  %RMatY = alloca [4 x [4 x double]]*, align 8
+  %RMatZ = alloca [4 x [4 x double]]*, align 8
+  %RMatXY = alloca [4 x [4 x double]]*, align 8
+  %RMatXYZ = alloca [4 x [4 x double]]*, align 8
+  %cosrx = alloca double, align 8
+  %sinrx = alloca double, align 8
+  %cosry = alloca double, align 8
+  %sinry = alloca double, align 8
+  %cosrz = alloca double, align 8
+  %sinrz = alloca double, align 8
+  store double %rx, double* %rx.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %rx.addr, metadata !311, metadata !60), !dbg !312
+  store double %ry, double* %ry.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %ry.addr, metadata !313, metadata !60), !dbg !314
+  store double %rz, double* %rz.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %rz.addr, metadata !315, metadata !60), !dbg !316
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %RMatX, metadata !317, metadata !60), !dbg !318
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %RMatY, metadata !319, metadata !60), !dbg !320
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %RMatZ, metadata !321, metadata !60), !dbg !322
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %RMatXY, metadata !323, metadata !60), !dbg !324
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %RMatXYZ, metadata !325, metadata !60), !dbg !326
+  call void @llvm.dbg.declare(metadata double* %cosrx, metadata !327, metadata !60), !dbg !328
+  call void @llvm.dbg.declare(metadata double* %sinrx, metadata !329, metadata !60), !dbg !330
+  call void @llvm.dbg.declare(metadata double* %cosry, metadata !331, metadata !60), !dbg !332
+  call void @llvm.dbg.declare(metadata double* %sinry, metadata !333, metadata !60), !dbg !334
+  call void @llvm.dbg.declare(metadata double* %cosrz, metadata !335, metadata !60), !dbg !336
+  call void @llvm.dbg.declare(metadata double* %sinrz, metadata !337, metadata !60), !dbg !338
+  %0 = load double, double* %rx.addr, align 8, !dbg !339
+  %mul = fmul double 0x3F91DF46A2529E84, %0, !dbg !339
+  %call = call double @cos(double %mul) #2, !dbg !340
+  store double %call, double* %cosrx, align 8, !dbg !341
+  %1 = load double, double* %rx.addr, align 8, !dbg !342
+  %mul1 = fmul double 0x3F91DF46A2529E84, %1, !dbg !342
+  %call2 = call double @sin(double %mul1) #2, !dbg !343
+  store double %call2, double* %sinrx, align 8, !dbg !344
+  %2 = load double, double* %ry.addr, align 8, !dbg !345
+  %mul3 = fmul double 0x3F91DF46A2529E84, %2, !dbg !345
+  %call4 = call double @cos(double %mul3) #2, !dbg !346
+  store double %call4, double* %cosry, align 8, !dbg !347
+  %3 = load double, double* %ry.addr, align 8, !dbg !348
+  %mul5 = fmul double 0x3F91DF46A2529E84, %3, !dbg !348
+  %call6 = call double @sin(double %mul5) #2, !dbg !349
+  store double %call6, double* %sinry, align 8, !dbg !350
+  %4 = load double, double* %rz.addr, align 8, !dbg !351
+  %mul7 = fmul double 0x3F91DF46A2529E84, %4, !dbg !351
+  %call8 = call double @cos(double %mul7) #2, !dbg !352
+  store double %call8, double* %cosrz, align 8, !dbg !353
+  %5 = load double, double* %rz.addr, align 8, !dbg !354
+  %mul9 = fmul double 0x3F91DF46A2529E84, %5, !dbg !354
+  %call10 = call double @sin(double %mul9) #2, !dbg !355
+  store double %call10, double* %sinrz, align 8, !dbg !356
+  %call11 = call [4 x [4 x double]]* @IdentMatrix(), !dbg !357
+  store [4 x [4 x double]]* %call11, [4 x [4 x double]]** %RMatX, align 8, !dbg !358
+  %call12 = call [4 x [4 x double]]* @IdentMatrix(), !dbg !359
+  store [4 x [4 x double]]* %call12, [4 x [4 x double]]** %RMatY, align 8, !dbg !360
+  %call13 = call [4 x [4 x double]]* @IdentMatrix(), !dbg !361
+  store [4 x [4 x double]]* %call13, [4 x [4 x double]]** %RMatZ, align 8, !dbg !362
+  %call14 = call [4 x [4 x double]]* @IdentMatrix(), !dbg !363
+  store [4 x [4 x double]]* %call14, [4 x [4 x double]]** %RMatXY, align 8, !dbg !364
+  %call15 = call [4 x [4 x double]]* @IdentMatrix(), !dbg !365
+  store [4 x [4 x double]]* %call15, [4 x [4 x double]]** %RMatXYZ, align 8, !dbg !366
+  %6 = load double, double* %cosrx, align 8, !dbg !367
+  %7 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatX, align 8, !dbg !368
+  %arrayidx = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %7, i32 0, i64 1, !dbg !369
+  %arrayidx16 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx, i32 0, i64 1, !dbg !369
+  store double %6, double* %arrayidx16, align 8, !dbg !370
+  %8 = load double, double* %sinrx, align 8, !dbg !371
+  %sub = fsub double -0.000000e+00, %8, !dbg !372
+  %9 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatX, align 8, !dbg !373
+  %arrayidx17 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %9, i32 0, i64 1, !dbg !374
+  %arrayidx18 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx17, i32 0, i64 2, !dbg !374
+  store double %sub, double* %arrayidx18, align 8, !dbg !375
+  %10 = load double, double* %sinrx, align 8, !dbg !376
+  %11 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatX, align 8, !dbg !377
+  %arrayidx19 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %11, i32 0, i64 2, !dbg !378
+  %arrayidx20 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx19, i32 0, i64 1, !dbg !378
+  store double %10, double* %arrayidx20, align 8, !dbg !379
+  %12 = load double, double* %cosrx, align 8, !dbg !380
+  %13 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatX, align 8, !dbg !381
+  %arrayidx21 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %13, i32 0, i64 2, !dbg !382
+  %arrayidx22 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx21, i32 0, i64 2, !dbg !382
+  store double %12, double* %arrayidx22, align 8, !dbg !383
+  %14 = load double, double* %cosry, align 8, !dbg !384
+  %15 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatY, align 8, !dbg !385
+  %arrayidx23 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %15, i32 0, i64 0, !dbg !386
+  %arrayidx24 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx23, i32 0, i64 0, !dbg !386
+  store double %14, double* %arrayidx24, align 8, !dbg !387
+  %16 = load double, double* %sinry, align 8, !dbg !388
+  %17 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatY, align 8, !dbg !389
+  %arrayidx25 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %17, i32 0, i64 0, !dbg !390
+  %arrayidx26 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx25, i32 0, i64 2, !dbg !390
+  store double %16, double* %arrayidx26, align 8, !dbg !391
+  %18 = load double, double* %sinry, align 8, !dbg !392
+  %sub27 = fsub double -0.000000e+00, %18, !dbg !393
+  %19 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatY, align 8, !dbg !394
+  %arrayidx28 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %19, i32 0, i64 2, !dbg !395
+  %arrayidx29 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx28, i32 0, i64 0, !dbg !395
+  store double %sub27, double* %arrayidx29, align 8, !dbg !396
+  %20 = load double, double* %cosry, align 8, !dbg !397
+  %21 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatY, align 8, !dbg !398
+  %arrayidx30 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %21, i32 0, i64 2, !dbg !399
+  %arrayidx31 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx30, i32 0, i64 2, !dbg !399
+  store double %20, double* %arrayidx31, align 8, !dbg !400
+  %22 = load double, double* %cosrz, align 8, !dbg !401
+  %23 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatZ, align 8, !dbg !402
+  %arrayidx32 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %23, i32 0, i64 0, !dbg !403
+  %arrayidx33 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx32, i32 0, i64 0, !dbg !403
+  store double %22, double* %arrayidx33, align 8, !dbg !404
+  %24 = load double, double* %sinrz, align 8, !dbg !405
+  %sub34 = fsub double -0.000000e+00, %24, !dbg !406
+  %25 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatZ, align 8, !dbg !407
+  %arrayidx35 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %25, i32 0, i64 0, !dbg !408
+  %arrayidx36 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx35, i32 0, i64 1, !dbg !408
+  store double %sub34, double* %arrayidx36, align 8, !dbg !409
+  %26 = load double, double* %sinrz, align 8, !dbg !410
+  %27 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatZ, align 8, !dbg !411
+  %arrayidx37 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %27, i32 0, i64 1, !dbg !412
+  %arrayidx38 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx37, i32 0, i64 0, !dbg !412
+  store double %26, double* %arrayidx38, align 8, !dbg !413
+  %28 = load double, double* %cosrz, align 8, !dbg !414
+  %29 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatZ, align 8, !dbg !415
+  %arrayidx39 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %29, i32 0, i64 1, !dbg !416
+  %arrayidx40 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx39, i32 0, i64 1, !dbg !416
+  store double %28, double* %arrayidx40, align 8, !dbg !417
+  %30 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatX, align 8, !dbg !418
+  %31 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatY, align 8, !dbg !419
+  %32 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatXY, align 8, !dbg !420
+  call void @MultMatrixMatrix([4 x [4 x double]]* %30, [4 x [4 x double]]* %31, [4 x [4 x double]]* %32), !dbg !421
+  %33 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatXY, align 8, !dbg !422
+  %34 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatZ, align 8, !dbg !423
+  %35 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatXYZ, align 8, !dbg !424
+  call void @MultMatrixMatrix([4 x [4 x double]]* %33, [4 x [4 x double]]* %34, [4 x [4 x double]]* %35), !dbg !425
+  %36 = load [4 x [4 x double]]*, [4 x [4 x double]]** %RMatXYZ, align 8, !dbg !426
+  ret [4 x [4 x double]]* %36, !dbg !427
+}
+
+; Function Attrs: nounwind
+declare double @cos(double) #3
+
+; Function Attrs: nounwind
+declare double @sin(double) #3
+
+; Function Attrs: nounwind uwtable
+define [4 x [4 x double]]* @ScaleMatrix(double %sx, double %sy, double %sz) #0 {
+entry:
+  %sx.addr = alloca double, align 8
+  %sy.addr = alloca double, align 8
+  %sz.addr = alloca double, align 8
+  %I = alloca [4 x [4 x double]]*, align 8
+  store double %sx, double* %sx.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %sx.addr, metadata !428, metadata !60), !dbg !429
+  store double %sy, double* %sy.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %sy.addr, metadata !430, metadata !60), !dbg !431
+  store double %sz, double* %sz.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %sz.addr, metadata !432, metadata !60), !dbg !433
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %I, metadata !434, metadata !60), !dbg !435
+  %call = call [4 x [4 x double]]* @IdentMatrix(), !dbg !436
+  store [4 x [4 x double]]* %call, [4 x [4 x double]]** %I, align 8, !dbg !437
+  %0 = load double, double* %sx.addr, align 8, !dbg !438
+  %1 = load [4 x [4 x double]]*, [4 x [4 x double]]** %I, align 8, !dbg !439
+  %arrayidx = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %1, i32 0, i64 0, !dbg !440
+  %arrayidx1 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx, i32 0, i64 0, !dbg !440
+  store double %0, double* %arrayidx1, align 8, !dbg !441
+  %2 = load double, double* %sy.addr, align 8, !dbg !442
+  %3 = load [4 x [4 x double]]*, [4 x [4 x double]]** %I, align 8, !dbg !443
+  %arrayidx2 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %3, i32 0, i64 1, !dbg !444
+  %arrayidx3 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx2, i32 0, i64 1, !dbg !444
+  store double %2, double* %arrayidx3, align 8, !dbg !445
+  %4 = load double, double* %sz.addr, align 8, !dbg !446
+  %5 = load [4 x [4 x double]]*, [4 x [4 x double]]** %I, align 8, !dbg !447
+  %arrayidx4 = getelementptr inbounds [4 x [4 x double]], [4 x [4 x double]]* %5, i32 0, i64 2, !dbg !448
+  %arrayidx5 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx4, i32 0, i64 2, !dbg !448
+  store double %4, double* %arrayidx5, align 8, !dbg !449
+  %6 = load [4 x [4 x double]]*, [4 x [4 x double]]** %I, align 8, !dbg !450
+  ret [4 x [4 x double]]* %6, !dbg !451
+}
+
+; Function Attrs: nounwind uwtable
+define void @RotatePoint(%struct.ObjPointStruct* noalias sret %agg.result, %struct.ObjPointStruct* byval align 8 %a, double %rx, double %ry, double %rz) #0 {
+entry:
+  %rx.addr = alloca double, align 8
+  %ry.addr = alloca double, align 8
+  %rz.addr = alloca double, align 8
+  %Mat = alloca [4 x [4 x double]]*, align 8
+  %A = alloca %struct.HPointStruct, align 8
+  %tmp = alloca %struct.HPointStruct, align 8
+  %tmp1 = alloca %struct.HPointStruct, align 8
+  call void @llvm.dbg.declare(metadata %struct.ObjPointStruct* %a, metadata !452, metadata !60), !dbg !453
+  store double %rx, double* %rx.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %rx.addr, metadata !454, metadata !60), !dbg !455
+  store double %ry, double* %ry.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %ry.addr, metadata !456, metadata !60), !dbg !457
+  store double %rz, double* %rz.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %rz.addr, metadata !458, metadata !60), !dbg !459
+  call void @llvm.dbg.declare(metadata [4 x [4 x double]]** %Mat, metadata !460, metadata !60), !dbg !461
+  call void @llvm.dbg.declare(metadata %struct.HPointStruct* %A, metadata !462, metadata !60), !dbg !463
+  call void @PointToHPoint(%struct.HPointStruct* sret %tmp, %struct.ObjPointStruct* byval align 8 %a), !dbg !464
+  %0 = bitcast %struct.HPointStruct* %A to i8*, !dbg !464
+  %1 = bitcast %struct.HPointStruct* %tmp to i8*, !dbg !464
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %0, i8* %1, i64 32, i32 8, i1 false), !dbg !464
+  %2 = load double, double* %rx.addr, align 8, !dbg !465
+  %3 = load double, double* %ry.addr, align 8, !dbg !466
+  %4 = load double, double* %rz.addr, align 8, !dbg !467
+  %call = call [4 x [4 x double]]* @RotateMatrix(double %2, double %3, double %4), !dbg !468
+  store [4 x [4 x double]]* %call, [4 x [4 x double]]** %Mat, align 8, !dbg !469
+  %5 = load [4 x [4 x double]]*, [4 x [4 x double]]** %Mat, align 8, !dbg !470
+  call void @MultMatrixHPoint(%struct.HPointStruct* sret %tmp1, [4 x [4 x double]]* %5, %struct.HPointStruct* byval align 8 %A), !dbg !471
+  %6 = bitcast %struct.HPointStruct* %A to i8*, !dbg !471
+  %7 = bitcast %struct.HPointStruct* %tmp1 to i8*, !dbg !471
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %6, i8* %7, i64 32, i32 8, i1 false), !dbg !471
+  %8 = bitcast %struct.ObjPointStruct* %agg.result to i8*, !dbg !472
+  %9 = bitcast %struct.ObjPointStruct* %a to i8*, !dbg !472
+  call void @llvm.memcpy.p0i8.p0i8.i64(i8* %8, i8* %9, i64 48, i32 8, i1 false), !dbg !472
+  ret void, !dbg !473
+}
+
+declare void @PointToHPoint(%struct.HPointStruct* sret, %struct.ObjPointStruct* byval align 8) #4
+
+; Function Attrs: nounwind uwtable
+define void @PrintMatrix([4 x double]* %Mat) #0 {
+entry:
+  %Mat.addr = alloca [4 x double]*, align 8
+  store [4 x double]* %Mat, [4 x double]** %Mat.addr, align 8
+  call void @llvm.dbg.declare(metadata [4 x double]** %Mat.addr, metadata !474, metadata !60), !dbg !475
+  %0 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !476
+  %arrayidx = getelementptr inbounds [4 x double], [4 x double]* %0, i64 0, !dbg !476
+  %arrayidx1 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx, i32 0, i64 0, !dbg !476
+  %1 = load double, double* %arrayidx1, align 8, !dbg !476
+  %2 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !477
+  %arrayidx2 = getelementptr inbounds [4 x double], [4 x double]* %2, i64 0, !dbg !477
+  %arrayidx3 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx2, i32 0, i64 1, !dbg !477
+  %3 = load double, double* %arrayidx3, align 8, !dbg !477
+  %4 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !478
+  %arrayidx4 = getelementptr inbounds [4 x double], [4 x double]* %4, i64 0, !dbg !478
+  %arrayidx5 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx4, i32 0, i64 2, !dbg !478
+  %5 = load double, double* %arrayidx5, align 8, !dbg !478
+  %6 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !479
+  %arrayidx6 = getelementptr inbounds [4 x double], [4 x double]* %6, i64 0, !dbg !479
+  %arrayidx7 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx6, i32 0, i64 3, !dbg !479
+  %7 = load double, double* %arrayidx7, align 8, !dbg !479
+  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @.str, i32 0, i32 0), double %1, double %3, double %5, double %7), !dbg !480
+  %8 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !481
+  %arrayidx8 = getelementptr inbounds [4 x double], [4 x double]* %8, i64 1, !dbg !481
+  %arrayidx9 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx8, i32 0, i64 0, !dbg !481
+  %9 = load double, double* %arrayidx9, align 8, !dbg !481
+  %10 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !482
+  %arrayidx10 = getelementptr inbounds [4 x double], [4 x double]* %10, i64 1, !dbg !482
+  %arrayidx11 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx10, i32 0, i64 1, !dbg !482
+  %11 = load double, double* %arrayidx11, align 8, !dbg !482
+  %12 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !483
+  %arrayidx12 = getelementptr inbounds [4 x double], [4 x double]* %12, i64 1, !dbg !483
+  %arrayidx13 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx12, i32 0, i64 2, !dbg !483
+  %13 = load double, double* %arrayidx13, align 8, !dbg !483
+  %14 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !484
+  %arrayidx14 = getelementptr inbounds [4 x double], [4 x double]* %14, i64 1, !dbg !484
+  %arrayidx15 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx14, i32 0, i64 3, !dbg !484
+  %15 = load double, double* %arrayidx15, align 8, !dbg !484
+  %call16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @.str.1, i32 0, i32 0), double %9, double %11, double %13, double %15), !dbg !485
+  %16 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !486
+  %arrayidx17 = getelementptr inbounds [4 x double], [4 x double]* %16, i64 2, !dbg !486
+  %arrayidx18 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx17, i32 0, i64 0, !dbg !486
+  %17 = load double, double* %arrayidx18, align 8, !dbg !486
+  %18 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !487
+  %arrayidx19 = getelementptr inbounds [4 x double], [4 x double]* %18, i64 2, !dbg !487
+  %arrayidx20 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx19, i32 0, i64 1, !dbg !487
+  %19 = load double, double* %arrayidx20, align 8, !dbg !487
+  %20 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !488
+  %arrayidx21 = getelementptr inbounds [4 x double], [4 x double]* %20, i64 2, !dbg !488
+  %arrayidx22 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx21, i32 0, i64 2, !dbg !488
+  %21 = load double, double* %arrayidx22, align 8, !dbg !488
+  %22 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !489
+  %arrayidx23 = getelementptr inbounds [4 x double], [4 x double]* %22, i64 2, !dbg !489
+  %arrayidx24 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx23, i32 0, i64 3, !dbg !489
+  %23 = load double, double* %arrayidx24, align 8, !dbg !489
+  %call25 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @.str.1, i32 0, i32 0), double %17, double %19, double %21, double %23), !dbg !490
+  %24 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !491
+  %arrayidx26 = getelementptr inbounds [4 x double], [4 x double]* %24, i64 3, !dbg !491
+  %arrayidx27 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx26, i32 0, i64 0, !dbg !491
+  %25 = load double, double* %arrayidx27, align 8, !dbg !491
+  %26 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !492
+  %arrayidx28 = getelementptr inbounds [4 x double], [4 x double]* %26, i64 3, !dbg !492
+  %arrayidx29 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx28, i32 0, i64 1, !dbg !492
+  %27 = load double, double* %arrayidx29, align 8, !dbg !492
+  %28 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !493
+  %arrayidx30 = getelementptr inbounds [4 x double], [4 x double]* %28, i64 3, !dbg !493
+  %arrayidx31 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx30, i32 0, i64 2, !dbg !493
+  %29 = load double, double* %arrayidx31, align 8, !dbg !493
+  %30 = load [4 x double]*, [4 x double]** %Mat.addr, align 8, !dbg !494
+  %arrayidx32 = getelementptr inbounds [4 x double], [4 x double]* %30, i64 3, !dbg !494
+  %arrayidx33 = getelementptr inbounds [4 x double], [4 x double]* %arrayidx32, i32 0, i64 3, !dbg !494
+  %31 = load double, double* %arrayidx33, align 8, !dbg !494
+  %call34 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([30 x i8], [30 x i8]* @.str.2, i32 0, i32 0), double %25, double %27, double %29, double %31), !dbg !495
+  ret void, !dbg !496
+}
+
+declare i32 @printf(i8*, ...) #4
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { nounwind }
+attributes #3 = { nounwind "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #4 = { "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!56, !57}
+!llvm.ident = !{!58}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, retainedTypes: !3, subprograms: !5)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/McCat/08-main")
+!2 = !{}
+!3 = !{!4}
+!4 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: null, size: 64, align: 64)
+!5 = !{!6, !17, !27, !30, !33, !36, !37, !38, !50}
+!6 = !DISubprogram(name: "MultMatrixMatrix", scope: !7, file: !7, line: 21, type: !8, isLocal: false, isDefinition: true, scopeLine: 21, flags: DIFlagPrototyped, isOptimized: false, function: void ([4 x [4 x double]]*, [4 x [4 x double]]*, [4 x [4 x double]]*)* @MultMatrixMatrix, variables: !2)
+!7 = !DIFile(filename: "/home/gleison/tf/Benchmarks/McCat/08-main/tmp.c", directory: "/home/gleison/tf/Benchmarks/McCat/08-main")
+!8 = !DISubroutineType(types: !9)
+!9 = !{null, !10, !10, !10}
+!10 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !11, size: 64, align: 64)
+!11 = !DIDerivedType(tag: DW_TAG_typedef, name: "Matrix", file: !12, line: 37, baseType: !13)
+!12 = !DIFile(filename: "./types.h", directory: "/home/gleison/tf/Benchmarks/McCat/08-main")
+!13 = !DICompositeType(tag: DW_TAG_array_type, baseType: !14, size: 1024, align: 64, elements: !15)
+!14 = !DIBasicType(name: "double", size: 64, align: 64, encoding: DW_ATE_float)
+!15 = !{!16, !16}
+!16 = !DISubrange(count: 4)
+!17 = !DISubprogram(name: "MultMatrixHPoint", scope: !7, file: !7, line: 34, type: !18, isLocal: false, isDefinition: true, scopeLine: 36, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.HPointStruct*, [4 x [4 x double]]*, %struct.HPointStruct*)* @MultMatrixHPoint, variables: !2)
+!18 = !DISubroutineType(types: !19)
+!19 = !{!20, !10, !20}
+!20 = !DIDerivedType(tag: DW_TAG_typedef, name: "HPoint", file: !12, line: 29, baseType: !21)
+!21 = !DICompositeType(tag: DW_TAG_structure_type, name: "HPointStruct", file: !12, line: 23, size: 256, align: 64, elements: !22)
+!22 = !{!23, !24, !25, !26}
+!23 = !DIDerivedType(tag: DW_TAG_member, name: "x", scope: !21, file: !12, line: 25, baseType: !14, size: 64, align: 64)
+!24 = !DIDerivedType(tag: DW_TAG_member, name: "y", scope: !21, file: !12, line: 26, baseType: !14, size: 64, align: 64, offset: 64)
+!25 = !DIDerivedType(tag: DW_TAG_member, name: "z", scope: !21, file: !12, line: 27, baseType: !14, size: 64, align: 64, offset: 128)
+!26 = !DIDerivedType(tag: DW_TAG_member, name: "w", scope: !21, file: !12, line: 28, baseType: !14, size: 64, align: 64, offset: 192)
+!27 = !DISubprogram(name: "CopyMatrix", scope: !7, file: !7, line: 48, type: !28, isLocal: false, isDefinition: true, scopeLine: 48, flags: DIFlagPrototyped, isOptimized: false, function: [4 x [4 x double]]* ([4 x [4 x double]]*)* @CopyMatrix, variables: !2)
+!28 = !DISubroutineType(types: !29)
+!29 = !{!10, !10}
+!30 = !DISubprogram(name: "IdentMatrix", scope: !7, file: !7, line: 62, type: !31, isLocal: false, isDefinition: true, scopeLine: 62, flags: DIFlagPrototyped, isOptimized: false, function: [4 x [4 x double]]* ()* @IdentMatrix, variables: !2)
+!31 = !DISubroutineType(types: !32)
+!32 = !{!10}
+!33 = !DISubprogram(name: "TranslateMatrix", scope: !7, file: !7, line: 75, type: !34, isLocal: false, isDefinition: true, scopeLine: 75, flags: DIFlagPrototyped, isOptimized: false, function: [4 x [4 x double]]* (double, double, double)* @TranslateMatrix, variables: !2)
+!34 = !DISubroutineType(types: !35)
+!35 = !{!10, !14, !14, !14}
+!36 = !DISubprogram(name: "RotateMatrix", scope: !7, file: !7, line: 83, type: !34, isLocal: false, isDefinition: true, scopeLine: 83, flags: DIFlagPrototyped, isOptimized: false, function: [4 x [4 x double]]* (double, double, double)* @RotateMatrix, variables: !2)
+!37 = !DISubprogram(name: "ScaleMatrix", scope: !7, file: !7, line: 124, type: !34, isLocal: false, isDefinition: true, scopeLine: 124, flags: DIFlagPrototyped, isOptimized: false, function: [4 x [4 x double]]* (double, double, double)* @ScaleMatrix, variables: !2)
+!38 = !DISubprogram(name: "RotatePoint", scope: !7, file: !7, line: 133, type: !39, isLocal: false, isDefinition: true, scopeLine: 133, flags: DIFlagPrototyped, isOptimized: false, function: void (%struct.ObjPointStruct*, %struct.ObjPointStruct*, double, double, double)* @RotatePoint, variables: !2)
+!39 = !DISubroutineType(types: !40)
+!40 = !{!41, !41, !14, !14, !14}
+!41 = !DIDerivedType(tag: DW_TAG_typedef, name: "ObjPoint", file: !12, line: 21, baseType: !42)
+!42 = !DICompositeType(tag: DW_TAG_structure_type, name: "ObjPointStruct", file: !12, line: 13, size: 384, align: 64, elements: !43)
+!43 = !{!44, !45, !46, !47, !48, !49}
+!44 = !DIDerivedType(tag: DW_TAG_member, name: "x", scope: !42, file: !12, line: 15, baseType: !14, size: 64, align: 64)
+!45 = !DIDerivedType(tag: DW_TAG_member, name: "y", scope: !42, file: !12, line: 16, baseType: !14, size: 64, align: 64, offset: 64)
+!46 = !DIDerivedType(tag: DW_TAG_member, name: "z", scope: !42, file: !12, line: 17, baseType: !14, size: 64, align: 64, offset: 128)
+!47 = !DIDerivedType(tag: DW_TAG_member, name: "tx", scope: !42, file: !12, line: 18, baseType: !14, size: 64, align: 64, offset: 192)
+!48 = !DIDerivedType(tag: DW_TAG_member, name: "ty", scope: !42, file: !12, line: 19, baseType: !14, size: 64, align: 64, offset: 256)
+!49 = !DIDerivedType(tag: DW_TAG_member, name: "tz", scope: !42, file: !12, line: 20, baseType: !14, size: 64, align: 64, offset: 320)
+!50 = !DISubprogram(name: "PrintMatrix", scope: !7, file: !7, line: 142, type: !51, isLocal: false, isDefinition: true, scopeLine: 142, flags: DIFlagPrototyped, isOptimized: false, function: void ([4 x double]*)* @PrintMatrix, variables: !2)
+!51 = !DISubroutineType(types: !52)
+!52 = !{null, !53}
+!53 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !54, size: 64, align: 64)
+!54 = !DICompositeType(tag: DW_TAG_array_type, baseType: !14, size: 256, align: 64, elements: !55)
+!55 = !{!16}
+!56 = !{i32 2, !"Dwarf Version", i32 4}
+!57 = !{i32 2, !"Debug Info Version", i32 3}
+!58 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!59 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "A", arg: 1, scope: !6, file: !7, line: 21, type: !10)
+!60 = !DIExpression()
+!61 = !DILocation(line: 21, column: 31, scope: !6)
+!62 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "B", arg: 2, scope: !6, file: !7, line: 21, type: !10)
+!63 = !DILocation(line: 21, column: 42, scope: !6)
+!64 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "C", arg: 3, scope: !6, file: !7, line: 21, type: !10)
+!65 = !DILocation(line: 21, column: 53, scope: !6)
+!66 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !6, file: !7, line: 22, type: !67)
+!67 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!68 = !DILocation(line: 22, column: 7, scope: !6)
+!69 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "j", scope: !6, file: !7, line: 22, type: !67)
+!70 = !DILocation(line: 22, column: 14, scope: !6)
+!71 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "k", scope: !6, file: !7, line: 22, type: !67)
+!72 = !DILocation(line: 22, column: 21, scope: !6)
+!73 = !DILocation(line: 23, column: 10, scope: !74)
+!74 = distinct !DILexicalBlock(scope: !6, file: !7, line: 23, column: 3)
+!75 = !DILocation(line: 23, column: 8, scope: !74)
+!76 = !DILocation(line: 23, column: 15, scope: !77)
+!77 = !DILexicalBlockFile(scope: !78, file: !7, discriminator: 2)
+!78 = !DILexicalBlockFile(scope: !79, file: !7, discriminator: 1)
+!79 = distinct !DILexicalBlock(scope: !74, file: !7, line: 23, column: 3)
+!80 = !DILocation(line: 23, column: 17, scope: !79)
+!81 = !DILocation(line: 23, column: 3, scope: !74)
+!82 = !DILocation(line: 24, column: 12, scope: !83)
+!83 = distinct !DILexicalBlock(scope: !84, file: !7, line: 24, column: 5)
+!84 = distinct !DILexicalBlock(scope: !79, file: !7, line: 23, column: 27)
+!85 = !DILocation(line: 24, column: 10, scope: !83)
+!86 = !DILocation(line: 24, column: 17, scope: !87)
+!87 = !DILexicalBlockFile(scope: !88, file: !7, discriminator: 2)
+!88 = !DILexicalBlockFile(scope: !89, file: !7, discriminator: 1)
+!89 = distinct !DILexicalBlock(scope: !83, file: !7, line: 24, column: 5)
+!90 = !DILocation(line: 24, column: 19, scope: !89)
+!91 = !DILocation(line: 24, column: 5, scope: !83)
+!92 = !DILocation(line: 25, column: 15, scope: !93)
+!93 = distinct !DILexicalBlock(scope: !89, file: !7, line: 24, column: 29)
+!94 = !DILocation(line: 25, column: 7, scope: !93)
+!95 = !DILocation(line: 25, column: 12, scope: !93)
+!96 = !DILocation(line: 25, column: 9, scope: !93)
+!97 = !DILocation(line: 25, column: 18, scope: !93)
+!98 = !DILocation(line: 26, column: 14, scope: !99)
+!99 = distinct !DILexicalBlock(scope: !93, file: !7, line: 26, column: 7)
+!100 = !DILocation(line: 26, column: 12, scope: !99)
+!101 = !DILocation(line: 26, column: 19, scope: !102)
+!102 = !DILexicalBlockFile(scope: !103, file: !7, discriminator: 2)
+!103 = !DILexicalBlockFile(scope: !104, file: !7, discriminator: 1)
+!104 = distinct !DILexicalBlock(scope: !99, file: !7, line: 26, column: 7)
+!105 = !DILocation(line: 26, column: 21, scope: !104)
+!106 = !DILocation(line: 26, column: 7, scope: !99)
+!107 = !DILocation(line: 28, column: 31, scope: !108)
+!108 = distinct !DILexicalBlock(scope: !104, file: !7, line: 26, column: 31)
+!109 = !DILocation(line: 28, column: 23, scope: !108)
+!110 = !DILocation(line: 28, column: 28, scope: !108)
+!111 = !DILocation(line: 28, column: 25, scope: !108)
+!112 = !DILocation(line: 28, column: 44, scope: !108)
+!113 = !DILocation(line: 28, column: 36, scope: !108)
+!114 = !DILocation(line: 28, column: 41, scope: !108)
+!115 = !DILocation(line: 28, column: 38, scope: !108)
+!116 = !DILocation(line: 28, column: 34, scope: !108)
+!117 = !DILocation(line: 28, column: 17, scope: !108)
+!118 = !DILocation(line: 28, column: 9, scope: !108)
+!119 = !DILocation(line: 28, column: 14, scope: !108)
+!120 = !DILocation(line: 28, column: 11, scope: !108)
+!121 = !DILocation(line: 28, column: 20, scope: !108)
+!122 = !DILocation(line: 29, column: 7, scope: !108)
+!123 = !DILocation(line: 26, column: 27, scope: !104)
+!124 = !DILocation(line: 26, column: 7, scope: !104)
+!125 = !DILocation(line: 30, column: 5, scope: !93)
+!126 = !DILocation(line: 24, column: 25, scope: !89)
+!127 = !DILocation(line: 24, column: 5, scope: !89)
+!128 = !DILocation(line: 31, column: 3, scope: !84)
+!129 = !DILocation(line: 23, column: 23, scope: !79)
+!130 = !DILocation(line: 23, column: 3, scope: !79)
+!131 = !DILocation(line: 32, column: 1, scope: !6)
+!132 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "mat", arg: 1, scope: !17, file: !7, line: 34, type: !10)
+!133 = !DILocation(line: 34, column: 33, scope: !17)
+!134 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "P", arg: 2, scope: !17, file: !7, line: 35, type: !20)
+!135 = !DILocation(line: 35, column: 32, scope: !17)
+!136 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "Res", scope: !17, file: !7, line: 37, type: !20)
+!137 = !DILocation(line: 37, column: 10, scope: !17)
+!138 = !DILocation(line: 38, column: 13, scope: !17)
+!139 = !DILocation(line: 38, column: 19, scope: !17)
+!140 = !DILocation(line: 38, column: 17, scope: !17)
+!141 = !DILocation(line: 38, column: 15, scope: !17)
+!142 = !DILocation(line: 38, column: 34, scope: !17)
+!143 = !DILocation(line: 38, column: 40, scope: !17)
+!144 = !DILocation(line: 38, column: 38, scope: !17)
+!145 = !DILocation(line: 38, column: 36, scope: !17)
+!146 = !DILocation(line: 38, column: 30, scope: !17)
+!147 = !DILocation(line: 38, column: 55, scope: !17)
+!148 = !DILocation(line: 38, column: 61, scope: !17)
+!149 = !DILocation(line: 38, column: 59, scope: !17)
+!150 = !DILocation(line: 38, column: 57, scope: !17)
+!151 = !DILocation(line: 38, column: 51, scope: !17)
+!152 = !DILocation(line: 39, column: 13, scope: !17)
+!153 = !DILocation(line: 39, column: 19, scope: !17)
+!154 = !DILocation(line: 39, column: 17, scope: !17)
+!155 = !DILocation(line: 39, column: 15, scope: !17)
+!156 = !DILocation(line: 38, column: 72, scope: !17)
+!157 = !DILocation(line: 38, column: 7, scope: !17)
+!158 = !DILocation(line: 38, column: 9, scope: !17)
+!159 = !DILocation(line: 40, column: 13, scope: !17)
+!160 = !DILocation(line: 40, column: 19, scope: !17)
+!161 = !DILocation(line: 40, column: 17, scope: !17)
+!162 = !DILocation(line: 40, column: 15, scope: !17)
+!163 = !DILocation(line: 40, column: 34, scope: !17)
+!164 = !DILocation(line: 40, column: 40, scope: !17)
+!165 = !DILocation(line: 40, column: 38, scope: !17)
+!166 = !DILocation(line: 40, column: 36, scope: !17)
+!167 = !DILocation(line: 40, column: 30, scope: !17)
+!168 = !DILocation(line: 40, column: 55, scope: !17)
+!169 = !DILocation(line: 40, column: 61, scope: !17)
+!170 = !DILocation(line: 40, column: 59, scope: !17)
+!171 = !DILocation(line: 40, column: 57, scope: !17)
+!172 = !DILocation(line: 40, column: 51, scope: !17)
+!173 = !DILocation(line: 41, column: 13, scope: !17)
+!174 = !DILocation(line: 41, column: 19, scope: !17)
+!175 = !DILocation(line: 41, column: 17, scope: !17)
+!176 = !DILocation(line: 41, column: 15, scope: !17)
+!177 = !DILocation(line: 40, column: 72, scope: !17)
+!178 = !DILocation(line: 40, column: 7, scope: !17)
+!179 = !DILocation(line: 40, column: 9, scope: !17)
+!180 = !DILocation(line: 42, column: 13, scope: !17)
+!181 = !DILocation(line: 42, column: 19, scope: !17)
+!182 = !DILocation(line: 42, column: 17, scope: !17)
+!183 = !DILocation(line: 42, column: 15, scope: !17)
+!184 = !DILocation(line: 42, column: 34, scope: !17)
+!185 = !DILocation(line: 42, column: 40, scope: !17)
+!186 = !DILocation(line: 42, column: 38, scope: !17)
+!187 = !DILocation(line: 42, column: 36, scope: !17)
+!188 = !DILocation(line: 42, column: 30, scope: !17)
+!189 = !DILocation(line: 42, column: 55, scope: !17)
+!190 = !DILocation(line: 42, column: 61, scope: !17)
+!191 = !DILocation(line: 42, column: 59, scope: !17)
+!192 = !DILocation(line: 42, column: 57, scope: !17)
+!193 = !DILocation(line: 42, column: 51, scope: !17)
+!194 = !DILocation(line: 43, column: 13, scope: !17)
+!195 = !DILocation(line: 43, column: 19, scope: !17)
+!196 = !DILocation(line: 43, column: 17, scope: !17)
+!197 = !DILocation(line: 43, column: 15, scope: !17)
+!198 = !DILocation(line: 42, column: 72, scope: !17)
+!199 = !DILocation(line: 42, column: 7, scope: !17)
+!200 = !DILocation(line: 42, column: 9, scope: !17)
+!201 = !DILocation(line: 44, column: 13, scope: !17)
+!202 = !DILocation(line: 44, column: 19, scope: !17)
+!203 = !DILocation(line: 44, column: 17, scope: !17)
+!204 = !DILocation(line: 44, column: 15, scope: !17)
+!205 = !DILocation(line: 44, column: 34, scope: !17)
+!206 = !DILocation(line: 44, column: 40, scope: !17)
+!207 = !DILocation(line: 44, column: 38, scope: !17)
+!208 = !DILocation(line: 44, column: 36, scope: !17)
+!209 = !DILocation(line: 44, column: 30, scope: !17)
+!210 = !DILocation(line: 44, column: 55, scope: !17)
+!211 = !DILocation(line: 44, column: 61, scope: !17)
+!212 = !DILocation(line: 44, column: 59, scope: !17)
+!213 = !DILocation(line: 44, column: 57, scope: !17)
+!214 = !DILocation(line: 44, column: 51, scope: !17)
+!215 = !DILocation(line: 45, column: 13, scope: !17)
+!216 = !DILocation(line: 45, column: 19, scope: !17)
+!217 = !DILocation(line: 45, column: 17, scope: !17)
+!218 = !DILocation(line: 45, column: 15, scope: !17)
+!219 = !DILocation(line: 44, column: 72, scope: !17)
+!220 = !DILocation(line: 44, column: 7, scope: !17)
+!221 = !DILocation(line: 44, column: 9, scope: !17)
+!222 = !DILocation(line: 46, column: 10, scope: !17)
+!223 = !DILocation(line: 46, column: 3, scope: !17)
+!224 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "Mat", arg: 1, scope: !27, file: !7, line: 48, type: !10)
+!225 = !DILocation(line: 48, column: 28, scope: !27)
+!226 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !27, file: !7, line: 49, type: !67)
+!227 = !DILocation(line: 49, column: 7, scope: !27)
+!228 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "j", scope: !27, file: !7, line: 49, type: !67)
+!229 = !DILocation(line: 49, column: 10, scope: !27)
+!230 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "Res", scope: !27, file: !7, line: 50, type: !10)
+!231 = !DILocation(line: 50, column: 11, scope: !27)
+!232 = !DILocation(line: 51, column: 7, scope: !233)
+!233 = distinct !DILexicalBlock(scope: !27, file: !7, line: 51, column: 7)
+!234 = !DILocation(line: 51, column: 11, scope: !233)
+!235 = !DILocation(line: 51, column: 7, scope: !27)
+!236 = !DILocation(line: 52, column: 11, scope: !237)
+!237 = distinct !DILexicalBlock(scope: !233, file: !7, line: 51, column: 20)
+!238 = !DILocation(line: 52, column: 9, scope: !237)
+!239 = !DILocation(line: 53, column: 12, scope: !240)
+!240 = distinct !DILexicalBlock(scope: !237, file: !7, line: 53, column: 5)
+!241 = !DILocation(line: 53, column: 10, scope: !240)
+!242 = !DILocation(line: 53, column: 17, scope: !243)
+!243 = !DILexicalBlockFile(scope: !244, file: !7, discriminator: 2)
+!244 = !DILexicalBlockFile(scope: !245, file: !7, discriminator: 1)
+!245 = distinct !DILexicalBlock(scope: !240, file: !7, line: 53, column: 5)
+!246 = !DILocation(line: 53, column: 19, scope: !245)
+!247 = !DILocation(line: 53, column: 5, scope: !240)
+!248 = !DILocation(line: 54, column: 14, scope: !249)
+!249 = distinct !DILexicalBlock(scope: !250, file: !7, line: 54, column: 7)
+!250 = distinct !DILexicalBlock(scope: !245, file: !7, line: 53, column: 29)
+!251 = !DILocation(line: 54, column: 12, scope: !249)
+!252 = !DILocation(line: 54, column: 19, scope: !253)
+!253 = !DILexicalBlockFile(scope: !254, file: !7, discriminator: 2)
+!254 = !DILexicalBlockFile(scope: !255, file: !7, discriminator: 1)
+!255 = distinct !DILexicalBlock(scope: !249, file: !7, line: 54, column: 7)
+!256 = !DILocation(line: 54, column: 21, scope: !255)
+!257 = !DILocation(line: 54, column: 7, scope: !249)
+!258 = !DILocation(line: 56, column: 34, scope: !259)
+!259 = distinct !DILexicalBlock(scope: !255, file: !7, line: 54, column: 31)
+!260 = !DILocation(line: 56, column: 24, scope: !259)
+!261 = !DILocation(line: 56, column: 31, scope: !259)
+!262 = !DILocation(line: 56, column: 26, scope: !259)
+!263 = !DILocation(line: 56, column: 19, scope: !259)
+!264 = !DILocation(line: 56, column: 9, scope: !259)
+!265 = !DILocation(line: 56, column: 16, scope: !259)
+!266 = !DILocation(line: 56, column: 11, scope: !259)
+!267 = !DILocation(line: 56, column: 22, scope: !259)
+!268 = !DILocation(line: 57, column: 7, scope: !259)
+!269 = !DILocation(line: 54, column: 27, scope: !255)
+!270 = !DILocation(line: 54, column: 7, scope: !255)
+!271 = !DILocation(line: 58, column: 5, scope: !250)
+!272 = !DILocation(line: 53, column: 25, scope: !245)
+!273 = !DILocation(line: 53, column: 5, scope: !245)
+!274 = !DILocation(line: 59, column: 3, scope: !237)
+!275 = !DILocation(line: 60, column: 10, scope: !27)
+!276 = !DILocation(line: 60, column: 3, scope: !27)
+!277 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "SI", scope: !30, file: !7, line: 63, type: !11)
+!278 = !DILocation(line: 63, column: 10, scope: !30)
+!279 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "I", scope: !30, file: !7, line: 67, type: !10)
+!280 = !DILocation(line: 67, column: 11, scope: !30)
+!281 = !DILocation(line: 68, column: 7, scope: !30)
+!282 = !DILocation(line: 68, column: 5, scope: !30)
+!283 = !DILocation(line: 70, column: 7, scope: !30)
+!284 = !DILocation(line: 70, column: 5, scope: !30)
+!285 = !DILocation(line: 72, column: 10, scope: !30)
+!286 = !DILocation(line: 72, column: 3, scope: !30)
+!287 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "dx", arg: 1, scope: !33, file: !7, line: 75, type: !14)
+!288 = !DILocation(line: 75, column: 32, scope: !33)
+!289 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "dy", arg: 2, scope: !33, file: !7, line: 75, type: !14)
+!290 = !DILocation(line: 75, column: 43, scope: !33)
+!291 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "dz", arg: 3, scope: !33, file: !7, line: 75, type: !14)
+!292 = !DILocation(line: 75, column: 54, scope: !33)
+!293 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "TMat", scope: !33, file: !7, line: 76, type: !10)
+!294 = !DILocation(line: 76, column: 11, scope: !33)
+!295 = !DILocation(line: 77, column: 10, scope: !33)
+!296 = !DILocation(line: 77, column: 8, scope: !33)
+!297 = !DILocation(line: 78, column: 19, scope: !33)
+!298 = !DILocation(line: 78, column: 5, scope: !33)
+!299 = !DILocation(line: 78, column: 3, scope: !33)
+!300 = !DILocation(line: 78, column: 17, scope: !33)
+!301 = !DILocation(line: 79, column: 19, scope: !33)
+!302 = !DILocation(line: 79, column: 5, scope: !33)
+!303 = !DILocation(line: 79, column: 3, scope: !33)
+!304 = !DILocation(line: 79, column: 17, scope: !33)
+!305 = !DILocation(line: 80, column: 19, scope: !33)
+!306 = !DILocation(line: 80, column: 5, scope: !33)
+!307 = !DILocation(line: 80, column: 3, scope: !33)
+!308 = !DILocation(line: 80, column: 17, scope: !33)
+!309 = !DILocation(line: 81, column: 10, scope: !33)
+!310 = !DILocation(line: 81, column: 3, scope: !33)
+!311 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "rx", arg: 1, scope: !36, file: !7, line: 83, type: !14)
+!312 = !DILocation(line: 83, column: 29, scope: !36)
+!313 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "ry", arg: 2, scope: !36, file: !7, line: 83, type: !14)
+!314 = !DILocation(line: 83, column: 40, scope: !36)
+!315 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "rz", arg: 3, scope: !36, file: !7, line: 83, type: !14)
+!316 = !DILocation(line: 83, column: 51, scope: !36)
+!317 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "RMatX", scope: !36, file: !7, line: 84, type: !10)
+!318 = !DILocation(line: 84, column: 11, scope: !36)
+!319 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "RMatY", scope: !36, file: !7, line: 84, type: !10)
+!320 = !DILocation(line: 84, column: 19, scope: !36)
+!321 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "RMatZ", scope: !36, file: !7, line: 84, type: !10)
+!322 = !DILocation(line: 84, column: 27, scope: !36)
+!323 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "RMatXY", scope: !36, file: !7, line: 85, type: !10)
+!324 = !DILocation(line: 85, column: 11, scope: !36)
+!325 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "RMatXYZ", scope: !36, file: !7, line: 85, type: !10)
+!326 = !DILocation(line: 85, column: 20, scope: !36)
+!327 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "cosrx", scope: !36, file: !7, line: 86, type: !14)
+!328 = !DILocation(line: 86, column: 10, scope: !36)
+!329 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "sinrx", scope: !36, file: !7, line: 86, type: !14)
+!330 = !DILocation(line: 86, column: 17, scope: !36)
+!331 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "cosry", scope: !36, file: !7, line: 87, type: !14)
+!332 = !DILocation(line: 87, column: 10, scope: !36)
+!333 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "sinry", scope: !36, file: !7, line: 87, type: !14)
+!334 = !DILocation(line: 87, column: 17, scope: !36)
+!335 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "cosrz", scope: !36, file: !7, line: 88, type: !14)
+!336 = !DILocation(line: 88, column: 10, scope: !36)
+!337 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "sinrz", scope: !36, file: !7, line: 88, type: !14)
+!338 = !DILocation(line: 88, column: 17, scope: !36)
+!339 = !DILocation(line: 90, column: 15, scope: !36)
+!340 = !DILocation(line: 90, column: 11, scope: !36)
+!341 = !DILocation(line: 90, column: 9, scope: !36)
+!342 = !DILocation(line: 91, column: 15, scope: !36)
+!343 = !DILocation(line: 91, column: 11, scope: !36)
+!344 = !DILocation(line: 91, column: 9, scope: !36)
+!345 = !DILocation(line: 92, column: 15, scope: !36)
+!346 = !DILocation(line: 92, column: 11, scope: !36)
+!347 = !DILocation(line: 92, column: 9, scope: !36)
+!348 = !DILocation(line: 93, column: 15, scope: !36)
+!349 = !DILocation(line: 93, column: 11, scope: !36)
+!350 = !DILocation(line: 93, column: 9, scope: !36)
+!351 = !DILocation(line: 94, column: 15, scope: !36)
+!352 = !DILocation(line: 94, column: 11, scope: !36)
+!353 = !DILocation(line: 94, column: 9, scope: !36)
+!354 = !DILocation(line: 95, column: 15, scope: !36)
+!355 = !DILocation(line: 95, column: 11, scope: !36)
+!356 = !DILocation(line: 95, column: 9, scope: !36)
+!357 = !DILocation(line: 101, column: 11, scope: !36)
+!358 = !DILocation(line: 101, column: 9, scope: !36)
+!359 = !DILocation(line: 102, column: 11, scope: !36)
+!360 = !DILocation(line: 102, column: 9, scope: !36)
+!361 = !DILocation(line: 103, column: 11, scope: !36)
+!362 = !DILocation(line: 103, column: 9, scope: !36)
+!363 = !DILocation(line: 104, column: 12, scope: !36)
+!364 = !DILocation(line: 104, column: 10, scope: !36)
+!365 = !DILocation(line: 105, column: 13, scope: !36)
+!366 = !DILocation(line: 105, column: 11, scope: !36)
+!367 = !DILocation(line: 106, column: 20, scope: !36)
+!368 = !DILocation(line: 106, column: 5, scope: !36)
+!369 = !DILocation(line: 106, column: 3, scope: !36)
+!370 = !DILocation(line: 106, column: 18, scope: !36)
+!371 = !DILocation(line: 107, column: 21, scope: !36)
+!372 = !DILocation(line: 107, column: 20, scope: !36)
+!373 = !DILocation(line: 107, column: 5, scope: !36)
+!374 = !DILocation(line: 107, column: 3, scope: !36)
+!375 = !DILocation(line: 107, column: 18, scope: !36)
+!376 = !DILocation(line: 108, column: 20, scope: !36)
+!377 = !DILocation(line: 108, column: 5, scope: !36)
+!378 = !DILocation(line: 108, column: 3, scope: !36)
+!379 = !DILocation(line: 108, column: 18, scope: !36)
+!380 = !DILocation(line: 109, column: 20, scope: !36)
+!381 = !DILocation(line: 109, column: 5, scope: !36)
+!382 = !DILocation(line: 109, column: 3, scope: !36)
+!383 = !DILocation(line: 109, column: 18, scope: !36)
+!384 = !DILocation(line: 111, column: 20, scope: !36)
+!385 = !DILocation(line: 111, column: 5, scope: !36)
+!386 = !DILocation(line: 111, column: 3, scope: !36)
+!387 = !DILocation(line: 111, column: 18, scope: !36)
+!388 = !DILocation(line: 112, column: 20, scope: !36)
+!389 = !DILocation(line: 112, column: 5, scope: !36)
+!390 = !DILocation(line: 112, column: 3, scope: !36)
+!391 = !DILocation(line: 112, column: 18, scope: !36)
+!392 = !DILocation(line: 113, column: 21, scope: !36)
+!393 = !DILocation(line: 113, column: 20, scope: !36)
+!394 = !DILocation(line: 113, column: 5, scope: !36)
+!395 = !DILocation(line: 113, column: 3, scope: !36)
+!396 = !DILocation(line: 113, column: 18, scope: !36)
+!397 = !DILocation(line: 114, column: 20, scope: !36)
+!398 = !DILocation(line: 114, column: 5, scope: !36)
+!399 = !DILocation(line: 114, column: 3, scope: !36)
+!400 = !DILocation(line: 114, column: 18, scope: !36)
+!401 = !DILocation(line: 116, column: 20, scope: !36)
+!402 = !DILocation(line: 116, column: 5, scope: !36)
+!403 = !DILocation(line: 116, column: 3, scope: !36)
+!404 = !DILocation(line: 116, column: 18, scope: !36)
+!405 = !DILocation(line: 117, column: 21, scope: !36)
+!406 = !DILocation(line: 117, column: 20, scope: !36)
+!407 = !DILocation(line: 117, column: 5, scope: !36)
+!408 = !DILocation(line: 117, column: 3, scope: !36)
+!409 = !DILocation(line: 117, column: 18, scope: !36)
+!410 = !DILocation(line: 118, column: 20, scope: !36)
+!411 = !DILocation(line: 118, column: 5, scope: !36)
+!412 = !DILocation(line: 118, column: 3, scope: !36)
+!413 = !DILocation(line: 118, column: 18, scope: !36)
+!414 = !DILocation(line: 119, column: 20, scope: !36)
+!415 = !DILocation(line: 119, column: 5, scope: !36)
+!416 = !DILocation(line: 119, column: 3, scope: !36)
+!417 = !DILocation(line: 119, column: 18, scope: !36)
+!418 = !DILocation(line: 120, column: 20, scope: !36)
+!419 = !DILocation(line: 120, column: 27, scope: !36)
+!420 = !DILocation(line: 120, column: 34, scope: !36)
+!421 = !DILocation(line: 120, column: 3, scope: !36)
+!422 = !DILocation(line: 121, column: 20, scope: !36)
+!423 = !DILocation(line: 121, column: 28, scope: !36)
+!424 = !DILocation(line: 121, column: 35, scope: !36)
+!425 = !DILocation(line: 121, column: 3, scope: !36)
+!426 = !DILocation(line: 122, column: 10, scope: !36)
+!427 = !DILocation(line: 122, column: 3, scope: !36)
+!428 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "sx", arg: 1, scope: !37, file: !7, line: 124, type: !14)
+!429 = !DILocation(line: 124, column: 28, scope: !37)
+!430 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "sy", arg: 2, scope: !37, file: !7, line: 124, type: !14)
+!431 = !DILocation(line: 124, column: 39, scope: !37)
+!432 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "sz", arg: 3, scope: !37, file: !7, line: 124, type: !14)
+!433 = !DILocation(line: 124, column: 50, scope: !37)
+!434 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "I", scope: !37, file: !7, line: 125, type: !10)
+!435 = !DILocation(line: 125, column: 11, scope: !37)
+!436 = !DILocation(line: 126, column: 7, scope: !37)
+!437 = !DILocation(line: 126, column: 5, scope: !37)
+!438 = !DILocation(line: 127, column: 16, scope: !37)
+!439 = !DILocation(line: 127, column: 5, scope: !37)
+!440 = !DILocation(line: 127, column: 3, scope: !37)
+!441 = !DILocation(line: 127, column: 14, scope: !37)
+!442 = !DILocation(line: 128, column: 16, scope: !37)
+!443 = !DILocation(line: 128, column: 5, scope: !37)
+!444 = !DILocation(line: 128, column: 3, scope: !37)
+!445 = !DILocation(line: 128, column: 14, scope: !37)
+!446 = !DILocation(line: 129, column: 16, scope: !37)
+!447 = !DILocation(line: 129, column: 5, scope: !37)
+!448 = !DILocation(line: 129, column: 3, scope: !37)
+!449 = !DILocation(line: 129, column: 14, scope: !37)
+!450 = !DILocation(line: 130, column: 10, scope: !37)
+!451 = !DILocation(line: 130, column: 3, scope: !37)
+!452 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "a", arg: 1, scope: !38, file: !7, line: 133, type: !41)
+!453 = !DILocation(line: 133, column: 31, scope: !38)
+!454 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "rx", arg: 2, scope: !38, file: !7, line: 133, type: !14)
+!455 = !DILocation(line: 133, column: 41, scope: !38)
+!456 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "ry", arg: 3, scope: !38, file: !7, line: 133, type: !14)
+!457 = !DILocation(line: 133, column: 52, scope: !38)
+!458 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "rz", arg: 4, scope: !38, file: !7, line: 133, type: !14)
+!459 = !DILocation(line: 133, column: 63, scope: !38)
+!460 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "Mat", scope: !38, file: !7, line: 134, type: !10)
+!461 = !DILocation(line: 134, column: 11, scope: !38)
+!462 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "A", scope: !38, file: !7, line: 136, type: !20)
+!463 = !DILocation(line: 136, column: 10, scope: !38)
+!464 = !DILocation(line: 137, column: 7, scope: !38)
+!465 = !DILocation(line: 138, column: 22, scope: !38)
+!466 = !DILocation(line: 138, column: 26, scope: !38)
+!467 = !DILocation(line: 138, column: 30, scope: !38)
+!468 = !DILocation(line: 138, column: 9, scope: !38)
+!469 = !DILocation(line: 138, column: 7, scope: !38)
+!470 = !DILocation(line: 139, column: 24, scope: !38)
+!471 = !DILocation(line: 139, column: 7, scope: !38)
+!472 = !DILocation(line: 140, column: 10, scope: !38)
+!473 = !DILocation(line: 140, column: 3, scope: !38)
+!474 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "Mat", arg: 1, scope: !50, file: !7, line: 142, type: !53)
+!475 = !DILocation(line: 142, column: 25, scope: !50)
+!476 = !DILocation(line: 143, column: 44, scope: !50)
+!477 = !DILocation(line: 143, column: 55, scope: !50)
+!478 = !DILocation(line: 143, column: 66, scope: !50)
+!479 = !DILocation(line: 144, column: 10, scope: !50)
+!480 = !DILocation(line: 143, column: 3, scope: !50)
+!481 = !DILocation(line: 145, column: 44, scope: !50)
+!482 = !DILocation(line: 145, column: 55, scope: !50)
+!483 = !DILocation(line: 145, column: 66, scope: !50)
+!484 = !DILocation(line: 146, column: 10, scope: !50)
+!485 = !DILocation(line: 145, column: 3, scope: !50)
+!486 = !DILocation(line: 147, column: 44, scope: !50)
+!487 = !DILocation(line: 147, column: 55, scope: !50)
+!488 = !DILocation(line: 147, column: 66, scope: !50)
+!489 = !DILocation(line: 148, column: 10, scope: !50)
+!490 = !DILocation(line: 147, column: 3, scope: !50)
+!491 = !DILocation(line: 149, column: 44, scope: !50)
+!492 = !DILocation(line: 149, column: 55, scope: !50)
+!493 = !DILocation(line: 149, column: 66, scope: !50)
+!494 = !DILocation(line: 150, column: 10, scope: !50)
+!495 = !DILocation(line: 149, column: 3, scope: !50)
+!496 = !DILocation(line: 151, column: 1, scope: !50)

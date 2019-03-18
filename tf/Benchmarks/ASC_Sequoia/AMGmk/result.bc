@@ -1,0 +1,1684 @@
+; ModuleID = '/home/gleison/tf/Benchmarks/ASC_Sequoia/AMGmk/tmp.c'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct._IO_FILE = type { i32, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, %struct._IO_marker*, %struct._IO_FILE*, i32, i32, i64, i16, i8, [1 x i8], i8*, i64, i8*, i8*, i8*, i8*, i64, i32, [20 x i8] }
+%struct._IO_marker = type { %struct._IO_marker*, %struct._IO_FILE*, i32 }
+%struct.hypre_Vector = type { double*, i32, i32, i32, i32, i32, i32 }
+
+@.str = private unnamed_addr constant [2 x i8] c"r\00", align 1
+@.str.1 = private unnamed_addr constant [3 x i8] c"%d\00", align 1
+@.str.2 = private unnamed_addr constant [4 x i8] c"%le\00", align 1
+@stderr = external global %struct._IO_FILE*, align 8
+@.str.3 = private unnamed_addr constant [25 x i8] c"hypre_assert failed: %s\0A\00", align 1
+@.str.4 = private unnamed_addr constant [36 x i8] c"hypre_VectorNumVectors(vector) == 1\00", align 1
+@.str.5 = private unnamed_addr constant [52 x i8] c"/home/gleison/tf/Benchmarks/ASC_Sequoia/AMGmk/tmp.c\00", align 1
+@.str.6 = private unnamed_addr constant [2 x i8] c"w\00", align 1
+@.str.7 = private unnamed_addr constant [4 x i8] c"%d\0A\00", align 1
+@.str.8 = private unnamed_addr constant [23 x i8] c"%d vectors of size %d\0A\00", align 1
+@.str.9 = private unnamed_addr constant [11 x i8] c"vector %d\0A\00", align 1
+@.str.10 = private unnamed_addr constant [7 x i8] c"%.14e\0A\00", align 1
+
+; Function Attrs: nounwind uwtable
+define %struct.hypre_Vector* @hypre_SeqVectorCreate(i32 %size) #0 {
+entry:
+  %size.addr = alloca i32, align 4
+  %vector = alloca %struct.hypre_Vector*, align 8
+  store i32 %size, i32* %size.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %size.addr, metadata !68, metadata !69), !dbg !70
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %vector, metadata !71, metadata !69), !dbg !72
+  %call = call i8* @hypre_CAlloc(i32 1, i32 32), !dbg !73
+  %0 = bitcast i8* %call to %struct.hypre_Vector*, !dbg !73
+  store %struct.hypre_Vector* %0, %struct.hypre_Vector** %vector, align 8, !dbg !74
+  %1 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !75
+  %data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %1, i32 0, i32 0, !dbg !75
+  store double* null, double** %data, align 8, !dbg !76
+  %2 = load i32, i32* %size.addr, align 4, !dbg !77
+  %3 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !78
+  %size1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %3, i32 0, i32 1, !dbg !78
+  store i32 %2, i32* %size1, align 4, !dbg !79
+  %4 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !80
+  %num_vectors = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %4, i32 0, i32 3, !dbg !80
+  store i32 1, i32* %num_vectors, align 4, !dbg !81
+  %5 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !82
+  %multivec_storage_method = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %5, i32 0, i32 4, !dbg !82
+  store i32 0, i32* %multivec_storage_method, align 4, !dbg !83
+  %6 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !84
+  %owns_data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %6, i32 0, i32 2, !dbg !84
+  store i32 1, i32* %owns_data, align 4, !dbg !85
+  %7 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !86
+  ret %struct.hypre_Vector* %7, !dbg !87
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+declare i8* @hypre_CAlloc(i32, i32) #2
+
+; Function Attrs: nounwind uwtable
+define %struct.hypre_Vector* @hypre_SeqMultiVectorCreate(i32 %size, i32 %num_vectors) #0 {
+entry:
+  %size.addr = alloca i32, align 4
+  %num_vectors.addr = alloca i32, align 4
+  %vector = alloca %struct.hypre_Vector*, align 8
+  store i32 %size, i32* %size.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %size.addr, metadata !88, metadata !69), !dbg !89
+  store i32 %num_vectors, i32* %num_vectors.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %num_vectors.addr, metadata !90, metadata !69), !dbg !91
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %vector, metadata !92, metadata !69), !dbg !93
+  %0 = load i32, i32* %size.addr, align 4, !dbg !94
+  %call = call %struct.hypre_Vector* @hypre_SeqVectorCreate(i32 %0), !dbg !95
+  store %struct.hypre_Vector* %call, %struct.hypre_Vector** %vector, align 8, !dbg !93
+  %1 = load i32, i32* %num_vectors.addr, align 4, !dbg !96
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !97
+  %num_vectors1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 3, !dbg !97
+  store i32 %1, i32* %num_vectors1, align 4, !dbg !98
+  %3 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !99
+  ret %struct.hypre_Vector* %3, !dbg !100
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @hypre_SeqVectorDestroy(%struct.hypre_Vector* %vector) #0 {
+entry:
+  %vector.addr = alloca %struct.hypre_Vector*, align 8
+  %ierr = alloca i32, align 4
+  store %struct.hypre_Vector* %vector, %struct.hypre_Vector** %vector.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %vector.addr, metadata !101, metadata !69), !dbg !102
+  call void @llvm.dbg.declare(metadata i32* %ierr, metadata !103, metadata !69), !dbg !104
+  store i32 0, i32* %ierr, align 4, !dbg !104
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !105
+  %tobool = icmp ne %struct.hypre_Vector* %0, null, !dbg !105
+  br i1 %tobool, label %if.then, label %if.end.4, !dbg !107
+
+if.then:                                          ; preds = %entry
+  %1 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !108
+  %owns_data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %1, i32 0, i32 2, !dbg !108
+  %2 = load i32, i32* %owns_data, align 4, !dbg !108
+  %tobool1 = icmp ne i32 %2, 0, !dbg !108
+  br i1 %tobool1, label %if.then.2, label %if.end, !dbg !111
+
+if.then.2:                                        ; preds = %if.then
+  %3 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !112
+  %data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %3, i32 0, i32 0, !dbg !112
+  %4 = load double*, double** %data, align 8, !dbg !112
+  %5 = bitcast double* %4 to i8*, !dbg !112
+  call void @hypre_Free(i8* %5), !dbg !112
+  %6 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !112
+  %data3 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %6, i32 0, i32 0, !dbg !112
+  store double* null, double** %data3, align 8, !dbg !112
+  br label %if.end, !dbg !114
+
+if.end:                                           ; preds = %if.then.2, %if.then
+  %7 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !115
+  %8 = bitcast %struct.hypre_Vector* %7 to i8*, !dbg !115
+  call void @hypre_Free(i8* %8), !dbg !115
+  store %struct.hypre_Vector* null, %struct.hypre_Vector** %vector.addr, align 8, !dbg !115
+  br label %if.end.4, !dbg !116
+
+if.end.4:                                         ; preds = %if.end, %entry
+  %9 = load i32, i32* %ierr, align 4, !dbg !117
+  ret i32 %9, !dbg !118
+}
+
+declare void @hypre_Free(i8*) #2
+
+; Function Attrs: nounwind uwtable
+define i32 @hypre_SeqVectorInitialize(%struct.hypre_Vector* %vector) #0 {
+entry:
+  %vector.addr = alloca %struct.hypre_Vector*, align 8
+  %size = alloca i32, align 4
+  %ierr = alloca i32, align 4
+  %num_vectors = alloca i32, align 4
+  %multivec_storage_method = alloca i32, align 4
+  store %struct.hypre_Vector* %vector, %struct.hypre_Vector** %vector.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %vector.addr, metadata !119, metadata !69), !dbg !120
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !121, metadata !69), !dbg !122
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !123
+  %size1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %0, i32 0, i32 1, !dbg !123
+  %1 = load i32, i32* %size1, align 4, !dbg !123
+  store i32 %1, i32* %size, align 4, !dbg !122
+  call void @llvm.dbg.declare(metadata i32* %ierr, metadata !124, metadata !69), !dbg !125
+  store i32 0, i32* %ierr, align 4, !dbg !125
+  call void @llvm.dbg.declare(metadata i32* %num_vectors, metadata !126, metadata !69), !dbg !127
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !128
+  %num_vectors2 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 3, !dbg !128
+  %3 = load i32, i32* %num_vectors2, align 4, !dbg !128
+  store i32 %3, i32* %num_vectors, align 4, !dbg !127
+  call void @llvm.dbg.declare(metadata i32* %multivec_storage_method, metadata !129, metadata !69), !dbg !130
+  %4 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !131
+  %multivec_storage_method3 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %4, i32 0, i32 4, !dbg !131
+  %5 = load i32, i32* %multivec_storage_method3, align 4, !dbg !131
+  store i32 %5, i32* %multivec_storage_method, align 4, !dbg !130
+  %6 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !132
+  %data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %6, i32 0, i32 0, !dbg !132
+  %7 = load double*, double** %data, align 8, !dbg !132
+  %tobool = icmp ne double* %7, null, !dbg !132
+  br i1 %tobool, label %if.end, label %if.then, !dbg !134
+
+if.then:                                          ; preds = %entry
+  %8 = load i32, i32* %num_vectors, align 4, !dbg !135
+  %9 = load i32, i32* %size, align 4, !dbg !135
+  %mul = mul nsw i32 %8, %9, !dbg !135
+  %call = call i8* @hypre_CAlloc(i32 %mul, i32 8), !dbg !135
+  %10 = bitcast i8* %call to double*, !dbg !135
+  %11 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !136
+  %data4 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %11, i32 0, i32 0, !dbg !136
+  store double* %10, double** %data4, align 8, !dbg !137
+  br label %if.end, !dbg !136
+
+if.end:                                           ; preds = %if.then, %entry
+  %12 = load i32, i32* %multivec_storage_method, align 4, !dbg !138
+  %cmp = icmp eq i32 %12, 0, !dbg !140
+  br i1 %cmp, label %if.then.5, label %if.else, !dbg !141
+
+if.then.5:                                        ; preds = %if.end
+  %13 = load i32, i32* %size, align 4, !dbg !142
+  %14 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !144
+  %vecstride = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %14, i32 0, i32 5, !dbg !144
+  store i32 %13, i32* %vecstride, align 4, !dbg !145
+  %15 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !146
+  %idxstride = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %15, i32 0, i32 6, !dbg !146
+  store i32 1, i32* %idxstride, align 4, !dbg !147
+  br label %if.end.12, !dbg !148
+
+if.else:                                          ; preds = %if.end
+  %16 = load i32, i32* %multivec_storage_method, align 4, !dbg !149
+  %cmp6 = icmp eq i32 %16, 1, !dbg !151
+  br i1 %cmp6, label %if.then.7, label %if.else.10, !dbg !152
+
+if.then.7:                                        ; preds = %if.else
+  %17 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !153
+  %vecstride8 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %17, i32 0, i32 5, !dbg !153
+  store i32 1, i32* %vecstride8, align 4, !dbg !155
+  %18 = load i32, i32* %num_vectors, align 4, !dbg !156
+  %19 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !157
+  %idxstride9 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %19, i32 0, i32 6, !dbg !157
+  store i32 %18, i32* %idxstride9, align 4, !dbg !158
+  br label %if.end.11, !dbg !159
+
+if.else.10:                                       ; preds = %if.else
+  %20 = load i32, i32* %ierr, align 4, !dbg !160
+  %inc = add nsw i32 %20, 1, !dbg !160
+  store i32 %inc, i32* %ierr, align 4, !dbg !160
+  br label %if.end.11
+
+if.end.11:                                        ; preds = %if.else.10, %if.then.7
+  br label %if.end.12
+
+if.end.12:                                        ; preds = %if.end.11, %if.then.5
+  %21 = load i32, i32* %ierr, align 4, !dbg !161
+  ret i32 %21, !dbg !162
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @hypre_SeqVectorSetDataOwner(%struct.hypre_Vector* %vector, i32 %owns_data) #0 {
+entry:
+  %vector.addr = alloca %struct.hypre_Vector*, align 8
+  %owns_data.addr = alloca i32, align 4
+  %ierr = alloca i32, align 4
+  store %struct.hypre_Vector* %vector, %struct.hypre_Vector** %vector.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %vector.addr, metadata !163, metadata !69), !dbg !164
+  store i32 %owns_data, i32* %owns_data.addr, align 4
+  call void @llvm.dbg.declare(metadata i32* %owns_data.addr, metadata !165, metadata !69), !dbg !166
+  call void @llvm.dbg.declare(metadata i32* %ierr, metadata !167, metadata !69), !dbg !168
+  store i32 0, i32* %ierr, align 4, !dbg !168
+  %0 = load i32, i32* %owns_data.addr, align 4, !dbg !169
+  %1 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !170
+  %owns_data1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %1, i32 0, i32 2, !dbg !170
+  store i32 %0, i32* %owns_data1, align 4, !dbg !171
+  %2 = load i32, i32* %ierr, align 4, !dbg !172
+  ret i32 %2, !dbg !173
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.hypre_Vector* @hypre_SeqVectorRead(i8* %file_name) #0 {
+entry:
+  %file_name.addr = alloca i8*, align 8
+  %vector = alloca %struct.hypre_Vector*, align 8
+  %fp = alloca %struct._IO_FILE*, align 8
+  %data = alloca double*, align 8
+  %size = alloca i32, align 4
+  %j = alloca i32, align 4
+  store i8* %file_name, i8** %file_name.addr, align 8
+  call void @llvm.dbg.declare(metadata i8** %file_name.addr, metadata !174, metadata !69), !dbg !175
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %vector, metadata !176, metadata !69), !dbg !177
+  call void @llvm.dbg.declare(metadata %struct._IO_FILE** %fp, metadata !178, metadata !69), !dbg !239
+  call void @llvm.dbg.declare(metadata double** %data, metadata !240, metadata !69), !dbg !241
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !242, metadata !69), !dbg !243
+  call void @llvm.dbg.declare(metadata i32* %j, metadata !244, metadata !69), !dbg !245
+  %0 = load i8*, i8** %file_name.addr, align 8, !dbg !246
+  %call = call %struct._IO_FILE* @fopen(i8* %0, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i32 0, i32 0)), !dbg !247
+  store %struct._IO_FILE* %call, %struct._IO_FILE** %fp, align 8, !dbg !248
+  %1 = load %struct._IO_FILE*, %struct._IO_FILE** %fp, align 8, !dbg !249
+  %call1 = call i32 (%struct._IO_FILE*, i8*, ...) @__isoc99_fscanf(%struct._IO_FILE* %1, i8* getelementptr inbounds ([3 x i8], [3 x i8]* @.str.1, i32 0, i32 0), i32* %size), !dbg !250
+  %2 = load i32, i32* %size, align 4, !dbg !251
+  %call2 = call %struct.hypre_Vector* @hypre_SeqVectorCreate(i32 %2), !dbg !252
+  store %struct.hypre_Vector* %call2, %struct.hypre_Vector** %vector, align 8, !dbg !253
+  %3 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !254
+  %call3 = call i32 @hypre_SeqVectorInitialize(%struct.hypre_Vector* %3), !dbg !255
+  %4 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !256
+  %data4 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %4, i32 0, i32 0, !dbg !256
+  %5 = load double*, double** %data4, align 8, !dbg !256
+  store double* %5, double** %data, align 8, !dbg !257
+  store i32 0, i32* %j, align 4, !dbg !258
+  br label %for.cond, !dbg !260
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %6 = load i32, i32* %j, align 4, !dbg !261
+  %7 = load i32, i32* %size, align 4, !dbg !265
+  %cmp = icmp slt i32 %6, %7, !dbg !266
+  br i1 %cmp, label %for.body, label %for.end, !dbg !267
+
+for.body:                                         ; preds = %for.cond
+  %8 = load %struct._IO_FILE*, %struct._IO_FILE** %fp, align 8, !dbg !268
+  %9 = load i32, i32* %j, align 4, !dbg !270
+  %idxprom = sext i32 %9 to i64, !dbg !271
+  %10 = load double*, double** %data, align 8, !dbg !271
+  %arrayidx = getelementptr inbounds double, double* %10, i64 %idxprom, !dbg !271
+  %call5 = call i32 (%struct._IO_FILE*, i8*, ...) @__isoc99_fscanf(%struct._IO_FILE* %8, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.2, i32 0, i32 0), double* %arrayidx), !dbg !272
+  br label %for.inc, !dbg !273
+
+for.inc:                                          ; preds = %for.body
+  %11 = load i32, i32* %j, align 4, !dbg !274
+  %inc = add nsw i32 %11, 1, !dbg !274
+  store i32 %inc, i32* %j, align 4, !dbg !274
+  br label %for.cond, !dbg !275
+
+for.end:                                          ; preds = %for.cond
+  %12 = load %struct._IO_FILE*, %struct._IO_FILE** %fp, align 8, !dbg !276
+  %call6 = call i32 @fclose(%struct._IO_FILE* %12), !dbg !277
+  %13 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !278
+  %num_vectors = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %13, i32 0, i32 3, !dbg !278
+  %14 = load i32, i32* %num_vectors, align 4, !dbg !278
+  %cmp7 = icmp eq i32 %14, 1, !dbg !278
+  br i1 %cmp7, label %if.end, label %if.then, !dbg !280
+
+if.then:                                          ; preds = %for.end
+  %15 = load %struct._IO_FILE*, %struct._IO_FILE** @stderr, align 8, !dbg !281
+  %call8 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %15, i8* getelementptr inbounds ([25 x i8], [25 x i8]* @.str.3, i32 0, i32 0), i8* getelementptr inbounds ([36 x i8], [36 x i8]* @.str.4, i32 0, i32 0)), !dbg !281
+  call void @hypre_error_handler(i8* getelementptr inbounds ([52 x i8], [52 x i8]* @.str.5, i32 0, i32 0), i32 158, i32 1), !dbg !281
+  br label %if.end, !dbg !281
+
+if.end:                                           ; preds = %if.then, %for.end
+  %16 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector, align 8, !dbg !284
+  ret %struct.hypre_Vector* %16, !dbg !285
+}
+
+declare %struct._IO_FILE* @fopen(i8*, i8*) #2
+
+declare i32 @__isoc99_fscanf(%struct._IO_FILE*, i8*, ...) #2
+
+declare i32 @fclose(%struct._IO_FILE*) #2
+
+declare i32 @fprintf(%struct._IO_FILE*, i8*, ...) #2
+
+declare void @hypre_error_handler(i8*, i32, i32) #2
+
+; Function Attrs: nounwind uwtable
+define i32 @hypre_SeqVectorPrint(%struct.hypre_Vector* %vector, i8* %file_name) #0 {
+entry:
+  %vector.addr = alloca %struct.hypre_Vector*, align 8
+  %file_name.addr = alloca i8*, align 8
+  %fp = alloca %struct._IO_FILE*, align 8
+  %data = alloca double*, align 8
+  %size = alloca i32, align 4
+  %num_vectors = alloca i32, align 4
+  %vecstride = alloca i32, align 4
+  %idxstride = alloca i32, align 4
+  %i = alloca i32, align 4
+  %j = alloca i32, align 4
+  %ierr = alloca i32, align 4
+  store %struct.hypre_Vector* %vector, %struct.hypre_Vector** %vector.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %vector.addr, metadata !286, metadata !69), !dbg !287
+  store i8* %file_name, i8** %file_name.addr, align 8
+  call void @llvm.dbg.declare(metadata i8** %file_name.addr, metadata !288, metadata !69), !dbg !289
+  call void @llvm.dbg.declare(metadata %struct._IO_FILE** %fp, metadata !290, metadata !69), !dbg !291
+  call void @llvm.dbg.declare(metadata double** %data, metadata !292, metadata !69), !dbg !293
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !294, metadata !69), !dbg !295
+  call void @llvm.dbg.declare(metadata i32* %num_vectors, metadata !296, metadata !69), !dbg !297
+  call void @llvm.dbg.declare(metadata i32* %vecstride, metadata !298, metadata !69), !dbg !299
+  call void @llvm.dbg.declare(metadata i32* %idxstride, metadata !300, metadata !69), !dbg !301
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !302, metadata !69), !dbg !303
+  call void @llvm.dbg.declare(metadata i32* %j, metadata !304, metadata !69), !dbg !305
+  call void @llvm.dbg.declare(metadata i32* %ierr, metadata !306, metadata !69), !dbg !307
+  store i32 0, i32* %ierr, align 4, !dbg !307
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !308
+  %num_vectors1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %0, i32 0, i32 3, !dbg !308
+  %1 = load i32, i32* %num_vectors1, align 4, !dbg !308
+  store i32 %1, i32* %num_vectors, align 4, !dbg !309
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !310
+  %vecstride2 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 5, !dbg !310
+  %3 = load i32, i32* %vecstride2, align 4, !dbg !310
+  store i32 %3, i32* %vecstride, align 4, !dbg !311
+  %4 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !312
+  %idxstride3 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %4, i32 0, i32 6, !dbg !312
+  %5 = load i32, i32* %idxstride3, align 4, !dbg !312
+  store i32 %5, i32* %idxstride, align 4, !dbg !313
+  %6 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !314
+  %data4 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %6, i32 0, i32 0, !dbg !314
+  %7 = load double*, double** %data4, align 8, !dbg !314
+  store double* %7, double** %data, align 8, !dbg !315
+  %8 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !316
+  %size5 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %8, i32 0, i32 1, !dbg !316
+  %9 = load i32, i32* %size5, align 4, !dbg !316
+  store i32 %9, i32* %size, align 4, !dbg !317
+  %10 = load i8*, i8** %file_name.addr, align 8, !dbg !318
+  %call = call %struct._IO_FILE* @fopen(i8* %10, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.6, i32 0, i32 0)), !dbg !319
+  store %struct._IO_FILE* %call, %struct._IO_FILE** %fp, align 8, !dbg !320
+  %11 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !321
+  %num_vectors6 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %11, i32 0, i32 3, !dbg !321
+  %12 = load i32, i32* %num_vectors6, align 4, !dbg !321
+  %cmp = icmp eq i32 %12, 1, !dbg !323
+  br i1 %cmp, label %if.then, label %if.else, !dbg !324
+
+if.then:                                          ; preds = %entry
+  %13 = load %struct._IO_FILE*, %struct._IO_FILE** %fp, align 8, !dbg !325
+  %14 = load i32, i32* %size, align 4, !dbg !327
+  %call7 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %13, i8* getelementptr inbounds ([4 x i8], [4 x i8]* @.str.7, i32 0, i32 0), i32 %14), !dbg !328
+  br label %if.end, !dbg !329
+
+if.else:                                          ; preds = %entry
+  %15 = load %struct._IO_FILE*, %struct._IO_FILE** %fp, align 8, !dbg !330
+  %16 = load i32, i32* %num_vectors, align 4, !dbg !332
+  %17 = load i32, i32* %size, align 4, !dbg !333
+  %call8 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %15, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.8, i32 0, i32 0), i32 %16, i32 %17), !dbg !334
+  br label %if.end
+
+if.end:                                           ; preds = %if.else, %if.then
+  %18 = load i32, i32* %num_vectors, align 4, !dbg !335
+  %cmp9 = icmp sgt i32 %18, 1, !dbg !337
+  br i1 %cmp9, label %if.then.10, label %if.else.21, !dbg !338
+
+if.then.10:                                       ; preds = %if.end
+  store i32 0, i32* %j, align 4, !dbg !339
+  br label %for.cond, !dbg !342
+
+for.cond:                                         ; preds = %for.inc.18, %if.then.10
+  %19 = load i32, i32* %j, align 4, !dbg !343
+  %20 = load i32, i32* %num_vectors, align 4, !dbg !347
+  %cmp11 = icmp slt i32 %19, %20, !dbg !348
+  br i1 %cmp11, label %for.body, label %for.end.20, !dbg !349
+
+for.body:                                         ; preds = %for.cond
+  %21 = load %struct._IO_FILE*, %struct._IO_FILE** %fp, align 8, !dbg !350
+  %22 = load i32, i32* %j, align 4, !dbg !352
+  %call12 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %21, i8* getelementptr inbounds ([11 x i8], [11 x i8]* @.str.9, i32 0, i32 0), i32 %22), !dbg !353
+  store i32 0, i32* %i, align 4, !dbg !354
+  br label %for.cond.13, !dbg !356
+
+for.cond.13:                                      ; preds = %for.inc, %for.body
+  %23 = load i32, i32* %i, align 4, !dbg !357
+  %24 = load i32, i32* %size, align 4, !dbg !361
+  %cmp14 = icmp slt i32 %23, %24, !dbg !362
+  br i1 %cmp14, label %for.body.15, label %for.end, !dbg !363
+
+for.body.15:                                      ; preds = %for.cond.13
+  %25 = load %struct._IO_FILE*, %struct._IO_FILE** %fp, align 8, !dbg !364
+  %26 = load i32, i32* %j, align 4, !dbg !366
+  %27 = load i32, i32* %vecstride, align 4, !dbg !367
+  %mul = mul nsw i32 %26, %27, !dbg !368
+  %28 = load i32, i32* %i, align 4, !dbg !369
+  %29 = load i32, i32* %idxstride, align 4, !dbg !370
+  %mul16 = mul nsw i32 %28, %29, !dbg !371
+  %add = add nsw i32 %mul, %mul16, !dbg !372
+  %idxprom = sext i32 %add to i64, !dbg !373
+  %30 = load double*, double** %data, align 8, !dbg !373
+  %arrayidx = getelementptr inbounds double, double* %30, i64 %idxprom, !dbg !373
+  %31 = load double, double* %arrayidx, align 8, !dbg !373
+  %call17 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %25, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.10, i32 0, i32 0), double %31), !dbg !374
+  br label %for.inc, !dbg !375
+
+for.inc:                                          ; preds = %for.body.15
+  %32 = load i32, i32* %i, align 4, !dbg !376
+  %inc = add nsw i32 %32, 1, !dbg !376
+  store i32 %inc, i32* %i, align 4, !dbg !376
+  br label %for.cond.13, !dbg !377
+
+for.end:                                          ; preds = %for.cond.13
+  br label %for.inc.18, !dbg !378
+
+for.inc.18:                                       ; preds = %for.end
+  %33 = load i32, i32* %j, align 4, !dbg !379
+  %inc19 = add nsw i32 %33, 1, !dbg !379
+  store i32 %inc19, i32* %j, align 4, !dbg !379
+  br label %for.cond, !dbg !380
+
+for.end.20:                                       ; preds = %for.cond
+  br label %if.end.31, !dbg !381
+
+if.else.21:                                       ; preds = %if.end
+  store i32 0, i32* %i, align 4, !dbg !382
+  br label %for.cond.22, !dbg !385
+
+for.cond.22:                                      ; preds = %for.inc.28, %if.else.21
+  %34 = load i32, i32* %i, align 4, !dbg !386
+  %35 = load i32, i32* %size, align 4, !dbg !390
+  %cmp23 = icmp slt i32 %34, %35, !dbg !391
+  br i1 %cmp23, label %for.body.24, label %for.end.30, !dbg !392
+
+for.body.24:                                      ; preds = %for.cond.22
+  %36 = load %struct._IO_FILE*, %struct._IO_FILE** %fp, align 8, !dbg !393
+  %37 = load i32, i32* %i, align 4, !dbg !395
+  %idxprom25 = sext i32 %37 to i64, !dbg !396
+  %38 = load double*, double** %data, align 8, !dbg !396
+  %arrayidx26 = getelementptr inbounds double, double* %38, i64 %idxprom25, !dbg !396
+  %39 = load double, double* %arrayidx26, align 8, !dbg !396
+  %call27 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %36, i8* getelementptr inbounds ([7 x i8], [7 x i8]* @.str.10, i32 0, i32 0), double %39), !dbg !397
+  br label %for.inc.28, !dbg !398
+
+for.inc.28:                                       ; preds = %for.body.24
+  %40 = load i32, i32* %i, align 4, !dbg !399
+  %inc29 = add nsw i32 %40, 1, !dbg !399
+  store i32 %inc29, i32* %i, align 4, !dbg !399
+  br label %for.cond.22, !dbg !400
+
+for.end.30:                                       ; preds = %for.cond.22
+  br label %if.end.31
+
+if.end.31:                                        ; preds = %for.end.30, %for.end.20
+  %41 = load %struct._IO_FILE*, %struct._IO_FILE** %fp, align 8, !dbg !401
+  %call32 = call i32 @fclose(%struct._IO_FILE* %41), !dbg !402
+  %42 = load i32, i32* %ierr, align 4, !dbg !403
+  ret i32 %42, !dbg !404
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @hypre_SeqVectorSetConstantValues(%struct.hypre_Vector* %v, double %value) #0 {
+entry:
+  %v.addr = alloca %struct.hypre_Vector*, align 8
+  %value.addr = alloca double, align 8
+  %vector_data = alloca double*, align 8
+  %size = alloca i32, align 4
+  %i = alloca i32, align 4
+  %ierr = alloca i32, align 4
+  store %struct.hypre_Vector* %v, %struct.hypre_Vector** %v.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %v.addr, metadata !405, metadata !69), !dbg !406
+  store double %value, double* %value.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %value.addr, metadata !407, metadata !69), !dbg !408
+  call void @llvm.dbg.declare(metadata double** %vector_data, metadata !409, metadata !69), !dbg !410
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %v.addr, align 8, !dbg !411
+  %data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %0, i32 0, i32 0, !dbg !411
+  %1 = load double*, double** %data, align 8, !dbg !411
+  store double* %1, double** %vector_data, align 8, !dbg !410
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !412, metadata !69), !dbg !413
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %v.addr, align 8, !dbg !414
+  %size1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 1, !dbg !414
+  %3 = load i32, i32* %size1, align 4, !dbg !414
+  store i32 %3, i32* %size, align 4, !dbg !413
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !415, metadata !69), !dbg !416
+  call void @llvm.dbg.declare(metadata i32* %ierr, metadata !417, metadata !69), !dbg !418
+  store i32 0, i32* %ierr, align 4, !dbg !418
+  %4 = load %struct.hypre_Vector*, %struct.hypre_Vector** %v.addr, align 8, !dbg !419
+  %num_vectors = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %4, i32 0, i32 3, !dbg !419
+  %5 = load i32, i32* %num_vectors, align 4, !dbg !419
+  %6 = load i32, i32* %size, align 4, !dbg !420
+  %mul = mul nsw i32 %6, %5, !dbg !420
+  store i32 %mul, i32* %size, align 4, !dbg !420
+  store i32 0, i32* %i, align 4, !dbg !421
+  br label %for.cond, !dbg !423
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %7 = load i32, i32* %i, align 4, !dbg !424
+  %8 = load i32, i32* %size, align 4, !dbg !428
+  %cmp = icmp slt i32 %7, %8, !dbg !429
+  br i1 %cmp, label %for.body, label %for.end, !dbg !430
+
+for.body:                                         ; preds = %for.cond
+  %9 = load double, double* %value.addr, align 8, !dbg !431
+  %10 = load i32, i32* %i, align 4, !dbg !432
+  %idxprom = sext i32 %10 to i64, !dbg !433
+  %11 = load double*, double** %vector_data, align 8, !dbg !433
+  %arrayidx = getelementptr inbounds double, double* %11, i64 %idxprom, !dbg !433
+  store double %9, double* %arrayidx, align 8, !dbg !434
+  br label %for.inc, !dbg !433
+
+for.inc:                                          ; preds = %for.body
+  %12 = load i32, i32* %i, align 4, !dbg !435
+  %inc = add nsw i32 %12, 1, !dbg !435
+  store i32 %inc, i32* %i, align 4, !dbg !435
+  br label %for.cond, !dbg !436
+
+for.end:                                          ; preds = %for.cond
+  %13 = load i32, i32* %ierr, align 4, !dbg !437
+  ret i32 %13, !dbg !438
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @hypre_SeqVectorCopy(%struct.hypre_Vector* %x, %struct.hypre_Vector* %y) #0 {
+entry:
+  %x.addr = alloca %struct.hypre_Vector*, align 8
+  %y.addr = alloca %struct.hypre_Vector*, align 8
+  %x_data = alloca double*, align 8
+  %y_data = alloca double*, align 8
+  %size = alloca i32, align 4
+  %i = alloca i32, align 4
+  %ierr = alloca i32, align 4
+  store %struct.hypre_Vector* %x, %struct.hypre_Vector** %x.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %x.addr, metadata !439, metadata !69), !dbg !440
+  store %struct.hypre_Vector* %y, %struct.hypre_Vector** %y.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %y.addr, metadata !441, metadata !69), !dbg !442
+  call void @llvm.dbg.declare(metadata double** %x_data, metadata !443, metadata !69), !dbg !444
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !445
+  %data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %0, i32 0, i32 0, !dbg !445
+  %1 = load double*, double** %data, align 8, !dbg !445
+  store double* %1, double** %x_data, align 8, !dbg !444
+  call void @llvm.dbg.declare(metadata double** %y_data, metadata !446, metadata !69), !dbg !447
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y.addr, align 8, !dbg !448
+  %data1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 0, !dbg !448
+  %3 = load double*, double** %data1, align 8, !dbg !448
+  store double* %3, double** %y_data, align 8, !dbg !447
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !449, metadata !69), !dbg !450
+  %4 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !451
+  %size2 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %4, i32 0, i32 1, !dbg !451
+  %5 = load i32, i32* %size2, align 4, !dbg !451
+  store i32 %5, i32* %size, align 4, !dbg !450
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !452, metadata !69), !dbg !453
+  call void @llvm.dbg.declare(metadata i32* %ierr, metadata !454, metadata !69), !dbg !455
+  store i32 0, i32* %ierr, align 4, !dbg !455
+  %6 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !456
+  %num_vectors = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %6, i32 0, i32 3, !dbg !456
+  %7 = load i32, i32* %num_vectors, align 4, !dbg !456
+  %8 = load i32, i32* %size, align 4, !dbg !457
+  %mul = mul nsw i32 %8, %7, !dbg !457
+  store i32 %mul, i32* %size, align 4, !dbg !457
+  store i32 0, i32* %i, align 4, !dbg !458
+  br label %for.cond, !dbg !460
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %9 = load i32, i32* %i, align 4, !dbg !461
+  %10 = load i32, i32* %size, align 4, !dbg !465
+  %cmp = icmp slt i32 %9, %10, !dbg !466
+  br i1 %cmp, label %for.body, label %for.end, !dbg !467
+
+for.body:                                         ; preds = %for.cond
+  %11 = load i32, i32* %i, align 4, !dbg !468
+  %idxprom = sext i32 %11 to i64, !dbg !469
+  %12 = load double*, double** %x_data, align 8, !dbg !469
+  %arrayidx = getelementptr inbounds double, double* %12, i64 %idxprom, !dbg !469
+  %13 = load double, double* %arrayidx, align 8, !dbg !469
+  %14 = load i32, i32* %i, align 4, !dbg !470
+  %idxprom3 = sext i32 %14 to i64, !dbg !471
+  %15 = load double*, double** %y_data, align 8, !dbg !471
+  %arrayidx4 = getelementptr inbounds double, double* %15, i64 %idxprom3, !dbg !471
+  store double %13, double* %arrayidx4, align 8, !dbg !472
+  br label %for.inc, !dbg !471
+
+for.inc:                                          ; preds = %for.body
+  %16 = load i32, i32* %i, align 4, !dbg !473
+  %inc = add nsw i32 %16, 1, !dbg !473
+  store i32 %inc, i32* %i, align 4, !dbg !473
+  br label %for.cond, !dbg !474
+
+for.end:                                          ; preds = %for.cond
+  %17 = load i32, i32* %ierr, align 4, !dbg !475
+  ret i32 %17, !dbg !476
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.hypre_Vector* @hypre_SeqVectorCloneDeep(%struct.hypre_Vector* %x) #0 {
+entry:
+  %x.addr = alloca %struct.hypre_Vector*, align 8
+  %size = alloca i32, align 4
+  %num_vectors = alloca i32, align 4
+  %y = alloca %struct.hypre_Vector*, align 8
+  store %struct.hypre_Vector* %x, %struct.hypre_Vector** %x.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %x.addr, metadata !477, metadata !69), !dbg !478
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !479, metadata !69), !dbg !480
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !481
+  %size1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %0, i32 0, i32 1, !dbg !481
+  %1 = load i32, i32* %size1, align 4, !dbg !481
+  store i32 %1, i32* %size, align 4, !dbg !480
+  call void @llvm.dbg.declare(metadata i32* %num_vectors, metadata !482, metadata !69), !dbg !483
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !484
+  %num_vectors2 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 3, !dbg !484
+  %3 = load i32, i32* %num_vectors2, align 4, !dbg !484
+  store i32 %3, i32* %num_vectors, align 4, !dbg !483
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %y, metadata !485, metadata !69), !dbg !486
+  %4 = load i32, i32* %size, align 4, !dbg !487
+  %5 = load i32, i32* %num_vectors, align 4, !dbg !488
+  %call = call %struct.hypre_Vector* @hypre_SeqMultiVectorCreate(i32 %4, i32 %5), !dbg !489
+  store %struct.hypre_Vector* %call, %struct.hypre_Vector** %y, align 8, !dbg !486
+  %6 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !490
+  %multivec_storage_method = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %6, i32 0, i32 4, !dbg !490
+  %7 = load i32, i32* %multivec_storage_method, align 4, !dbg !490
+  %8 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !491
+  %multivec_storage_method3 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %8, i32 0, i32 4, !dbg !491
+  store i32 %7, i32* %multivec_storage_method3, align 4, !dbg !492
+  %9 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !493
+  %vecstride = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %9, i32 0, i32 5, !dbg !493
+  %10 = load i32, i32* %vecstride, align 4, !dbg !493
+  %11 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !494
+  %vecstride4 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %11, i32 0, i32 5, !dbg !494
+  store i32 %10, i32* %vecstride4, align 4, !dbg !495
+  %12 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !496
+  %idxstride = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %12, i32 0, i32 6, !dbg !496
+  %13 = load i32, i32* %idxstride, align 4, !dbg !496
+  %14 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !497
+  %idxstride5 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %14, i32 0, i32 6, !dbg !497
+  store i32 %13, i32* %idxstride5, align 4, !dbg !498
+  %15 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !499
+  %call6 = call i32 @hypre_SeqVectorInitialize(%struct.hypre_Vector* %15), !dbg !500
+  %16 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !501
+  %17 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !502
+  %call7 = call i32 @hypre_SeqVectorCopy(%struct.hypre_Vector* %16, %struct.hypre_Vector* %17), !dbg !503
+  %18 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !504
+  ret %struct.hypre_Vector* %18, !dbg !505
+}
+
+; Function Attrs: nounwind uwtable
+define %struct.hypre_Vector* @hypre_SeqVectorCloneShallow(%struct.hypre_Vector* %x) #0 {
+entry:
+  %x.addr = alloca %struct.hypre_Vector*, align 8
+  %size = alloca i32, align 4
+  %num_vectors = alloca i32, align 4
+  %y = alloca %struct.hypre_Vector*, align 8
+  store %struct.hypre_Vector* %x, %struct.hypre_Vector** %x.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %x.addr, metadata !506, metadata !69), !dbg !507
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !508, metadata !69), !dbg !509
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !510
+  %size1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %0, i32 0, i32 1, !dbg !510
+  %1 = load i32, i32* %size1, align 4, !dbg !510
+  store i32 %1, i32* %size, align 4, !dbg !509
+  call void @llvm.dbg.declare(metadata i32* %num_vectors, metadata !511, metadata !69), !dbg !512
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !513
+  %num_vectors2 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 3, !dbg !513
+  %3 = load i32, i32* %num_vectors2, align 4, !dbg !513
+  store i32 %3, i32* %num_vectors, align 4, !dbg !512
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %y, metadata !514, metadata !69), !dbg !515
+  %4 = load i32, i32* %size, align 4, !dbg !516
+  %5 = load i32, i32* %num_vectors, align 4, !dbg !517
+  %call = call %struct.hypre_Vector* @hypre_SeqMultiVectorCreate(i32 %4, i32 %5), !dbg !518
+  store %struct.hypre_Vector* %call, %struct.hypre_Vector** %y, align 8, !dbg !515
+  %6 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !519
+  %multivec_storage_method = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %6, i32 0, i32 4, !dbg !519
+  %7 = load i32, i32* %multivec_storage_method, align 4, !dbg !519
+  %8 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !520
+  %multivec_storage_method3 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %8, i32 0, i32 4, !dbg !520
+  store i32 %7, i32* %multivec_storage_method3, align 4, !dbg !521
+  %9 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !522
+  %vecstride = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %9, i32 0, i32 5, !dbg !522
+  %10 = load i32, i32* %vecstride, align 4, !dbg !522
+  %11 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !523
+  %vecstride4 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %11, i32 0, i32 5, !dbg !523
+  store i32 %10, i32* %vecstride4, align 4, !dbg !524
+  %12 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !525
+  %idxstride = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %12, i32 0, i32 6, !dbg !525
+  %13 = load i32, i32* %idxstride, align 4, !dbg !525
+  %14 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !526
+  %idxstride5 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %14, i32 0, i32 6, !dbg !526
+  store i32 %13, i32* %idxstride5, align 4, !dbg !527
+  %15 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !528
+  %data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %15, i32 0, i32 0, !dbg !528
+  %16 = load double*, double** %data, align 8, !dbg !528
+  %17 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !529
+  %data6 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %17, i32 0, i32 0, !dbg !529
+  store double* %16, double** %data6, align 8, !dbg !530
+  %18 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !531
+  %call7 = call i32 @hypre_SeqVectorSetDataOwner(%struct.hypre_Vector* %18, i32 0), !dbg !532
+  %19 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !533
+  %call8 = call i32 @hypre_SeqVectorInitialize(%struct.hypre_Vector* %19), !dbg !534
+  %20 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y, align 8, !dbg !535
+  ret %struct.hypre_Vector* %20, !dbg !536
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @hypre_SeqVectorScale(double %alpha, %struct.hypre_Vector* %y) #0 {
+entry:
+  %alpha.addr = alloca double, align 8
+  %y.addr = alloca %struct.hypre_Vector*, align 8
+  %y_data = alloca double*, align 8
+  %size = alloca i32, align 4
+  %i = alloca i32, align 4
+  %ierr = alloca i32, align 4
+  store double %alpha, double* %alpha.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %alpha.addr, metadata !537, metadata !69), !dbg !538
+  store %struct.hypre_Vector* %y, %struct.hypre_Vector** %y.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %y.addr, metadata !539, metadata !69), !dbg !540
+  call void @llvm.dbg.declare(metadata double** %y_data, metadata !541, metadata !69), !dbg !542
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y.addr, align 8, !dbg !543
+  %data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %0, i32 0, i32 0, !dbg !543
+  %1 = load double*, double** %data, align 8, !dbg !543
+  store double* %1, double** %y_data, align 8, !dbg !542
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !544, metadata !69), !dbg !545
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y.addr, align 8, !dbg !546
+  %size1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 1, !dbg !546
+  %3 = load i32, i32* %size1, align 4, !dbg !546
+  store i32 %3, i32* %size, align 4, !dbg !545
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !547, metadata !69), !dbg !548
+  call void @llvm.dbg.declare(metadata i32* %ierr, metadata !549, metadata !69), !dbg !550
+  store i32 0, i32* %ierr, align 4, !dbg !550
+  %4 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y.addr, align 8, !dbg !551
+  %num_vectors = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %4, i32 0, i32 3, !dbg !551
+  %5 = load i32, i32* %num_vectors, align 4, !dbg !551
+  %6 = load i32, i32* %size, align 4, !dbg !552
+  %mul = mul nsw i32 %6, %5, !dbg !552
+  store i32 %mul, i32* %size, align 4, !dbg !552
+  store i32 0, i32* %i, align 4, !dbg !553
+  br label %for.cond, !dbg !555
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %7 = load i32, i32* %i, align 4, !dbg !556
+  %8 = load i32, i32* %size, align 4, !dbg !560
+  %cmp = icmp slt i32 %7, %8, !dbg !561
+  br i1 %cmp, label %for.body, label %for.end, !dbg !562
+
+for.body:                                         ; preds = %for.cond
+  %9 = load double, double* %alpha.addr, align 8, !dbg !563
+  %10 = load i32, i32* %i, align 4, !dbg !564
+  %idxprom = sext i32 %10 to i64, !dbg !565
+  %11 = load double*, double** %y_data, align 8, !dbg !565
+  %arrayidx = getelementptr inbounds double, double* %11, i64 %idxprom, !dbg !565
+  %12 = load double, double* %arrayidx, align 8, !dbg !566
+  %mul2 = fmul double %12, %9, !dbg !566
+  store double %mul2, double* %arrayidx, align 8, !dbg !566
+  br label %for.inc, !dbg !565
+
+for.inc:                                          ; preds = %for.body
+  %13 = load i32, i32* %i, align 4, !dbg !567
+  %inc = add nsw i32 %13, 1, !dbg !567
+  store i32 %inc, i32* %i, align 4, !dbg !567
+  br label %for.cond, !dbg !568
+
+for.end:                                          ; preds = %for.cond
+  %14 = load i32, i32* %ierr, align 4, !dbg !569
+  ret i32 %14, !dbg !570
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @hypre_SeqVectorAxpy(double %alpha, %struct.hypre_Vector* %x, %struct.hypre_Vector* %y) #0 {
+entry:
+  %alpha.addr = alloca double, align 8
+  %x.addr = alloca %struct.hypre_Vector*, align 8
+  %y.addr = alloca %struct.hypre_Vector*, align 8
+  %x_data = alloca double*, align 8
+  %y_data = alloca double*, align 8
+  %size = alloca i32, align 4
+  %i = alloca i32, align 4
+  %ierr = alloca i32, align 4
+  store double %alpha, double* %alpha.addr, align 8
+  call void @llvm.dbg.declare(metadata double* %alpha.addr, metadata !571, metadata !69), !dbg !572
+  store %struct.hypre_Vector* %x, %struct.hypre_Vector** %x.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %x.addr, metadata !573, metadata !69), !dbg !574
+  store %struct.hypre_Vector* %y, %struct.hypre_Vector** %y.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %y.addr, metadata !575, metadata !69), !dbg !576
+  call void @llvm.dbg.declare(metadata double** %x_data, metadata !577, metadata !69), !dbg !578
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !579
+  %data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %0, i32 0, i32 0, !dbg !579
+  %1 = load double*, double** %data, align 8, !dbg !579
+  store double* %1, double** %x_data, align 8, !dbg !578
+  call void @llvm.dbg.declare(metadata double** %y_data, metadata !580, metadata !69), !dbg !581
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y.addr, align 8, !dbg !582
+  %data1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 0, !dbg !582
+  %3 = load double*, double** %data1, align 8, !dbg !582
+  store double* %3, double** %y_data, align 8, !dbg !581
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !583, metadata !69), !dbg !584
+  %4 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !585
+  %size2 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %4, i32 0, i32 1, !dbg !585
+  %5 = load i32, i32* %size2, align 4, !dbg !585
+  store i32 %5, i32* %size, align 4, !dbg !584
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !586, metadata !69), !dbg !587
+  call void @llvm.dbg.declare(metadata i32* %ierr, metadata !588, metadata !69), !dbg !589
+  store i32 0, i32* %ierr, align 4, !dbg !589
+  %6 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !590
+  %num_vectors = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %6, i32 0, i32 3, !dbg !590
+  %7 = load i32, i32* %num_vectors, align 4, !dbg !590
+  %8 = load i32, i32* %size, align 4, !dbg !591
+  %mul = mul nsw i32 %8, %7, !dbg !591
+  store i32 %mul, i32* %size, align 4, !dbg !591
+  store i32 0, i32* %i, align 4, !dbg !592
+  br label %for.cond, !dbg !594
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %9 = load i32, i32* %i, align 4, !dbg !595
+  %10 = load i32, i32* %size, align 4, !dbg !599
+  %cmp = icmp slt i32 %9, %10, !dbg !600
+  br i1 %cmp, label %for.body, label %for.end, !dbg !601
+
+for.body:                                         ; preds = %for.cond
+  %11 = load double, double* %alpha.addr, align 8, !dbg !602
+  %12 = load i32, i32* %i, align 4, !dbg !603
+  %idxprom = sext i32 %12 to i64, !dbg !604
+  %13 = load double*, double** %x_data, align 8, !dbg !604
+  %arrayidx = getelementptr inbounds double, double* %13, i64 %idxprom, !dbg !604
+  %14 = load double, double* %arrayidx, align 8, !dbg !604
+  %mul3 = fmul double %11, %14, !dbg !605
+  %15 = load i32, i32* %i, align 4, !dbg !606
+  %idxprom4 = sext i32 %15 to i64, !dbg !607
+  %16 = load double*, double** %y_data, align 8, !dbg !607
+  %arrayidx5 = getelementptr inbounds double, double* %16, i64 %idxprom4, !dbg !607
+  %17 = load double, double* %arrayidx5, align 8, !dbg !608
+  %add = fadd double %17, %mul3, !dbg !608
+  store double %add, double* %arrayidx5, align 8, !dbg !608
+  br label %for.inc, !dbg !607
+
+for.inc:                                          ; preds = %for.body
+  %18 = load i32, i32* %i, align 4, !dbg !609
+  %inc = add nsw i32 %18, 1, !dbg !609
+  store i32 %inc, i32* %i, align 4, !dbg !609
+  br label %for.cond, !dbg !610
+
+for.end:                                          ; preds = %for.cond
+  %19 = load i32, i32* %ierr, align 4, !dbg !611
+  ret i32 %19, !dbg !612
+}
+
+; Function Attrs: nounwind uwtable
+define double @hypre_SeqVectorInnerProd(%struct.hypre_Vector* %x, %struct.hypre_Vector* %y) #0 {
+entry:
+  %x.addr = alloca %struct.hypre_Vector*, align 8
+  %y.addr = alloca %struct.hypre_Vector*, align 8
+  %x_data = alloca double*, align 8
+  %y_data = alloca double*, align 8
+  %size = alloca i32, align 4
+  %i = alloca i32, align 4
+  %result = alloca double, align 8
+  store %struct.hypre_Vector* %x, %struct.hypre_Vector** %x.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %x.addr, metadata !613, metadata !69), !dbg !614
+  store %struct.hypre_Vector* %y, %struct.hypre_Vector** %y.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %y.addr, metadata !615, metadata !69), !dbg !616
+  call void @llvm.dbg.declare(metadata double** %x_data, metadata !617, metadata !69), !dbg !618
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !619
+  %data = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %0, i32 0, i32 0, !dbg !619
+  %1 = load double*, double** %data, align 8, !dbg !619
+  store double* %1, double** %x_data, align 8, !dbg !618
+  call void @llvm.dbg.declare(metadata double** %y_data, metadata !620, metadata !69), !dbg !621
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %y.addr, align 8, !dbg !622
+  %data1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 0, !dbg !622
+  %3 = load double*, double** %data1, align 8, !dbg !622
+  store double* %3, double** %y_data, align 8, !dbg !621
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !623, metadata !69), !dbg !624
+  %4 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !625
+  %size2 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %4, i32 0, i32 1, !dbg !625
+  %5 = load i32, i32* %size2, align 4, !dbg !625
+  store i32 %5, i32* %size, align 4, !dbg !624
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !626, metadata !69), !dbg !627
+  call void @llvm.dbg.declare(metadata double* %result, metadata !628, metadata !69), !dbg !629
+  store double 0.000000e+00, double* %result, align 8, !dbg !629
+  %6 = load %struct.hypre_Vector*, %struct.hypre_Vector** %x.addr, align 8, !dbg !630
+  %num_vectors = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %6, i32 0, i32 3, !dbg !630
+  %7 = load i32, i32* %num_vectors, align 4, !dbg !630
+  %8 = load i32, i32* %size, align 4, !dbg !631
+  %mul = mul nsw i32 %8, %7, !dbg !631
+  store i32 %mul, i32* %size, align 4, !dbg !631
+  store i32 0, i32* %i, align 4, !dbg !632
+  br label %for.cond, !dbg !634
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %9 = load i32, i32* %i, align 4, !dbg !635
+  %10 = load i32, i32* %size, align 4, !dbg !639
+  %cmp = icmp slt i32 %9, %10, !dbg !640
+  br i1 %cmp, label %for.body, label %for.end, !dbg !641
+
+for.body:                                         ; preds = %for.cond
+  %11 = load i32, i32* %i, align 4, !dbg !642
+  %idxprom = sext i32 %11 to i64, !dbg !643
+  %12 = load double*, double** %y_data, align 8, !dbg !643
+  %arrayidx = getelementptr inbounds double, double* %12, i64 %idxprom, !dbg !643
+  %13 = load double, double* %arrayidx, align 8, !dbg !643
+  %14 = load i32, i32* %i, align 4, !dbg !644
+  %idxprom3 = sext i32 %14 to i64, !dbg !645
+  %15 = load double*, double** %x_data, align 8, !dbg !645
+  %arrayidx4 = getelementptr inbounds double, double* %15, i64 %idxprom3, !dbg !645
+  %16 = load double, double* %arrayidx4, align 8, !dbg !645
+  %mul5 = fmul double %13, %16, !dbg !646
+  %17 = load double, double* %result, align 8, !dbg !647
+  %add = fadd double %17, %mul5, !dbg !647
+  store double %add, double* %result, align 8, !dbg !647
+  br label %for.inc, !dbg !648
+
+for.inc:                                          ; preds = %for.body
+  %18 = load i32, i32* %i, align 4, !dbg !649
+  %inc = add nsw i32 %18, 1, !dbg !649
+  store i32 %inc, i32* %i, align 4, !dbg !649
+  br label %for.cond, !dbg !650
+
+for.end:                                          ; preds = %for.cond
+  %19 = load double, double* %result, align 8, !dbg !651
+  ret double %19, !dbg !652
+}
+
+; Function Attrs: nounwind uwtable
+define double @hypre_VectorSumElts(%struct.hypre_Vector* %vector) #0 {
+entry:
+  %vector.addr = alloca %struct.hypre_Vector*, align 8
+  %sum = alloca double, align 8
+  %data = alloca double*, align 8
+  %size = alloca i32, align 4
+  %i = alloca i32, align 4
+  store %struct.hypre_Vector* %vector, %struct.hypre_Vector** %vector.addr, align 8
+  call void @llvm.dbg.declare(metadata %struct.hypre_Vector** %vector.addr, metadata !653, metadata !69), !dbg !654
+  call void @llvm.dbg.declare(metadata double* %sum, metadata !655, metadata !69), !dbg !656
+  store double 0.000000e+00, double* %sum, align 8, !dbg !656
+  call void @llvm.dbg.declare(metadata double** %data, metadata !657, metadata !69), !dbg !658
+  %0 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !659
+  %data1 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %0, i32 0, i32 0, !dbg !659
+  %1 = load double*, double** %data1, align 8, !dbg !659
+  store double* %1, double** %data, align 8, !dbg !658
+  call void @llvm.dbg.declare(metadata i32* %size, metadata !660, metadata !69), !dbg !661
+  %2 = load %struct.hypre_Vector*, %struct.hypre_Vector** %vector.addr, align 8, !dbg !662
+  %size2 = getelementptr inbounds %struct.hypre_Vector, %struct.hypre_Vector* %2, i32 0, i32 1, !dbg !662
+  %3 = load i32, i32* %size2, align 4, !dbg !662
+  store i32 %3, i32* %size, align 4, !dbg !661
+  call void @llvm.dbg.declare(metadata i32* %i, metadata !663, metadata !69), !dbg !664
+  store i32 0, i32* %i, align 4, !dbg !665
+  br label %for.cond, !dbg !667
+
+for.cond:                                         ; preds = %for.inc, %entry
+  %4 = load i32, i32* %i, align 4, !dbg !668
+  %5 = load i32, i32* %size, align 4, !dbg !672
+  %cmp = icmp slt i32 %4, %5, !dbg !673
+  br i1 %cmp, label %for.body, label %for.end, !dbg !674
+
+for.body:                                         ; preds = %for.cond
+  %6 = load i32, i32* %i, align 4, !dbg !675
+  %idxprom = sext i32 %6 to i64, !dbg !676
+  %7 = load double*, double** %data, align 8, !dbg !676
+  %arrayidx = getelementptr inbounds double, double* %7, i64 %idxprom, !dbg !676
+  %8 = load double, double* %arrayidx, align 8, !dbg !676
+  %9 = load double, double* %sum, align 8, !dbg !677
+  %add = fadd double %9, %8, !dbg !677
+  store double %add, double* %sum, align 8, !dbg !677
+  br label %for.inc, !dbg !678
+
+for.inc:                                          ; preds = %for.body
+  %10 = load i32, i32* %i, align 4, !dbg !679
+  %inc = add nsw i32 %10, 1, !dbg !679
+  store i32 %inc, i32* %i, align 4, !dbg !679
+  br label %for.cond, !dbg !680
+
+for.end:                                          ; preds = %for.cond
+  %11 = load double, double* %sum, align 8, !dbg !681
+  ret double %11, !dbg !682
+}
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!65, !66}
+!llvm.ident = !{!67}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, retainedTypes: !3, subprograms: !22)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/AMGmk")
+!2 = !{}
+!3 = !{!4, !19, !20, !10}
+!4 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !5, size: 64, align: 64)
+!5 = !DIDerivedType(tag: DW_TAG_typedef, name: "hypre_Vector", file: !6, line: 122, baseType: !7)
+!6 = !DIFile(filename: "./seq_mv.h", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/AMGmk")
+!7 = !DICompositeType(tag: DW_TAG_structure_type, file: !6, line: 104, size: 256, align: 64, elements: !8)
+!8 = !{!9, !12, !14, !15, !16, !17, !18}
+!9 = !DIDerivedType(tag: DW_TAG_member, name: "data", scope: !7, file: !6, line: 106, baseType: !10, size: 64, align: 64)
+!10 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !11, size: 64, align: 64)
+!11 = !DIBasicType(name: "double", size: 64, align: 64, encoding: DW_ATE_float)
+!12 = !DIDerivedType(tag: DW_TAG_member, name: "size", scope: !7, file: !6, line: 107, baseType: !13, size: 32, align: 32, offset: 64)
+!13 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!14 = !DIDerivedType(tag: DW_TAG_member, name: "owns_data", scope: !7, file: !6, line: 110, baseType: !13, size: 32, align: 32, offset: 96)
+!15 = !DIDerivedType(tag: DW_TAG_member, name: "num_vectors", scope: !7, file: !6, line: 113, baseType: !13, size: 32, align: 32, offset: 128)
+!16 = !DIDerivedType(tag: DW_TAG_member, name: "multivec_storage_method", scope: !7, file: !6, line: 114, baseType: !13, size: 32, align: 32, offset: 160)
+!17 = !DIDerivedType(tag: DW_TAG_member, name: "vecstride", scope: !7, file: !6, line: 119, baseType: !13, size: 32, align: 32, offset: 192)
+!18 = !DIDerivedType(tag: DW_TAG_member, name: "idxstride", scope: !7, file: !6, line: 119, baseType: !13, size: 32, align: 32, offset: 224)
+!19 = !DIBasicType(name: "unsigned int", size: 32, align: 32, encoding: DW_ATE_unsigned)
+!20 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !21, size: 64, align: 64)
+!21 = !DIBasicType(name: "char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!22 = !{!23, !27, !30, !33, !34, !37, !40, !43, !46, !49, !52, !53, !56, !59, !62}
+!23 = !DISubprogram(name: "hypre_SeqVectorCreate", scope: !24, file: !24, line: 41, type: !25, isLocal: false, isDefinition: true, scopeLine: 41, flags: DIFlagPrototyped, isOptimized: false, function: %struct.hypre_Vector* (i32)* @hypre_SeqVectorCreate, variables: !2)
+!24 = !DIFile(filename: "/home/gleison/tf/Benchmarks/ASC_Sequoia/AMGmk/tmp.c", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/AMGmk")
+!25 = !DISubroutineType(types: !26)
+!26 = !{!4, !13}
+!27 = !DISubprogram(name: "hypre_SeqMultiVectorCreate", scope: !24, file: !24, line: 63, type: !28, isLocal: false, isDefinition: true, scopeLine: 63, flags: DIFlagPrototyped, isOptimized: false, function: %struct.hypre_Vector* (i32, i32)* @hypre_SeqMultiVectorCreate, variables: !2)
+!28 = !DISubroutineType(types: !29)
+!29 = !{!4, !13, !13}
+!30 = !DISubprogram(name: "hypre_SeqVectorDestroy", scope: !24, file: !24, line: 73, type: !31, isLocal: false, isDefinition: true, scopeLine: 73, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct.hypre_Vector*)* @hypre_SeqVectorDestroy, variables: !2)
+!31 = !DISubroutineType(types: !32)
+!32 = !{!13, !4}
+!33 = !DISubprogram(name: "hypre_SeqVectorInitialize", scope: !24, file: !24, line: 90, type: !31, isLocal: false, isDefinition: true, scopeLine: 90, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct.hypre_Vector*)* @hypre_SeqVectorInitialize, variables: !2)
+!34 = !DISubprogram(name: "hypre_SeqVectorSetDataOwner", scope: !24, file: !24, line: 115, type: !35, isLocal: false, isDefinition: true, scopeLine: 116, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct.hypre_Vector*, i32)* @hypre_SeqVectorSetDataOwner, variables: !2)
+!35 = !DISubroutineType(types: !36)
+!36 = !{!13, !4, !13}
+!37 = !DISubprogram(name: "hypre_SeqVectorRead", scope: !24, file: !24, line: 129, type: !38, isLocal: false, isDefinition: true, scopeLine: 129, flags: DIFlagPrototyped, isOptimized: false, function: %struct.hypre_Vector* (i8*)* @hypre_SeqVectorRead, variables: !2)
+!38 = !DISubroutineType(types: !39)
+!39 = !{!4, !20}
+!40 = !DISubprogram(name: "hypre_SeqVectorPrint", scope: !24, file: !24, line: 167, type: !41, isLocal: false, isDefinition: true, scopeLine: 168, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct.hypre_Vector*, i8*)* @hypre_SeqVectorPrint, variables: !2)
+!41 = !DISubroutineType(types: !42)
+!42 = !{!13, !4, !20}
+!43 = !DISubprogram(name: "hypre_SeqVectorSetConstantValues", scope: !24, file: !24, line: 219, type: !44, isLocal: false, isDefinition: true, scopeLine: 220, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct.hypre_Vector*, double)* @hypre_SeqVectorSetConstantValues, variables: !2)
+!44 = !DISubroutineType(types: !45)
+!45 = !{!13, !4, !11}
+!46 = !DISubprogram(name: "hypre_SeqVectorCopy", scope: !24, file: !24, line: 242, type: !47, isLocal: false, isDefinition: true, scopeLine: 243, flags: DIFlagPrototyped, isOptimized: false, function: i32 (%struct.hypre_Vector*, %struct.hypre_Vector*)* @hypre_SeqVectorCopy, variables: !2)
+!47 = !DISubroutineType(types: !48)
+!48 = !{!13, !4, !4}
+!49 = !DISubprogram(name: "hypre_SeqVectorCloneDeep", scope: !24, file: !24, line: 266, type: !50, isLocal: false, isDefinition: true, scopeLine: 266, flags: DIFlagPrototyped, isOptimized: false, function: %struct.hypre_Vector* (%struct.hypre_Vector*)* @hypre_SeqVectorCloneDeep, variables: !2)
+!50 = !DISubroutineType(types: !51)
+!51 = !{!4, !4}
+!52 = !DISubprogram(name: "hypre_SeqVectorCloneShallow", scope: !24, file: !24, line: 287, type: !50, isLocal: false, isDefinition: true, scopeLine: 287, flags: DIFlagPrototyped, isOptimized: false, function: %struct.hypre_Vector* (%struct.hypre_Vector*)* @hypre_SeqVectorCloneShallow, variables: !2)
+!53 = !DISubprogram(name: "hypre_SeqVectorScale", scope: !24, file: !24, line: 307, type: !54, isLocal: false, isDefinition: true, scopeLine: 308, flags: DIFlagPrototyped, isOptimized: false, function: i32 (double, %struct.hypre_Vector*)* @hypre_SeqVectorScale, variables: !2)
+!54 = !DISubroutineType(types: !55)
+!55 = !{!13, !11, !4}
+!56 = !DISubprogram(name: "hypre_SeqVectorAxpy", scope: !24, file: !24, line: 328, type: !57, isLocal: false, isDefinition: true, scopeLine: 330, flags: DIFlagPrototyped, isOptimized: false, function: i32 (double, %struct.hypre_Vector*, %struct.hypre_Vector*)* @hypre_SeqVectorAxpy, variables: !2)
+!57 = !DISubroutineType(types: !58)
+!58 = !{!13, !11, !4, !4}
+!59 = !DISubprogram(name: "hypre_SeqVectorInnerProd", scope: !24, file: !24, line: 351, type: !60, isLocal: false, isDefinition: true, scopeLine: 352, flags: DIFlagPrototyped, isOptimized: false, function: double (%struct.hypre_Vector*, %struct.hypre_Vector*)* @hypre_SeqVectorInnerProd, variables: !2)
+!60 = !DISubroutineType(types: !61)
+!61 = !{!11, !4, !4}
+!62 = !DISubprogram(name: "hypre_VectorSumElts", scope: !24, file: !24, line: 374, type: !63, isLocal: false, isDefinition: true, scopeLine: 374, flags: DIFlagPrototyped, isOptimized: false, function: double (%struct.hypre_Vector*)* @hypre_VectorSumElts, variables: !2)
+!63 = !DISubroutineType(types: !64)
+!64 = !{!11, !4}
+!65 = !{i32 2, !"Dwarf Version", i32 4}
+!66 = !{i32 2, !"Debug Info Version", i32 3}
+!67 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!68 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "size", arg: 1, scope: !23, file: !24, line: 41, type: !13)
+!69 = !DIExpression()
+!70 = !DILocation(line: 41, column: 27, scope: !23)
+!71 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "vector", scope: !23, file: !24, line: 42, type: !4)
+!72 = !DILocation(line: 42, column: 17, scope: !23)
+!73 = !DILocation(line: 44, column: 12, scope: !23)
+!74 = !DILocation(line: 44, column: 10, scope: !23)
+!75 = !DILocation(line: 46, column: 3, scope: !23)
+!76 = !DILocation(line: 46, column: 28, scope: !23)
+!77 = !DILocation(line: 47, column: 30, scope: !23)
+!78 = !DILocation(line: 47, column: 3, scope: !23)
+!79 = !DILocation(line: 47, column: 28, scope: !23)
+!80 = !DILocation(line: 49, column: 3, scope: !23)
+!81 = !DILocation(line: 49, column: 34, scope: !23)
+!82 = !DILocation(line: 50, column: 3, scope: !23)
+!83 = !DILocation(line: 50, column: 45, scope: !23)
+!84 = !DILocation(line: 53, column: 3, scope: !23)
+!85 = !DILocation(line: 53, column: 32, scope: !23)
+!86 = !DILocation(line: 55, column: 10, scope: !23)
+!87 = !DILocation(line: 55, column: 3, scope: !23)
+!88 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "size", arg: 1, scope: !27, file: !24, line: 63, type: !13)
+!89 = !DILocation(line: 63, column: 32, scope: !27)
+!90 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "num_vectors", arg: 2, scope: !27, file: !24, line: 63, type: !13)
+!91 = !DILocation(line: 63, column: 42, scope: !27)
+!92 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "vector", scope: !27, file: !24, line: 64, type: !4)
+!93 = !DILocation(line: 64, column: 17, scope: !27)
+!94 = !DILocation(line: 64, column: 48, scope: !27)
+!95 = !DILocation(line: 64, column: 26, scope: !27)
+!96 = !DILocation(line: 65, column: 36, scope: !27)
+!97 = !DILocation(line: 65, column: 3, scope: !27)
+!98 = !DILocation(line: 65, column: 34, scope: !27)
+!99 = !DILocation(line: 66, column: 10, scope: !27)
+!100 = !DILocation(line: 66, column: 3, scope: !27)
+!101 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "vector", arg: 1, scope: !30, file: !24, line: 73, type: !4)
+!102 = !DILocation(line: 73, column: 42, scope: !30)
+!103 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ierr", scope: !30, file: !24, line: 74, type: !13)
+!104 = !DILocation(line: 74, column: 7, scope: !30)
+!105 = !DILocation(line: 76, column: 7, scope: !106)
+!106 = distinct !DILexicalBlock(scope: !30, file: !24, line: 76, column: 7)
+!107 = !DILocation(line: 76, column: 7, scope: !30)
+!108 = !DILocation(line: 77, column: 9, scope: !109)
+!109 = distinct !DILexicalBlock(scope: !110, file: !24, line: 77, column: 9)
+!110 = distinct !DILexicalBlock(scope: !106, file: !24, line: 76, column: 15)
+!111 = !DILocation(line: 77, column: 9, scope: !110)
+!112 = !DILocation(line: 78, column: 7, scope: !113)
+!113 = distinct !DILexicalBlock(scope: !109, file: !24, line: 77, column: 39)
+!114 = !DILocation(line: 79, column: 5, scope: !113)
+!115 = !DILocation(line: 80, column: 5, scope: !110)
+!116 = !DILocation(line: 81, column: 3, scope: !110)
+!117 = !DILocation(line: 83, column: 10, scope: !30)
+!118 = !DILocation(line: 83, column: 3, scope: !30)
+!119 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "vector", arg: 1, scope: !33, file: !24, line: 90, type: !4)
+!120 = !DILocation(line: 90, column: 45, scope: !33)
+!121 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !33, file: !24, line: 91, type: !13)
+!122 = !DILocation(line: 91, column: 7, scope: !33)
+!123 = !DILocation(line: 91, column: 14, scope: !33)
+!124 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ierr", scope: !33, file: !24, line: 92, type: !13)
+!125 = !DILocation(line: 92, column: 7, scope: !33)
+!126 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "num_vectors", scope: !33, file: !24, line: 93, type: !13)
+!127 = !DILocation(line: 93, column: 7, scope: !33)
+!128 = !DILocation(line: 93, column: 21, scope: !33)
+!129 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "multivec_storage_method", scope: !33, file: !24, line: 94, type: !13)
+!130 = !DILocation(line: 94, column: 7, scope: !33)
+!131 = !DILocation(line: 94, column: 33, scope: !33)
+!132 = !DILocation(line: 96, column: 8, scope: !133)
+!133 = distinct !DILexicalBlock(scope: !33, file: !24, line: 96, column: 7)
+!134 = !DILocation(line: 96, column: 7, scope: !33)
+!135 = !DILocation(line: 97, column: 32, scope: !133)
+!136 = !DILocation(line: 97, column: 5, scope: !133)
+!137 = !DILocation(line: 97, column: 30, scope: !133)
+!138 = !DILocation(line: 99, column: 7, scope: !139)
+!139 = distinct !DILexicalBlock(scope: !33, file: !24, line: 99, column: 7)
+!140 = !DILocation(line: 99, column: 31, scope: !139)
+!141 = !DILocation(line: 99, column: 7, scope: !33)
+!142 = !DILocation(line: 100, column: 40, scope: !143)
+!143 = distinct !DILexicalBlock(scope: !139, file: !24, line: 99, column: 37)
+!144 = !DILocation(line: 100, column: 5, scope: !143)
+!145 = !DILocation(line: 100, column: 38, scope: !143)
+!146 = !DILocation(line: 101, column: 5, scope: !143)
+!147 = !DILocation(line: 101, column: 37, scope: !143)
+!148 = !DILocation(line: 102, column: 3, scope: !143)
+!149 = !DILocation(line: 102, column: 14, scope: !150)
+!150 = distinct !DILexicalBlock(scope: !139, file: !24, line: 102, column: 14)
+!151 = !DILocation(line: 102, column: 38, scope: !150)
+!152 = !DILocation(line: 102, column: 14, scope: !139)
+!153 = !DILocation(line: 103, column: 5, scope: !154)
+!154 = distinct !DILexicalBlock(scope: !150, file: !24, line: 102, column: 44)
+!155 = !DILocation(line: 103, column: 38, scope: !154)
+!156 = !DILocation(line: 104, column: 39, scope: !154)
+!157 = !DILocation(line: 104, column: 5, scope: !154)
+!158 = !DILocation(line: 104, column: 37, scope: !154)
+!159 = !DILocation(line: 105, column: 3, scope: !154)
+!160 = !DILocation(line: 106, column: 5, scope: !150)
+!161 = !DILocation(line: 108, column: 10, scope: !33)
+!162 = !DILocation(line: 108, column: 3, scope: !33)
+!163 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "vector", arg: 1, scope: !34, file: !24, line: 115, type: !4)
+!164 = !DILocation(line: 115, column: 47, scope: !34)
+!165 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "owns_data", arg: 2, scope: !34, file: !24, line: 116, type: !13)
+!166 = !DILocation(line: 116, column: 37, scope: !34)
+!167 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ierr", scope: !34, file: !24, line: 117, type: !13)
+!168 = !DILocation(line: 117, column: 7, scope: !34)
+!169 = !DILocation(line: 119, column: 34, scope: !34)
+!170 = !DILocation(line: 119, column: 3, scope: !34)
+!171 = !DILocation(line: 119, column: 32, scope: !34)
+!172 = !DILocation(line: 121, column: 10, scope: !34)
+!173 = !DILocation(line: 121, column: 3, scope: !34)
+!174 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "file_name", arg: 1, scope: !37, file: !24, line: 129, type: !20)
+!175 = !DILocation(line: 129, column: 27, scope: !37)
+!176 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "vector", scope: !37, file: !24, line: 130, type: !4)
+!177 = !DILocation(line: 130, column: 17, scope: !37)
+!178 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "fp", scope: !37, file: !24, line: 132, type: !179)
+!179 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !180, size: 64, align: 64)
+!180 = !DIDerivedType(tag: DW_TAG_typedef, name: "FILE", file: !181, line: 48, baseType: !182)
+!181 = !DIFile(filename: "/usr/include/stdio.h", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/AMGmk")
+!182 = !DICompositeType(tag: DW_TAG_structure_type, name: "_IO_FILE", file: !183, line: 241, size: 1728, align: 64, elements: !184)
+!183 = !DIFile(filename: "/usr/include/libio.h", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/AMGmk")
+!184 = !{!185, !186, !187, !188, !189, !190, !191, !192, !193, !194, !195, !196, !197, !205, !206, !207, !208, !212, !214, !216, !220, !223, !225, !227, !228, !229, !230, !234, !235}
+!185 = !DIDerivedType(tag: DW_TAG_member, name: "_flags", scope: !182, file: !183, line: 242, baseType: !13, size: 32, align: 32)
+!186 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_read_ptr", scope: !182, file: !183, line: 247, baseType: !20, size: 64, align: 64, offset: 64)
+!187 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_read_end", scope: !182, file: !183, line: 248, baseType: !20, size: 64, align: 64, offset: 128)
+!188 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_read_base", scope: !182, file: !183, line: 249, baseType: !20, size: 64, align: 64, offset: 192)
+!189 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_write_base", scope: !182, file: !183, line: 250, baseType: !20, size: 64, align: 64, offset: 256)
+!190 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_write_ptr", scope: !182, file: !183, line: 251, baseType: !20, size: 64, align: 64, offset: 320)
+!191 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_write_end", scope: !182, file: !183, line: 252, baseType: !20, size: 64, align: 64, offset: 384)
+!192 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_buf_base", scope: !182, file: !183, line: 253, baseType: !20, size: 64, align: 64, offset: 448)
+!193 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_buf_end", scope: !182, file: !183, line: 254, baseType: !20, size: 64, align: 64, offset: 512)
+!194 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_save_base", scope: !182, file: !183, line: 256, baseType: !20, size: 64, align: 64, offset: 576)
+!195 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_backup_base", scope: !182, file: !183, line: 257, baseType: !20, size: 64, align: 64, offset: 640)
+!196 = !DIDerivedType(tag: DW_TAG_member, name: "_IO_save_end", scope: !182, file: !183, line: 258, baseType: !20, size: 64, align: 64, offset: 704)
+!197 = !DIDerivedType(tag: DW_TAG_member, name: "_markers", scope: !182, file: !183, line: 260, baseType: !198, size: 64, align: 64, offset: 768)
+!198 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !199, size: 64, align: 64)
+!199 = !DICompositeType(tag: DW_TAG_structure_type, name: "_IO_marker", file: !183, line: 156, size: 192, align: 64, elements: !200)
+!200 = !{!201, !202, !204}
+!201 = !DIDerivedType(tag: DW_TAG_member, name: "_next", scope: !199, file: !183, line: 157, baseType: !198, size: 64, align: 64)
+!202 = !DIDerivedType(tag: DW_TAG_member, name: "_sbuf", scope: !199, file: !183, line: 158, baseType: !203, size: 64, align: 64, offset: 64)
+!203 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !182, size: 64, align: 64)
+!204 = !DIDerivedType(tag: DW_TAG_member, name: "_pos", scope: !199, file: !183, line: 162, baseType: !13, size: 32, align: 32, offset: 128)
+!205 = !DIDerivedType(tag: DW_TAG_member, name: "_chain", scope: !182, file: !183, line: 262, baseType: !203, size: 64, align: 64, offset: 832)
+!206 = !DIDerivedType(tag: DW_TAG_member, name: "_fileno", scope: !182, file: !183, line: 264, baseType: !13, size: 32, align: 32, offset: 896)
+!207 = !DIDerivedType(tag: DW_TAG_member, name: "_flags2", scope: !182, file: !183, line: 268, baseType: !13, size: 32, align: 32, offset: 928)
+!208 = !DIDerivedType(tag: DW_TAG_member, name: "_old_offset", scope: !182, file: !183, line: 270, baseType: !209, size: 64, align: 64, offset: 960)
+!209 = !DIDerivedType(tag: DW_TAG_typedef, name: "__off_t", file: !210, line: 131, baseType: !211)
+!210 = !DIFile(filename: "/usr/include/x86_64-linux-gnu/bits/types.h", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/AMGmk")
+!211 = !DIBasicType(name: "long int", size: 64, align: 64, encoding: DW_ATE_signed)
+!212 = !DIDerivedType(tag: DW_TAG_member, name: "_cur_column", scope: !182, file: !183, line: 274, baseType: !213, size: 16, align: 16, offset: 1024)
+!213 = !DIBasicType(name: "unsigned short", size: 16, align: 16, encoding: DW_ATE_unsigned)
+!214 = !DIDerivedType(tag: DW_TAG_member, name: "_vtable_offset", scope: !182, file: !183, line: 275, baseType: !215, size: 8, align: 8, offset: 1040)
+!215 = !DIBasicType(name: "signed char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!216 = !DIDerivedType(tag: DW_TAG_member, name: "_shortbuf", scope: !182, file: !183, line: 276, baseType: !217, size: 8, align: 8, offset: 1048)
+!217 = !DICompositeType(tag: DW_TAG_array_type, baseType: !21, size: 8, align: 8, elements: !218)
+!218 = !{!219}
+!219 = !DISubrange(count: 1)
+!220 = !DIDerivedType(tag: DW_TAG_member, name: "_lock", scope: !182, file: !183, line: 280, baseType: !221, size: 64, align: 64, offset: 1088)
+!221 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !222, size: 64, align: 64)
+!222 = !DIDerivedType(tag: DW_TAG_typedef, name: "_IO_lock_t", file: !183, line: 150, baseType: null)
+!223 = !DIDerivedType(tag: DW_TAG_member, name: "_offset", scope: !182, file: !183, line: 289, baseType: !224, size: 64, align: 64, offset: 1152)
+!224 = !DIDerivedType(tag: DW_TAG_typedef, name: "__off64_t", file: !210, line: 132, baseType: !211)
+!225 = !DIDerivedType(tag: DW_TAG_member, name: "__pad1", scope: !182, file: !183, line: 297, baseType: !226, size: 64, align: 64, offset: 1216)
+!226 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: null, size: 64, align: 64)
+!227 = !DIDerivedType(tag: DW_TAG_member, name: "__pad2", scope: !182, file: !183, line: 298, baseType: !226, size: 64, align: 64, offset: 1280)
+!228 = !DIDerivedType(tag: DW_TAG_member, name: "__pad3", scope: !182, file: !183, line: 299, baseType: !226, size: 64, align: 64, offset: 1344)
+!229 = !DIDerivedType(tag: DW_TAG_member, name: "__pad4", scope: !182, file: !183, line: 300, baseType: !226, size: 64, align: 64, offset: 1408)
+!230 = !DIDerivedType(tag: DW_TAG_member, name: "__pad5", scope: !182, file: !183, line: 302, baseType: !231, size: 64, align: 64, offset: 1472)
+!231 = !DIDerivedType(tag: DW_TAG_typedef, name: "size_t", file: !232, line: 62, baseType: !233)
+!232 = !DIFile(filename: "/home/gleison/lge/llvm-3.7-src/build-debug/bin/../lib/clang/3.7.0/include/stddef.h", directory: "/home/gleison/tf/Benchmarks/ASC_Sequoia/AMGmk")
+!233 = !DIBasicType(name: "long unsigned int", size: 64, align: 64, encoding: DW_ATE_unsigned)
+!234 = !DIDerivedType(tag: DW_TAG_member, name: "_mode", scope: !182, file: !183, line: 303, baseType: !13, size: 32, align: 32, offset: 1536)
+!235 = !DIDerivedType(tag: DW_TAG_member, name: "_unused2", scope: !182, file: !183, line: 305, baseType: !236, size: 160, align: 8, offset: 1568)
+!236 = !DICompositeType(tag: DW_TAG_array_type, baseType: !21, size: 160, align: 8, elements: !237)
+!237 = !{!238}
+!238 = !DISubrange(count: 20)
+!239 = !DILocation(line: 132, column: 9, scope: !37)
+!240 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "data", scope: !37, file: !24, line: 134, type: !10)
+!241 = !DILocation(line: 134, column: 11, scope: !37)
+!242 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !37, file: !24, line: 135, type: !13)
+!243 = !DILocation(line: 135, column: 7, scope: !37)
+!244 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "j", scope: !37, file: !24, line: 137, type: !13)
+!245 = !DILocation(line: 137, column: 7, scope: !37)
+!246 = !DILocation(line: 143, column: 14, scope: !37)
+!247 = !DILocation(line: 143, column: 8, scope: !37)
+!248 = !DILocation(line: 143, column: 6, scope: !37)
+!249 = !DILocation(line: 145, column: 10, scope: !37)
+!250 = !DILocation(line: 145, column: 3, scope: !37)
+!251 = !DILocation(line: 147, column: 34, scope: !37)
+!252 = !DILocation(line: 147, column: 12, scope: !37)
+!253 = !DILocation(line: 147, column: 10, scope: !37)
+!254 = !DILocation(line: 148, column: 29, scope: !37)
+!255 = !DILocation(line: 148, column: 3, scope: !37)
+!256 = !DILocation(line: 150, column: 10, scope: !37)
+!257 = !DILocation(line: 150, column: 8, scope: !37)
+!258 = !DILocation(line: 151, column: 10, scope: !259)
+!259 = distinct !DILexicalBlock(scope: !37, file: !24, line: 151, column: 3)
+!260 = !DILocation(line: 151, column: 8, scope: !259)
+!261 = !DILocation(line: 151, column: 15, scope: !262)
+!262 = !DILexicalBlockFile(scope: !263, file: !24, discriminator: 2)
+!263 = !DILexicalBlockFile(scope: !264, file: !24, discriminator: 1)
+!264 = distinct !DILexicalBlock(scope: !259, file: !24, line: 151, column: 3)
+!265 = !DILocation(line: 151, column: 19, scope: !264)
+!266 = !DILocation(line: 151, column: 17, scope: !264)
+!267 = !DILocation(line: 151, column: 3, scope: !259)
+!268 = !DILocation(line: 152, column: 12, scope: !269)
+!269 = distinct !DILexicalBlock(scope: !264, file: !24, line: 151, column: 30)
+!270 = !DILocation(line: 152, column: 29, scope: !269)
+!271 = !DILocation(line: 152, column: 24, scope: !269)
+!272 = !DILocation(line: 152, column: 5, scope: !269)
+!273 = !DILocation(line: 153, column: 3, scope: !269)
+!274 = !DILocation(line: 151, column: 26, scope: !264)
+!275 = !DILocation(line: 151, column: 3, scope: !264)
+!276 = !DILocation(line: 155, column: 10, scope: !37)
+!277 = !DILocation(line: 155, column: 3, scope: !37)
+!278 = !DILocation(line: 158, column: 3, scope: !279)
+!279 = distinct !DILexicalBlock(scope: !37, file: !24, line: 158, column: 3)
+!280 = !DILocation(line: 158, column: 3, scope: !37)
+!281 = !DILocation(line: 158, column: 3, scope: !282)
+!282 = !DILexicalBlockFile(scope: !283, file: !24, discriminator: 1)
+!283 = distinct !DILexicalBlock(scope: !279, file: !24, line: 158, column: 3)
+!284 = !DILocation(line: 160, column: 10, scope: !37)
+!285 = !DILocation(line: 160, column: 3, scope: !37)
+!286 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "vector", arg: 1, scope: !40, file: !24, line: 167, type: !4)
+!287 = !DILocation(line: 167, column: 40, scope: !40)
+!288 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "file_name", arg: 2, scope: !40, file: !24, line: 168, type: !20)
+!289 = !DILocation(line: 168, column: 32, scope: !40)
+!290 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "fp", scope: !40, file: !24, line: 169, type: !179)
+!291 = !DILocation(line: 169, column: 9, scope: !40)
+!292 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "data", scope: !40, file: !24, line: 171, type: !10)
+!293 = !DILocation(line: 171, column: 11, scope: !40)
+!294 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !40, file: !24, line: 172, type: !13)
+!295 = !DILocation(line: 172, column: 7, scope: !40)
+!296 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "num_vectors", scope: !40, file: !24, line: 172, type: !13)
+!297 = !DILocation(line: 172, column: 13, scope: !40)
+!298 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "vecstride", scope: !40, file: !24, line: 172, type: !13)
+!299 = !DILocation(line: 172, column: 26, scope: !40)
+!300 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "idxstride", scope: !40, file: !24, line: 172, type: !13)
+!301 = !DILocation(line: 172, column: 37, scope: !40)
+!302 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !40, file: !24, line: 174, type: !13)
+!303 = !DILocation(line: 174, column: 7, scope: !40)
+!304 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "j", scope: !40, file: !24, line: 174, type: !13)
+!305 = !DILocation(line: 174, column: 10, scope: !40)
+!306 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ierr", scope: !40, file: !24, line: 176, type: !13)
+!307 = !DILocation(line: 176, column: 7, scope: !40)
+!308 = !DILocation(line: 178, column: 17, scope: !40)
+!309 = !DILocation(line: 178, column: 15, scope: !40)
+!310 = !DILocation(line: 179, column: 15, scope: !40)
+!311 = !DILocation(line: 179, column: 13, scope: !40)
+!312 = !DILocation(line: 180, column: 15, scope: !40)
+!313 = !DILocation(line: 180, column: 13, scope: !40)
+!314 = !DILocation(line: 186, column: 10, scope: !40)
+!315 = !DILocation(line: 186, column: 8, scope: !40)
+!316 = !DILocation(line: 187, column: 10, scope: !40)
+!317 = !DILocation(line: 187, column: 8, scope: !40)
+!318 = !DILocation(line: 189, column: 14, scope: !40)
+!319 = !DILocation(line: 189, column: 8, scope: !40)
+!320 = !DILocation(line: 189, column: 6, scope: !40)
+!321 = !DILocation(line: 191, column: 7, scope: !322)
+!322 = distinct !DILexicalBlock(scope: !40, file: !24, line: 191, column: 7)
+!323 = !DILocation(line: 191, column: 38, scope: !322)
+!324 = !DILocation(line: 191, column: 7, scope: !40)
+!325 = !DILocation(line: 192, column: 13, scope: !326)
+!326 = distinct !DILexicalBlock(scope: !322, file: !24, line: 191, column: 44)
+!327 = !DILocation(line: 192, column: 25, scope: !326)
+!328 = !DILocation(line: 192, column: 5, scope: !326)
+!329 = !DILocation(line: 193, column: 3, scope: !326)
+!330 = !DILocation(line: 194, column: 13, scope: !331)
+!331 = distinct !DILexicalBlock(scope: !322, file: !24, line: 193, column: 10)
+!332 = !DILocation(line: 194, column: 44, scope: !331)
+!333 = !DILocation(line: 194, column: 57, scope: !331)
+!334 = !DILocation(line: 194, column: 5, scope: !331)
+!335 = !DILocation(line: 197, column: 7, scope: !336)
+!336 = distinct !DILexicalBlock(scope: !40, file: !24, line: 197, column: 7)
+!337 = !DILocation(line: 197, column: 19, scope: !336)
+!338 = !DILocation(line: 197, column: 7, scope: !40)
+!339 = !DILocation(line: 198, column: 12, scope: !340)
+!340 = distinct !DILexicalBlock(scope: !341, file: !24, line: 198, column: 5)
+!341 = distinct !DILexicalBlock(scope: !336, file: !24, line: 197, column: 24)
+!342 = !DILocation(line: 198, column: 10, scope: !340)
+!343 = !DILocation(line: 198, column: 17, scope: !344)
+!344 = !DILexicalBlockFile(scope: !345, file: !24, discriminator: 2)
+!345 = !DILexicalBlockFile(scope: !346, file: !24, discriminator: 1)
+!346 = distinct !DILexicalBlock(scope: !340, file: !24, line: 198, column: 5)
+!347 = !DILocation(line: 198, column: 21, scope: !346)
+!348 = !DILocation(line: 198, column: 19, scope: !346)
+!349 = !DILocation(line: 198, column: 5, scope: !340)
+!350 = !DILocation(line: 199, column: 15, scope: !351)
+!351 = distinct !DILexicalBlock(scope: !346, file: !24, line: 198, column: 39)
+!352 = !DILocation(line: 199, column: 34, scope: !351)
+!353 = !DILocation(line: 199, column: 7, scope: !351)
+!354 = !DILocation(line: 200, column: 14, scope: !355)
+!355 = distinct !DILexicalBlock(scope: !351, file: !24, line: 200, column: 7)
+!356 = !DILocation(line: 200, column: 12, scope: !355)
+!357 = !DILocation(line: 200, column: 19, scope: !358)
+!358 = !DILexicalBlockFile(scope: !359, file: !24, discriminator: 2)
+!359 = !DILexicalBlockFile(scope: !360, file: !24, discriminator: 1)
+!360 = distinct !DILexicalBlock(scope: !355, file: !24, line: 200, column: 7)
+!361 = !DILocation(line: 200, column: 23, scope: !360)
+!362 = !DILocation(line: 200, column: 21, scope: !360)
+!363 = !DILocation(line: 200, column: 7, scope: !355)
+!364 = !DILocation(line: 201, column: 17, scope: !365)
+!365 = distinct !DILexicalBlock(scope: !360, file: !24, line: 200, column: 34)
+!366 = !DILocation(line: 201, column: 37, scope: !365)
+!367 = !DILocation(line: 201, column: 41, scope: !365)
+!368 = !DILocation(line: 201, column: 39, scope: !365)
+!369 = !DILocation(line: 201, column: 53, scope: !365)
+!370 = !DILocation(line: 201, column: 57, scope: !365)
+!371 = !DILocation(line: 201, column: 55, scope: !365)
+!372 = !DILocation(line: 201, column: 51, scope: !365)
+!373 = !DILocation(line: 201, column: 32, scope: !365)
+!374 = !DILocation(line: 201, column: 9, scope: !365)
+!375 = !DILocation(line: 202, column: 7, scope: !365)
+!376 = !DILocation(line: 200, column: 30, scope: !360)
+!377 = !DILocation(line: 200, column: 7, scope: !360)
+!378 = !DILocation(line: 203, column: 5, scope: !351)
+!379 = !DILocation(line: 198, column: 34, scope: !346)
+!380 = !DILocation(line: 198, column: 5, scope: !346)
+!381 = !DILocation(line: 204, column: 3, scope: !341)
+!382 = !DILocation(line: 205, column: 12, scope: !383)
+!383 = distinct !DILexicalBlock(scope: !384, file: !24, line: 205, column: 5)
+!384 = distinct !DILexicalBlock(scope: !336, file: !24, line: 204, column: 10)
+!385 = !DILocation(line: 205, column: 10, scope: !383)
+!386 = !DILocation(line: 205, column: 17, scope: !387)
+!387 = !DILexicalBlockFile(scope: !388, file: !24, discriminator: 2)
+!388 = !DILexicalBlockFile(scope: !389, file: !24, discriminator: 1)
+!389 = distinct !DILexicalBlock(scope: !383, file: !24, line: 205, column: 5)
+!390 = !DILocation(line: 205, column: 21, scope: !389)
+!391 = !DILocation(line: 205, column: 19, scope: !389)
+!392 = !DILocation(line: 205, column: 5, scope: !383)
+!393 = !DILocation(line: 206, column: 15, scope: !394)
+!394 = distinct !DILexicalBlock(scope: !389, file: !24, line: 205, column: 32)
+!395 = !DILocation(line: 206, column: 35, scope: !394)
+!396 = !DILocation(line: 206, column: 30, scope: !394)
+!397 = !DILocation(line: 206, column: 7, scope: !394)
+!398 = !DILocation(line: 207, column: 5, scope: !394)
+!399 = !DILocation(line: 205, column: 28, scope: !389)
+!400 = !DILocation(line: 205, column: 5, scope: !389)
+!401 = !DILocation(line: 210, column: 10, scope: !40)
+!402 = !DILocation(line: 210, column: 3, scope: !40)
+!403 = !DILocation(line: 212, column: 10, scope: !40)
+!404 = !DILocation(line: 212, column: 3, scope: !40)
+!405 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "v", arg: 1, scope: !43, file: !24, line: 219, type: !4)
+!406 = !DILocation(line: 219, column: 52, scope: !43)
+!407 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "value", arg: 2, scope: !43, file: !24, line: 220, type: !11)
+!408 = !DILocation(line: 220, column: 45, scope: !43)
+!409 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "vector_data", scope: !43, file: !24, line: 221, type: !10)
+!410 = !DILocation(line: 221, column: 11, scope: !43)
+!411 = !DILocation(line: 221, column: 25, scope: !43)
+!412 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !43, file: !24, line: 222, type: !13)
+!413 = !DILocation(line: 222, column: 7, scope: !43)
+!414 = !DILocation(line: 222, column: 14, scope: !43)
+!415 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !43, file: !24, line: 224, type: !13)
+!416 = !DILocation(line: 224, column: 7, scope: !43)
+!417 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ierr", scope: !43, file: !24, line: 226, type: !13)
+!418 = !DILocation(line: 226, column: 7, scope: !43)
+!419 = !DILocation(line: 228, column: 11, scope: !43)
+!420 = !DILocation(line: 228, column: 8, scope: !43)
+!421 = !DILocation(line: 230, column: 10, scope: !422)
+!422 = distinct !DILexicalBlock(scope: !43, file: !24, line: 230, column: 3)
+!423 = !DILocation(line: 230, column: 8, scope: !422)
+!424 = !DILocation(line: 230, column: 15, scope: !425)
+!425 = !DILexicalBlockFile(scope: !426, file: !24, discriminator: 2)
+!426 = !DILexicalBlockFile(scope: !427, file: !24, discriminator: 1)
+!427 = distinct !DILexicalBlock(scope: !422, file: !24, line: 230, column: 3)
+!428 = !DILocation(line: 230, column: 19, scope: !427)
+!429 = !DILocation(line: 230, column: 17, scope: !427)
+!430 = !DILocation(line: 230, column: 3, scope: !422)
+!431 = !DILocation(line: 231, column: 22, scope: !427)
+!432 = !DILocation(line: 231, column: 17, scope: !427)
+!433 = !DILocation(line: 231, column: 5, scope: !427)
+!434 = !DILocation(line: 231, column: 20, scope: !427)
+!435 = !DILocation(line: 230, column: 26, scope: !427)
+!436 = !DILocation(line: 230, column: 3, scope: !427)
+!437 = !DILocation(line: 233, column: 10, scope: !43)
+!438 = !DILocation(line: 233, column: 3, scope: !43)
+!439 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "x", arg: 1, scope: !46, file: !24, line: 242, type: !4)
+!440 = !DILocation(line: 242, column: 39, scope: !46)
+!441 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "y", arg: 2, scope: !46, file: !24, line: 243, type: !4)
+!442 = !DILocation(line: 243, column: 39, scope: !46)
+!443 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "x_data", scope: !46, file: !24, line: 244, type: !10)
+!444 = !DILocation(line: 244, column: 11, scope: !46)
+!445 = !DILocation(line: 244, column: 20, scope: !46)
+!446 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "y_data", scope: !46, file: !24, line: 245, type: !10)
+!447 = !DILocation(line: 245, column: 11, scope: !46)
+!448 = !DILocation(line: 245, column: 20, scope: !46)
+!449 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !46, file: !24, line: 246, type: !13)
+!450 = !DILocation(line: 246, column: 7, scope: !46)
+!451 = !DILocation(line: 246, column: 14, scope: !46)
+!452 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !46, file: !24, line: 248, type: !13)
+!453 = !DILocation(line: 248, column: 7, scope: !46)
+!454 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ierr", scope: !46, file: !24, line: 250, type: !13)
+!455 = !DILocation(line: 250, column: 7, scope: !46)
+!456 = !DILocation(line: 252, column: 11, scope: !46)
+!457 = !DILocation(line: 252, column: 8, scope: !46)
+!458 = !DILocation(line: 254, column: 10, scope: !459)
+!459 = distinct !DILexicalBlock(scope: !46, file: !24, line: 254, column: 3)
+!460 = !DILocation(line: 254, column: 8, scope: !459)
+!461 = !DILocation(line: 254, column: 15, scope: !462)
+!462 = !DILexicalBlockFile(scope: !463, file: !24, discriminator: 2)
+!463 = !DILexicalBlockFile(scope: !464, file: !24, discriminator: 1)
+!464 = distinct !DILexicalBlock(scope: !459, file: !24, line: 254, column: 3)
+!465 = !DILocation(line: 254, column: 19, scope: !464)
+!466 = !DILocation(line: 254, column: 17, scope: !464)
+!467 = !DILocation(line: 254, column: 3, scope: !459)
+!468 = !DILocation(line: 255, column: 24, scope: !464)
+!469 = !DILocation(line: 255, column: 17, scope: !464)
+!470 = !DILocation(line: 255, column: 12, scope: !464)
+!471 = !DILocation(line: 255, column: 5, scope: !464)
+!472 = !DILocation(line: 255, column: 15, scope: !464)
+!473 = !DILocation(line: 254, column: 26, scope: !464)
+!474 = !DILocation(line: 254, column: 3, scope: !464)
+!475 = !DILocation(line: 257, column: 10, scope: !46)
+!476 = !DILocation(line: 257, column: 3, scope: !46)
+!477 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "x", arg: 1, scope: !49, file: !24, line: 266, type: !4)
+!478 = !DILocation(line: 266, column: 40, scope: !49)
+!479 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !49, file: !24, line: 267, type: !13)
+!480 = !DILocation(line: 267, column: 7, scope: !49)
+!481 = !DILocation(line: 267, column: 14, scope: !49)
+!482 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "num_vectors", scope: !49, file: !24, line: 268, type: !13)
+!483 = !DILocation(line: 268, column: 7, scope: !49)
+!484 = !DILocation(line: 268, column: 21, scope: !49)
+!485 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "y", scope: !49, file: !24, line: 269, type: !4)
+!486 = !DILocation(line: 269, column: 17, scope: !49)
+!487 = !DILocation(line: 269, column: 48, scope: !49)
+!488 = !DILocation(line: 269, column: 54, scope: !49)
+!489 = !DILocation(line: 269, column: 21, scope: !49)
+!490 = !DILocation(line: 271, column: 42, scope: !49)
+!491 = !DILocation(line: 271, column: 3, scope: !49)
+!492 = !DILocation(line: 271, column: 40, scope: !49)
+!493 = !DILocation(line: 272, column: 33, scope: !49)
+!494 = !DILocation(line: 272, column: 3, scope: !49)
+!495 = !DILocation(line: 272, column: 31, scope: !49)
+!496 = !DILocation(line: 273, column: 32, scope: !49)
+!497 = !DILocation(line: 273, column: 3, scope: !49)
+!498 = !DILocation(line: 273, column: 30, scope: !49)
+!499 = !DILocation(line: 275, column: 29, scope: !49)
+!500 = !DILocation(line: 275, column: 3, scope: !49)
+!501 = !DILocation(line: 276, column: 23, scope: !49)
+!502 = !DILocation(line: 276, column: 26, scope: !49)
+!503 = !DILocation(line: 276, column: 3, scope: !49)
+!504 = !DILocation(line: 278, column: 10, scope: !49)
+!505 = !DILocation(line: 278, column: 3, scope: !49)
+!506 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "x", arg: 1, scope: !52, file: !24, line: 287, type: !4)
+!507 = !DILocation(line: 287, column: 43, scope: !52)
+!508 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !52, file: !24, line: 288, type: !13)
+!509 = !DILocation(line: 288, column: 7, scope: !52)
+!510 = !DILocation(line: 288, column: 14, scope: !52)
+!511 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "num_vectors", scope: !52, file: !24, line: 289, type: !13)
+!512 = !DILocation(line: 289, column: 7, scope: !52)
+!513 = !DILocation(line: 289, column: 21, scope: !52)
+!514 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "y", scope: !52, file: !24, line: 290, type: !4)
+!515 = !DILocation(line: 290, column: 17, scope: !52)
+!516 = !DILocation(line: 290, column: 48, scope: !52)
+!517 = !DILocation(line: 290, column: 54, scope: !52)
+!518 = !DILocation(line: 290, column: 21, scope: !52)
+!519 = !DILocation(line: 292, column: 42, scope: !52)
+!520 = !DILocation(line: 292, column: 3, scope: !52)
+!521 = !DILocation(line: 292, column: 40, scope: !52)
+!522 = !DILocation(line: 293, column: 33, scope: !52)
+!523 = !DILocation(line: 293, column: 3, scope: !52)
+!524 = !DILocation(line: 293, column: 31, scope: !52)
+!525 = !DILocation(line: 294, column: 32, scope: !52)
+!526 = !DILocation(line: 294, column: 3, scope: !52)
+!527 = !DILocation(line: 294, column: 30, scope: !52)
+!528 = !DILocation(line: 296, column: 25, scope: !52)
+!529 = !DILocation(line: 296, column: 3, scope: !52)
+!530 = !DILocation(line: 296, column: 23, scope: !52)
+!531 = !DILocation(line: 297, column: 31, scope: !52)
+!532 = !DILocation(line: 297, column: 3, scope: !52)
+!533 = !DILocation(line: 298, column: 29, scope: !52)
+!534 = !DILocation(line: 298, column: 3, scope: !52)
+!535 = !DILocation(line: 300, column: 10, scope: !52)
+!536 = !DILocation(line: 300, column: 3, scope: !52)
+!537 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "alpha", arg: 1, scope: !53, file: !24, line: 307, type: !11)
+!538 = !DILocation(line: 307, column: 33, scope: !53)
+!539 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "y", arg: 2, scope: !53, file: !24, line: 308, type: !4)
+!540 = !DILocation(line: 308, column: 40, scope: !53)
+!541 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "y_data", scope: !53, file: !24, line: 309, type: !10)
+!542 = !DILocation(line: 309, column: 11, scope: !53)
+!543 = !DILocation(line: 309, column: 20, scope: !53)
+!544 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !53, file: !24, line: 310, type: !13)
+!545 = !DILocation(line: 310, column: 7, scope: !53)
+!546 = !DILocation(line: 310, column: 14, scope: !53)
+!547 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !53, file: !24, line: 312, type: !13)
+!548 = !DILocation(line: 312, column: 7, scope: !53)
+!549 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ierr", scope: !53, file: !24, line: 314, type: !13)
+!550 = !DILocation(line: 314, column: 7, scope: !53)
+!551 = !DILocation(line: 316, column: 11, scope: !53)
+!552 = !DILocation(line: 316, column: 8, scope: !53)
+!553 = !DILocation(line: 318, column: 10, scope: !554)
+!554 = distinct !DILexicalBlock(scope: !53, file: !24, line: 318, column: 3)
+!555 = !DILocation(line: 318, column: 8, scope: !554)
+!556 = !DILocation(line: 318, column: 15, scope: !557)
+!557 = !DILexicalBlockFile(scope: !558, file: !24, discriminator: 2)
+!558 = !DILexicalBlockFile(scope: !559, file: !24, discriminator: 1)
+!559 = distinct !DILexicalBlock(scope: !554, file: !24, line: 318, column: 3)
+!560 = !DILocation(line: 318, column: 19, scope: !559)
+!561 = !DILocation(line: 318, column: 17, scope: !559)
+!562 = !DILocation(line: 318, column: 3, scope: !554)
+!563 = !DILocation(line: 319, column: 18, scope: !559)
+!564 = !DILocation(line: 319, column: 12, scope: !559)
+!565 = !DILocation(line: 319, column: 5, scope: !559)
+!566 = !DILocation(line: 319, column: 15, scope: !559)
+!567 = !DILocation(line: 318, column: 26, scope: !559)
+!568 = !DILocation(line: 318, column: 3, scope: !559)
+!569 = !DILocation(line: 321, column: 10, scope: !53)
+!570 = !DILocation(line: 321, column: 3, scope: !53)
+!571 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "alpha", arg: 1, scope: !56, file: !24, line: 328, type: !11)
+!572 = !DILocation(line: 328, column: 32, scope: !56)
+!573 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "x", arg: 2, scope: !56, file: !24, line: 329, type: !4)
+!574 = !DILocation(line: 329, column: 39, scope: !56)
+!575 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "y", arg: 3, scope: !56, file: !24, line: 330, type: !4)
+!576 = !DILocation(line: 330, column: 39, scope: !56)
+!577 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "x_data", scope: !56, file: !24, line: 331, type: !10)
+!578 = !DILocation(line: 331, column: 11, scope: !56)
+!579 = !DILocation(line: 331, column: 20, scope: !56)
+!580 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "y_data", scope: !56, file: !24, line: 332, type: !10)
+!581 = !DILocation(line: 332, column: 11, scope: !56)
+!582 = !DILocation(line: 332, column: 20, scope: !56)
+!583 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !56, file: !24, line: 333, type: !13)
+!584 = !DILocation(line: 333, column: 7, scope: !56)
+!585 = !DILocation(line: 333, column: 14, scope: !56)
+!586 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !56, file: !24, line: 335, type: !13)
+!587 = !DILocation(line: 335, column: 7, scope: !56)
+!588 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "ierr", scope: !56, file: !24, line: 337, type: !13)
+!589 = !DILocation(line: 337, column: 7, scope: !56)
+!590 = !DILocation(line: 339, column: 11, scope: !56)
+!591 = !DILocation(line: 339, column: 8, scope: !56)
+!592 = !DILocation(line: 341, column: 10, scope: !593)
+!593 = distinct !DILexicalBlock(scope: !56, file: !24, line: 341, column: 3)
+!594 = !DILocation(line: 341, column: 8, scope: !593)
+!595 = !DILocation(line: 341, column: 15, scope: !596)
+!596 = !DILexicalBlockFile(scope: !597, file: !24, discriminator: 2)
+!597 = !DILexicalBlockFile(scope: !598, file: !24, discriminator: 1)
+!598 = distinct !DILexicalBlock(scope: !593, file: !24, line: 341, column: 3)
+!599 = !DILocation(line: 341, column: 19, scope: !598)
+!600 = !DILocation(line: 341, column: 17, scope: !598)
+!601 = !DILocation(line: 341, column: 3, scope: !593)
+!602 = !DILocation(line: 342, column: 18, scope: !598)
+!603 = !DILocation(line: 342, column: 33, scope: !598)
+!604 = !DILocation(line: 342, column: 26, scope: !598)
+!605 = !DILocation(line: 342, column: 24, scope: !598)
+!606 = !DILocation(line: 342, column: 12, scope: !598)
+!607 = !DILocation(line: 342, column: 5, scope: !598)
+!608 = !DILocation(line: 342, column: 15, scope: !598)
+!609 = !DILocation(line: 341, column: 26, scope: !598)
+!610 = !DILocation(line: 341, column: 3, scope: !598)
+!611 = !DILocation(line: 344, column: 10, scope: !56)
+!612 = !DILocation(line: 344, column: 3, scope: !56)
+!613 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "x", arg: 1, scope: !59, file: !24, line: 351, type: !4)
+!614 = !DILocation(line: 351, column: 47, scope: !59)
+!615 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "y", arg: 2, scope: !59, file: !24, line: 352, type: !4)
+!616 = !DILocation(line: 352, column: 47, scope: !59)
+!617 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "x_data", scope: !59, file: !24, line: 353, type: !10)
+!618 = !DILocation(line: 353, column: 11, scope: !59)
+!619 = !DILocation(line: 353, column: 20, scope: !59)
+!620 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "y_data", scope: !59, file: !24, line: 354, type: !10)
+!621 = !DILocation(line: 354, column: 11, scope: !59)
+!622 = !DILocation(line: 354, column: 20, scope: !59)
+!623 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !59, file: !24, line: 355, type: !13)
+!624 = !DILocation(line: 355, column: 7, scope: !59)
+!625 = !DILocation(line: 355, column: 14, scope: !59)
+!626 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !59, file: !24, line: 357, type: !13)
+!627 = !DILocation(line: 357, column: 7, scope: !59)
+!628 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "result", scope: !59, file: !24, line: 359, type: !11)
+!629 = !DILocation(line: 359, column: 10, scope: !59)
+!630 = !DILocation(line: 361, column: 11, scope: !59)
+!631 = !DILocation(line: 361, column: 8, scope: !59)
+!632 = !DILocation(line: 363, column: 10, scope: !633)
+!633 = distinct !DILexicalBlock(scope: !59, file: !24, line: 363, column: 3)
+!634 = !DILocation(line: 363, column: 8, scope: !633)
+!635 = !DILocation(line: 363, column: 15, scope: !636)
+!636 = !DILexicalBlockFile(scope: !637, file: !24, discriminator: 2)
+!637 = !DILexicalBlockFile(scope: !638, file: !24, discriminator: 1)
+!638 = distinct !DILexicalBlock(scope: !633, file: !24, line: 363, column: 3)
+!639 = !DILocation(line: 363, column: 19, scope: !638)
+!640 = !DILocation(line: 363, column: 17, scope: !638)
+!641 = !DILocation(line: 363, column: 3, scope: !633)
+!642 = !DILocation(line: 364, column: 22, scope: !638)
+!643 = !DILocation(line: 364, column: 15, scope: !638)
+!644 = !DILocation(line: 364, column: 34, scope: !638)
+!645 = !DILocation(line: 364, column: 27, scope: !638)
+!646 = !DILocation(line: 364, column: 25, scope: !638)
+!647 = !DILocation(line: 364, column: 12, scope: !638)
+!648 = !DILocation(line: 364, column: 5, scope: !638)
+!649 = !DILocation(line: 363, column: 26, scope: !638)
+!650 = !DILocation(line: 363, column: 3, scope: !638)
+!651 = !DILocation(line: 366, column: 10, scope: !59)
+!652 = !DILocation(line: 366, column: 3, scope: !59)
+!653 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "vector", arg: 1, scope: !62, file: !24, line: 374, type: !4)
+!654 = !DILocation(line: 374, column: 42, scope: !62)
+!655 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "sum", scope: !62, file: !24, line: 375, type: !11)
+!656 = !DILocation(line: 375, column: 10, scope: !62)
+!657 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "data", scope: !62, file: !24, line: 376, type: !10)
+!658 = !DILocation(line: 376, column: 11, scope: !62)
+!659 = !DILocation(line: 376, column: 18, scope: !62)
+!660 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "size", scope: !62, file: !24, line: 377, type: !13)
+!661 = !DILocation(line: 377, column: 7, scope: !62)
+!662 = !DILocation(line: 377, column: 14, scope: !62)
+!663 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !62, file: !24, line: 378, type: !13)
+!664 = !DILocation(line: 378, column: 7, scope: !62)
+!665 = !DILocation(line: 380, column: 10, scope: !666)
+!666 = distinct !DILexicalBlock(scope: !62, file: !24, line: 380, column: 3)
+!667 = !DILocation(line: 380, column: 8, scope: !666)
+!668 = !DILocation(line: 380, column: 15, scope: !669)
+!669 = !DILexicalBlockFile(scope: !670, file: !24, discriminator: 2)
+!670 = !DILexicalBlockFile(scope: !671, file: !24, discriminator: 1)
+!671 = distinct !DILexicalBlock(scope: !666, file: !24, line: 380, column: 3)
+!672 = !DILocation(line: 380, column: 19, scope: !671)
+!673 = !DILocation(line: 380, column: 17, scope: !671)
+!674 = !DILocation(line: 380, column: 3, scope: !666)
+!675 = !DILocation(line: 381, column: 17, scope: !671)
+!676 = !DILocation(line: 381, column: 12, scope: !671)
+!677 = !DILocation(line: 381, column: 9, scope: !671)
+!678 = !DILocation(line: 381, column: 5, scope: !671)
+!679 = !DILocation(line: 380, column: 25, scope: !671)
+!680 = !DILocation(line: 380, column: 3, scope: !671)
+!681 = !DILocation(line: 383, column: 10, scope: !62)
+!682 = !DILocation(line: 383, column: 3, scope: !62)

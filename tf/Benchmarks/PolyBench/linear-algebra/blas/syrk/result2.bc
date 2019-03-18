@@ -1,0 +1,1204 @@
+; ModuleID = 'result.bc'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+%struct._IO_FILE = type { i32, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, i8*, %struct._IO_marker*, %struct._IO_FILE*, i32, i32, i64, i16, i8, [1 x i8], i8*, i64, i8*, i8*, i8*, i8*, i64, i32, [20 x i8] }
+%struct._IO_marker = type { %struct._IO_marker*, %struct._IO_FILE*, i32 }
+
+@.str = private unnamed_addr constant [1 x i8] zeroinitializer, align 1
+@stderr = external global %struct._IO_FILE*, align 8
+@.str.1 = private unnamed_addr constant [23 x i8] c"==BEGIN DUMP_ARRAYS==\0A\00", align 1
+@.str.2 = private unnamed_addr constant [15 x i8] c"begin dump: %s\00", align 1
+@.str.3 = private unnamed_addr constant [2 x i8] c"C\00", align 1
+@.str.4 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
+@.str.5 = private unnamed_addr constant [8 x i8] c"%0.2lf \00", align 1
+@.str.6 = private unnamed_addr constant [17 x i8] c"\0Aend   dump: %s\0A\00", align 1
+@.str.7 = private unnamed_addr constant [23 x i8] c"==END   DUMP_ARRAYS==\0A\00", align 1
+
+; Function Attrs: nounwind uwtable
+define i32 @main(i32 %argc, i8** %argv) #0 {
+entry:
+  %alpha = alloca double, align 8
+  %beta = alloca double, align 8
+  call void @llvm.dbg.value(metadata i32 %argc, i64 0, metadata !42, metadata !43), !dbg !44
+  call void @llvm.dbg.value(metadata i8** %argv, i64 0, metadata !45, metadata !43), !dbg !46
+  call void @llvm.dbg.value(metadata i32 1200, i64 0, metadata !47, metadata !43), !dbg !48
+  call void @llvm.dbg.value(metadata i32 1000, i64 0, metadata !49, metadata !43), !dbg !50
+  call void @llvm.dbg.declare(metadata double* %alpha, metadata !51, metadata !43), !dbg !52
+  call void @llvm.dbg.declare(metadata double* %beta, metadata !53, metadata !43), !dbg !54
+  %call = call i8* @polybench_alloc_data(i64 1440000, i32 8), !dbg !55
+  %tmp = bitcast i8* %call to [1200 x [1200 x double]]*, !dbg !55
+  call void @llvm.dbg.value(metadata [1200 x [1200 x double]]* %tmp, i64 0, metadata !56, metadata !43), !dbg !55
+  %call1 = call i8* @polybench_alloc_data(i64 1200000, i32 8), !dbg !57
+  %tmp1 = bitcast i8* %call1 to [1200 x [1000 x double]]*, !dbg !57
+  call void @llvm.dbg.value(metadata [1200 x [1000 x double]]* %tmp1, i64 0, metadata !58, metadata !43), !dbg !57
+  %arraydecay = getelementptr inbounds [1200 x [1200 x double]], [1200 x [1200 x double]]* %tmp, i32 0, i32 0, !dbg !59
+  %arraydecay2 = getelementptr inbounds [1200 x [1000 x double]], [1200 x [1000 x double]]* %tmp1, i32 0, i32 0, !dbg !60
+  call void @init_array(i32 1200, i32 1000, double* %alpha, double* %beta, [1200 x double]* %arraydecay, [1000 x double]* %arraydecay2), !dbg !61
+  %tmp8 = load double, double* %alpha, align 8, !dbg !62
+  %tmp9 = load double, double* %beta, align 8, !dbg !63
+  %arraydecay3 = getelementptr inbounds [1200 x [1200 x double]], [1200 x [1200 x double]]* %tmp, i32 0, i32 0, !dbg !64
+  %arraydecay4 = getelementptr inbounds [1200 x [1000 x double]], [1200 x [1000 x double]]* %tmp1, i32 0, i32 0, !dbg !65
+  call void @kernel_syrk(i32 1200, i32 1000, double %tmp8, double %tmp9, [1200 x double]* %arraydecay3, [1000 x double]* %arraydecay4), !dbg !66
+  %cmp = icmp sgt i32 %argc, 42, !dbg !67
+  br i1 %cmp, label %land.lhs.true, label %if.end, !dbg !67
+
+land.lhs.true:                                    ; preds = %entry
+  %arrayidx = getelementptr inbounds i8*, i8** %argv, i64 0, !dbg !69
+  %tmp14 = load i8*, i8** %arrayidx, align 8, !dbg !69
+  %call5 = call i32 @strcmp(i8* %tmp14, i8* getelementptr inbounds ([1 x i8], [1 x i8]* @.str, i32 0, i32 0)) #5, !dbg !69
+  %tobool = icmp ne i32 %call5, 0, !dbg !69
+  br i1 %tobool, label %if.end, label %if.then, !dbg !71
+
+if.then:                                          ; preds = %land.lhs.true
+  %arraydecay6 = getelementptr inbounds [1200 x [1200 x double]], [1200 x [1200 x double]]* %tmp, i32 0, i32 0, !dbg !72
+  call void @print_array(i32 1200, [1200 x double]* %arraydecay6), !dbg !72
+  br label %if.end, !dbg !72
+
+if.end:                                           ; preds = %if.then, %land.lhs.true, %entry
+  %tmp18 = bitcast [1200 x [1200 x double]]* %tmp to i8*, !dbg !74
+  call void @free(i8* %tmp18) #6, !dbg !74
+  %tmp20 = bitcast [1200 x [1000 x double]]* %tmp1 to i8*, !dbg !75
+  call void @free(i8* %tmp20) #6, !dbg !75
+  ret i32 0, !dbg !76
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+declare i8* @polybench_alloc_data(i64, i32) #2
+
+; Function Attrs: nounwind uwtable
+define internal void @init_array(i32 %n, i32 %m, double* %alpha, double* %beta, [1200 x double]* %C, [1000 x double]* %A) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %n, i64 0, metadata !77, metadata !43), !dbg !78
+  call void @llvm.dbg.value(metadata i32 %m, i64 0, metadata !79, metadata !43), !dbg !80
+  call void @llvm.dbg.value(metadata double* %alpha, i64 0, metadata !81, metadata !43), !dbg !82
+  call void @llvm.dbg.value(metadata double* %beta, i64 0, metadata !83, metadata !43), !dbg !84
+  call void @llvm.dbg.value(metadata [1200 x double]* %C, i64 0, metadata !85, metadata !43), !dbg !86
+  call void @llvm.dbg.value(metadata [1000 x double]* %A, i64 0, metadata !87, metadata !43), !dbg !88
+  %0 = ptrtoint [1200 x double]* %C to i64
+  %1 = ptrtoint [1000 x double]* %A to i64
+  %2 = ptrtoint [1200 x double]* %C to i64
+  %beta29 = ptrtoint double* %beta to i64
+  %alpha28 = ptrtoint double* %alpha to i64
+  %3 = ptrtoint [1000 x double]* %A to i64
+  %4 = ptrtoint [1000 x double]* %A to i64
+  %5 = ptrtoint [1200 x double]* undef to i64
+  %6 = ptrtoint double* undef to i64
+  %7 = ptrtoint double* undef to i64
+  %8 = ptrtoint [1200 x double]* %C to i64
+  %9 = ptrtoint [1000 x double]* undef to i64
+  %C30 = ptrtoint [1200 x double]* %C to i64
+  %10 = ptrtoint double* undef to i64
+  %11 = ptrtoint double* undef to i64
+  %12 = ptrtoint [1000 x double]* %A to i64
+  %A32 = ptrtoint [1000 x double]* %A to i64
+  %13 = ptrtoint [1200 x double]* undef to i64
+  %14 = ptrtoint double* undef to i64
+  %15 = ptrtoint double* undef to i64
+  store double 1.500000e+00, double* %alpha, align 8, !dbg !89
+  store double 1.200000e+00, double* %beta, align 8, !dbg !90
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !91, metadata !43), !dbg !92
+  %16 = add i64 %alpha28, 8, !dbg !93
+  %17 = add i64 %alpha28, 8, !dbg !93
+  %18 = add i64 %beta29, 8, !dbg !93
+  %19 = add i64 %beta29, 8, !dbg !93
+  %20 = add i64 %alpha28, 8, !dbg !93
+  %21 = add i64 %alpha28, 8, !dbg !93
+  %22 = add i64 %beta29, 8, !dbg !93
+  %23 = add i64 %beta29, 8, !dbg !93
+  br label %for.cond, !dbg !95
+
+for.cond:                                         ; preds = %for.inc.7, %entry
+  %i.0 = phi i32 [ 0, %entry ], [ %inc8, %for.inc.7 ]
+  %cmp = icmp slt i32 %i.0, %n, !dbg !96
+  %24 = icmp sgt i32 %n, 0, !dbg !93
+  %smax = select i1 %24, i32 %n, i32 0, !dbg !93
+  %25 = mul i32 1, %smax, !dbg !93
+  %26 = add i32 0, %25, !dbg !93
+  %27 = zext i32 %smax to i64, !dbg !93
+  %28 = mul i64 9600, %27, !dbg !93
+  %29 = add i64 %C30, %28, !dbg !93
+  %30 = sext i32 %n to i64, !dbg !93
+  %31 = mul i64 8, %30, !dbg !93
+  %32 = add i64 %29, %31, !dbg !93
+  %33 = add i64 %32, 8, !dbg !93
+  %34 = icmp sgt i32 %m, 0, !dbg !93
+  %smax31 = select i1 %34, i32 %m, i32 0, !dbg !93
+  %35 = zext i32 %smax31 to i64, !dbg !93
+  %36 = mul i64 8, %35, !dbg !93
+  %37 = add i64 %A32, %36, !dbg !93
+  %38 = add i64 %37, 8, !dbg !93
+  %39 = ptrtoint [1000 x double]* undef to i64, !dbg !93
+  %40 = sub i64 %38, %12, !dbg !93
+  %41 = icmp sgt i32 %n, 0, !dbg !93
+  %smax38 = select i1 %41, i32 %n, i32 0, !dbg !93
+  %42 = mul i32 1, %smax38, !dbg !93
+  %43 = add i32 0, %42, !dbg !93
+  %44 = zext i32 %smax38 to i64, !dbg !93
+  %45 = mul i64 9600, %44, !dbg !93
+  %46 = add i64 %2, %45, !dbg !93
+  %47 = sext i32 %n to i64, !dbg !93
+  %48 = mul i64 8, %47, !dbg !93
+  %49 = add i64 %46, %48, !dbg !93
+  %50 = add i64 %49, 8, !dbg !93
+  %51 = icmp sgt i32 %m, 0, !dbg !93
+  %smax39 = select i1 %51, i32 %m, i32 0, !dbg !93
+  %52 = zext i32 %smax39 to i64, !dbg !93
+  %53 = mul i64 8, %52, !dbg !93
+  %54 = add i64 %4, %53, !dbg !93
+  %55 = add i64 %54, 8, !dbg !93
+  %56 = ptrtoint [1000 x double]* undef to i64, !dbg !93
+  %57 = sub i64 %55, %3, !dbg !93
+  br i1 %cmp, label %for.body, label %for.end.9, !dbg !93
+
+for.body:                                         ; preds = %for.cond
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !98, metadata !43), !dbg !99
+  br label %for.cond.1, !dbg !100
+
+for.cond.1:                                       ; preds = %for.inc, %for.body
+  %j.0 = phi i32 [ 0, %for.body ], [ %inc, %for.inc ]
+  %cmp2 = icmp slt i32 %j.0, %m, !dbg !102
+  %58 = icmp sgt i32 %n, 0, !dbg !104
+  %smax33 = select i1 %58, i32 %n, i32 0, !dbg !104
+  %59 = zext i32 %smax33 to i64, !dbg !104
+  %60 = mul i64 8000, %59, !dbg !104
+  %61 = add i64 %12, %60, !dbg !104
+  %62 = add i64 %61, 8, !dbg !104
+  %63 = icmp sgt i32 %m, 0, !dbg !104
+  %smax34 = select i1 %63, i32 %m, i32 0, !dbg !104
+  %64 = mul i32 1, %smax34, !dbg !104
+  %65 = add i32 0, %64, !dbg !104
+  %66 = ptrtoint [1000 x double]* undef to i64, !dbg !104
+  %67 = sub i64 %62, %4, !dbg !104
+  %68 = icmp sgt i32 %n, 0, !dbg !104
+  %smax40 = select i1 %68, i32 %n, i32 0, !dbg !104
+  %69 = zext i32 %smax40 to i64, !dbg !104
+  %70 = mul i64 8000, %69, !dbg !104
+  %71 = add i64 %3, %70, !dbg !104
+  %72 = add i64 %71, 8, !dbg !104
+  %73 = icmp sgt i32 %m, 0, !dbg !104
+  %smax41 = select i1 %73, i32 %m, i32 0, !dbg !104
+  %74 = mul i32 1, %smax41, !dbg !104
+  %75 = add i32 0, %74, !dbg !104
+  %76 = ptrtoint [1000 x double]* undef to i64, !dbg !104
+  %77 = sub i64 %72, %1, !dbg !104
+  br i1 %cmp2, label %for.body.3, label %for.end, !dbg !104
+
+for.body.3:                                       ; preds = %for.cond.1
+  %mul = mul nsw i32 %i.0, %j.0, !dbg !105
+  %add = add nsw i32 %mul, 1, !dbg !106
+  %rem = srem i32 %add, %n, !dbg !107
+  %conv = sitofp i32 %rem to double, !dbg !108
+  %conv4 = sitofp i32 %n to double, !dbg !109
+  %div = fdiv double %conv, %conv4, !dbg !110
+  %idxprom = sext i32 %j.0 to i64, !dbg !111
+  %idxprom5 = sext i32 %i.0 to i64, !dbg !111
+  %arrayidx = getelementptr inbounds [1000 x double], [1000 x double]* %A, i64 %idxprom5, !dbg !111
+  %arrayidx6 = getelementptr inbounds [1000 x double], [1000 x double]* %arrayidx, i32 0, i64 %idxprom, !dbg !111
+  store double %div, double* %arrayidx6, align 8, !dbg !112
+  br label %for.inc, !dbg !111
+
+for.inc:                                          ; preds = %for.body.3
+  %inc = add nsw i32 %j.0, 1, !dbg !113
+  call void @llvm.dbg.value(metadata i32 %inc, i64 0, metadata !98, metadata !43), !dbg !99
+  br label %for.cond.1, !dbg !114
+
+for.end:                                          ; preds = %for.cond.1
+  br label %for.inc.7, !dbg !115
+
+for.inc.7:                                        ; preds = %for.end
+  %inc8 = add nsw i32 %i.0, 1, !dbg !116
+  call void @llvm.dbg.value(metadata i32 %inc8, i64 0, metadata !91, metadata !43), !dbg !92
+  br label %for.cond, !dbg !117
+
+for.end.9:                                        ; preds = %for.cond
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !91, metadata !43), !dbg !92
+  %78 = add i64 %alpha28, 8, !dbg !118
+  %79 = add i64 %alpha28, 8, !dbg !118
+  %80 = add i64 %beta29, 8, !dbg !118
+  %81 = add i64 %beta29, 8, !dbg !118
+  %82 = mul i32 1, %n, !dbg !120
+  %83 = add i32 0, %82, !dbg !120
+  %84 = add i64 %alpha28, 8, !dbg !118
+  %85 = add i64 %alpha28, 8, !dbg !118
+  %86 = add i64 %beta29, 8, !dbg !118
+  %87 = add i64 %beta29, 8, !dbg !118
+  %88 = mul i32 1, %n, !dbg !120
+  %89 = add i32 0, %88, !dbg !120
+  br label %for.cond.10, !dbg !123
+
+for.cond.10:                                      ; preds = %for.inc.31, %for.end.9
+  %i.1 = phi i32 [ 0, %for.end.9 ], [ %inc32, %for.inc.31 ]
+  %cmp11 = icmp slt i32 %i.1, %n, !dbg !124
+  %90 = icmp sgt i32 %n, 0, !dbg !118
+  %smax35 = select i1 %90, i32 %n, i32 0, !dbg !118
+  %91 = mul i32 1, %smax35, !dbg !118
+  %92 = add i32 0, %91, !dbg !118
+  %93 = sext i32 %n to i64, !dbg !118
+  %94 = mul i64 8, %93, !dbg !118
+  %95 = add i64 %C30, %94, !dbg !118
+  %96 = add i64 %95, 8, !dbg !118
+  %97 = ptrtoint [1200 x double]* undef to i64, !dbg !118
+  %98 = sub i64 %96, %8, !dbg !118
+  %99 = zext i32 %smax35 to i64, !dbg !118
+  %100 = mul i64 8000, %99, !dbg !118
+  %101 = add i64 %4, %100, !dbg !118
+  %102 = icmp sgt i32 %m, 0, !dbg !118
+  %smax36 = select i1 %102, i32 %m, i32 0, !dbg !118
+  %103 = zext i32 %smax36 to i64, !dbg !118
+  %104 = mul i64 8, %103, !dbg !118
+  %105 = add i64 %101, %104, !dbg !118
+  %106 = add i64 %105, 8, !dbg !118
+  %107 = icmp sgt i32 %n, 0, !dbg !118
+  %smax42 = select i1 %107, i32 %n, i32 0, !dbg !118
+  %108 = mul i32 1, %smax42, !dbg !118
+  %109 = add i32 0, %108, !dbg !118
+  %110 = sext i32 %n to i64, !dbg !118
+  %111 = mul i64 8, %110, !dbg !118
+  %112 = add i64 %2, %111, !dbg !118
+  %113 = add i64 %112, 8, !dbg !118
+  %114 = ptrtoint [1200 x double]* undef to i64, !dbg !118
+  %115 = sub i64 %113, %0, !dbg !118
+  %116 = zext i32 %smax42 to i64, !dbg !118
+  %117 = mul i64 8000, %116, !dbg !118
+  %118 = add i64 %1, %117, !dbg !118
+  %119 = icmp sgt i32 %m, 0, !dbg !118
+  %smax43 = select i1 %119, i32 %m, i32 0, !dbg !118
+  %120 = zext i32 %smax43 to i64, !dbg !118
+  %121 = mul i64 8, %120, !dbg !118
+  %122 = add i64 %118, %121, !dbg !118
+  %123 = add i64 %122, 8, !dbg !118
+  br i1 %cmp11, label %for.body.13, label %for.end.33, !dbg !118
+
+for.body.13:                                      ; preds = %for.cond.10
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !98, metadata !43), !dbg !99
+  br label %for.cond.14, !dbg !125
+
+for.cond.14:                                      ; preds = %for.inc.28, %for.body.13
+  %j.1 = phi i32 [ 0, %for.body.13 ], [ %inc29, %for.inc.28 ]
+  %cmp15 = icmp slt i32 %j.1, %n, !dbg !126
+  %124 = icmp sgt i32 %n, 0, !dbg !120
+  %smax37 = select i1 %124, i32 %n, i32 0, !dbg !120
+  %125 = zext i32 %smax37 to i64, !dbg !120
+  %126 = mul i64 9600, %125, !dbg !120
+  %127 = add i64 %8, %126, !dbg !120
+  %128 = add i64 %127, 8, !dbg !120
+  %129 = ptrtoint [1200 x double]* undef to i64, !dbg !120
+  %130 = sub i64 %128, %2, !dbg !120
+  %131 = icmp sgt i32 %n, 0, !dbg !120
+  %smax44 = select i1 %131, i32 %n, i32 0, !dbg !120
+  %132 = zext i32 %smax44 to i64, !dbg !120
+  %133 = mul i64 9600, %132, !dbg !120
+  %134 = add i64 %0, %133, !dbg !120
+  %135 = add i64 %134, 8, !dbg !120
+  %136 = ptrtoint [1200 x double]* %C to i64, !dbg !120
+  %137 = sub i64 %135, %136, !dbg !120
+  br i1 %cmp15, label %for.body.17, label %for.end.30, !dbg !120
+
+for.body.17:                                      ; preds = %for.cond.14
+  %mul18 = mul nsw i32 %i.1, %j.1, !dbg !128
+  %add19 = add nsw i32 %mul18, 2, !dbg !129
+  %rem20 = srem i32 %add19, %m, !dbg !130
+  %conv21 = sitofp i32 %rem20 to double, !dbg !131
+  %conv22 = sitofp i32 %m to double, !dbg !132
+  %div23 = fdiv double %conv21, %conv22, !dbg !133
+  %idxprom24 = sext i32 %j.1 to i64, !dbg !134
+  %idxprom25 = sext i32 %i.1 to i64, !dbg !134
+  %arrayidx26 = getelementptr inbounds [1200 x double], [1200 x double]* %C, i64 %idxprom25, !dbg !134
+  %arrayidx27 = getelementptr inbounds [1200 x double], [1200 x double]* %arrayidx26, i32 0, i64 %idxprom24, !dbg !134
+  store double %div23, double* %arrayidx27, align 8, !dbg !135
+  br label %for.inc.28, !dbg !134
+
+for.inc.28:                                       ; preds = %for.body.17
+  %inc29 = add nsw i32 %j.1, 1, !dbg !136
+  call void @llvm.dbg.value(metadata i32 %inc29, i64 0, metadata !98, metadata !43), !dbg !99
+  br label %for.cond.14, !dbg !137
+
+for.end.30:                                       ; preds = %for.cond.14
+  br label %for.inc.31, !dbg !138
+
+for.inc.31:                                       ; preds = %for.end.30
+  %inc32 = add nsw i32 %i.1, 1, !dbg !139
+  call void @llvm.dbg.value(metadata i32 %inc32, i64 0, metadata !91, metadata !43), !dbg !92
+  br label %for.cond.10, !dbg !140
+
+for.end.33:                                       ; preds = %for.cond.10
+  ret void, !dbg !141
+}
+
+; Function Attrs: nounwind uwtable
+define internal void @kernel_syrk(i32 %n, i32 %m, double %alpha, double %beta, [1200 x double]* %C, [1000 x double]* %A) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %n, i64 0, metadata !142, metadata !43), !dbg !143
+  call void @llvm.dbg.value(metadata i32 %m, i64 0, metadata !144, metadata !43), !dbg !145
+  call void @llvm.dbg.value(metadata double %alpha, i64 0, metadata !146, metadata !43), !dbg !147
+  call void @llvm.dbg.value(metadata double %beta, i64 0, metadata !148, metadata !43), !dbg !149
+  call void @llvm.dbg.value(metadata [1200 x double]* %C, i64 0, metadata !150, metadata !43), !dbg !151
+  call void @llvm.dbg.value(metadata [1000 x double]* %A, i64 0, metadata !152, metadata !43), !dbg !153
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !154, metadata !43), !dbg !155
+  %A43 = ptrtoint [1000 x double]* %A to i64
+  %C32 = ptrtoint [1200 x double]* %C to i64
+  %0 = ptrtoint [1000 x double]* undef to i64
+  %1 = ptrtoint [1200 x double]* undef to i64
+  %2 = ptrtoint [1000 x double]* undef to i64
+  %3 = ptrtoint [1200 x double]* undef to i64
+  %4 = ptrtoint [1000 x double]* undef to i64
+  %5 = ptrtoint [1200 x double]* undef to i64
+  %6 = ptrtoint [1000 x double]* undef to i64
+  %7 = ptrtoint [1200 x double]* undef to i64
+  %8 = ptrtoint [1000 x double]* undef to i64
+  %9 = ptrtoint [1200 x double]* undef to i64
+  %10 = ptrtoint [1000 x double]* undef to i64
+  %11 = ptrtoint [1200 x double]* undef to i64
+  %12 = ptrtoint [1000 x double]* undef to i64
+  %13 = ptrtoint [1200 x double]* undef to i64
+  %14 = add i64 %C32, 8, !dbg !156
+  %15 = add i64 %C32, 8, !dbg !156
+  %16 = add i64 %C32, 8, !dbg !156
+  %17 = add i64 %C32, 8, !dbg !156
+  br label %for.cond, !dbg !158
+
+for.cond:                                         ; preds = %for.inc.32, %entry
+  %i.0 = phi i32 [ 0, %entry ], [ %inc33, %for.inc.32 ]
+  %cmp = icmp slt i32 %i.0, %n, !dbg !159
+  %18 = icmp ult [1200 x double]* %C, %C, !dbg !156
+  %umin = select i1 %18, [1200 x double]* %C, [1200 x double]* %C, !dbg !156
+  %19 = icmp ult [1200 x double]* %C, %umin, !dbg !156
+  %umin30 = select i1 %19, [1200 x double]* %C, [1200 x double]* %umin, !dbg !156
+  %20 = icmp ult [1200 x double]* %C, %umin30, !dbg !156
+  %umin31 = select i1 %20, [1200 x double]* %C, [1200 x double]* %umin30, !dbg !156
+  %21 = icmp ugt i64 %14, %14, !dbg !156
+  %umax = select i1 %21, i64 %14, i64 %14, !dbg !156
+  %22 = icmp ugt i64 %15, %umax, !dbg !156
+  %umax33 = select i1 %22, i64 %15, i64 %umax, !dbg !156
+  %23 = icmp ugt i64 %15, %umax33, !dbg !156
+  %umax34 = select i1 %23, i64 %15, i64 %umax33, !dbg !156
+  %24 = add i64 %umax34, 8, !dbg !156
+  %25 = icmp ult [1200 x double]* %C, %C, !dbg !156
+  %umin35 = select i1 %25, [1200 x double]* %C, [1200 x double]* %C, !dbg !156
+  %26 = icmp ult [1200 x double]* %C, %umin35, !dbg !156
+  %umin36 = select i1 %26, [1200 x double]* %C, [1200 x double]* %umin35, !dbg !156
+  %27 = icmp ult [1200 x double]* %C, %umin36, !dbg !156
+  %umin37 = select i1 %27, [1200 x double]* %C, [1200 x double]* %umin36, !dbg !156
+  %28 = icmp ugt i64 %14, %14, !dbg !156
+  %umax38 = select i1 %28, i64 %14, i64 %14, !dbg !156
+  %29 = icmp ugt i64 %15, %umax38, !dbg !156
+  %umax39 = select i1 %29, i64 %15, i64 %umax38, !dbg !156
+  %30 = icmp ugt i64 %15, %umax39, !dbg !156
+  %umax40 = select i1 %30, i64 %15, i64 %umax39, !dbg !156
+  %31 = add i64 %umax40, 8, !dbg !156
+  %32 = icmp sgt i32 %n, 0, !dbg !156
+  %smax = select i1 %32, i32 %n, i32 0, !dbg !156
+  %33 = mul i32 1, %smax, !dbg !156
+  %34 = add i32 0, %33, !dbg !156
+  %35 = ptrtoint [1200 x double]* %umin31 to i64, !dbg !156
+  %36 = sub i64 %24, %35, !dbg !156
+  %37 = icmp ult [1000 x double]* %A, %A, !dbg !156
+  %umin41 = select i1 %37, [1000 x double]* %A, [1000 x double]* %A, !dbg !156
+  %38 = icmp sgt i32 %m, 0, !dbg !156
+  %smax42 = select i1 %38, i32 %m, i32 0, !dbg !156
+  %39 = zext i32 %smax42 to i64, !dbg !156
+  %40 = mul i64 8, %39, !dbg !156
+  %41 = add i64 %A43, %40, !dbg !156
+  %42 = add i64 %41, 8000, !dbg !156
+  %43 = icmp ugt i64 %42, %41, !dbg !156
+  %umax44 = select i1 %43, i64 %42, i64 %41, !dbg !156
+  %44 = add i64 %umax44, 8, !dbg !156
+  %45 = icmp ult [1000 x double]* %A, %A, !dbg !156
+  %umin45 = select i1 %45, [1000 x double]* %A, [1000 x double]* %A, !dbg !156
+  %46 = icmp ugt i64 %42, %41, !dbg !156
+  %umax46 = select i1 %46, i64 %42, i64 %41, !dbg !156
+  %47 = add i64 %umax46, 8, !dbg !156
+  %48 = ptrtoint [1000 x double]* %umin41 to i64, !dbg !156
+  %49 = sub i64 %44, %48, !dbg !156
+  %50 = icmp ult [1200 x double]* %C, %C, !dbg !156
+  %umin93 = select i1 %50, [1200 x double]* %C, [1200 x double]* %C, !dbg !156
+  %51 = icmp ult [1200 x double]* %C, %umin93, !dbg !156
+  %umin94 = select i1 %51, [1200 x double]* %C, [1200 x double]* %umin93, !dbg !156
+  %52 = icmp ult [1200 x double]* %C, %umin94, !dbg !156
+  %umin95 = select i1 %52, [1200 x double]* %C, [1200 x double]* %umin94, !dbg !156
+  %53 = icmp ugt i64 %16, %16, !dbg !156
+  %umax96 = select i1 %53, i64 %16, i64 %16, !dbg !156
+  %54 = icmp ugt i64 %17, %umax96, !dbg !156
+  %umax97 = select i1 %54, i64 %17, i64 %umax96, !dbg !156
+  %55 = icmp ugt i64 %17, %umax97, !dbg !156
+  %umax98 = select i1 %55, i64 %17, i64 %umax97, !dbg !156
+  %56 = add i64 %umax98, 8, !dbg !156
+  %57 = icmp ult [1200 x double]* %C, %C, !dbg !156
+  %umin99 = select i1 %57, [1200 x double]* %C, [1200 x double]* %C, !dbg !156
+  %58 = icmp ult [1200 x double]* %C, %umin99, !dbg !156
+  %umin100 = select i1 %58, [1200 x double]* %C, [1200 x double]* %umin99, !dbg !156
+  %59 = icmp ult [1200 x double]* %C, %umin100, !dbg !156
+  %umin101 = select i1 %59, [1200 x double]* %C, [1200 x double]* %umin100, !dbg !156
+  %60 = icmp ugt i64 %16, %16, !dbg !156
+  %umax102 = select i1 %60, i64 %16, i64 %16, !dbg !156
+  %61 = icmp ugt i64 %17, %umax102, !dbg !156
+  %umax103 = select i1 %61, i64 %17, i64 %umax102, !dbg !156
+  %62 = icmp ugt i64 %17, %umax103, !dbg !156
+  %umax104 = select i1 %62, i64 %17, i64 %umax103, !dbg !156
+  %63 = add i64 %umax104, 8, !dbg !156
+  %64 = icmp sgt i32 %n, 0, !dbg !156
+  %smax105 = select i1 %64, i32 %n, i32 0, !dbg !156
+  %65 = mul i32 1, %smax105, !dbg !156
+  %66 = add i32 0, %65, !dbg !156
+  %67 = ptrtoint [1200 x double]* %umin95 to i64, !dbg !156
+  %68 = sub i64 %56, %67, !dbg !156
+  %69 = icmp ult [1000 x double]* %A, %A, !dbg !156
+  %umin106 = select i1 %69, [1000 x double]* %A, [1000 x double]* %A, !dbg !156
+  %70 = icmp sgt i32 %m, 0, !dbg !156
+  %smax107 = select i1 %70, i32 %m, i32 0, !dbg !156
+  %71 = zext i32 %smax107 to i64, !dbg !156
+  %72 = mul i64 8, %71, !dbg !156
+  %73 = add i64 %A43, %72, !dbg !156
+  %74 = add i64 %73, 8000, !dbg !156
+  %75 = icmp ugt i64 %74, %73, !dbg !156
+  %umax108 = select i1 %75, i64 %74, i64 %73, !dbg !156
+  %76 = add i64 %umax108, 8, !dbg !156
+  %77 = icmp ult [1000 x double]* %A, %A, !dbg !156
+  %umin109 = select i1 %77, [1000 x double]* %A, [1000 x double]* %A, !dbg !156
+  %78 = icmp ugt i64 %74, %73, !dbg !156
+  %umax110 = select i1 %78, i64 %74, i64 %73, !dbg !156
+  %79 = add i64 %umax110, 8, !dbg !156
+  %80 = ptrtoint [1000 x double]* %umin106 to i64, !dbg !156
+  %81 = sub i64 %76, %80, !dbg !156
+  br i1 %cmp, label %for.body, label %for.end.34, !dbg !156
+
+for.body:                                         ; preds = %for.cond
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !161, metadata !43), !dbg !162
+  br label %for.cond.1, !dbg !163
+
+for.cond.1:                                       ; preds = %for.inc, %for.body
+  %j.0 = phi i32 [ 0, %for.body ], [ %inc, %for.inc ]
+  %cmp2 = icmp sle i32 %j.0, %i.0, !dbg !166
+  %82 = icmp ult [1200 x double]* %C, %C, !dbg !168
+  %umin47 = select i1 %82, [1200 x double]* %C, [1200 x double]* %C, !dbg !168
+  %83 = icmp ult [1200 x double]* %C, %umin47, !dbg !168
+  %umin48 = select i1 %83, [1200 x double]* %C, [1200 x double]* %umin47, !dbg !168
+  %84 = icmp ult [1200 x double]* %C, %umin48, !dbg !168
+  %umin49 = select i1 %84, [1200 x double]* %C, [1200 x double]* %umin48, !dbg !168
+  %85 = icmp sgt i32 %n, 0, !dbg !168
+  %smax50 = select i1 %85, i32 %n, i32 0, !dbg !168
+  %86 = zext i32 %smax50 to i64, !dbg !168
+  %87 = mul i64 9600, %86, !dbg !168
+  %88 = add i64 %C32, %87, !dbg !168
+  %89 = icmp ugt i64 %88, %88, !dbg !168
+  %umax51 = select i1 %89, i64 %88, i64 %88, !dbg !168
+  %90 = mul i64 1, %86, !dbg !168
+  %91 = add i64 1, %90, !dbg !168
+  %92 = mul i64 8, %91, !dbg !168
+  %93 = add i64 %88, %92, !dbg !168
+  %94 = icmp ugt i64 %93, %umax51, !dbg !168
+  %umax52 = select i1 %94, i64 %93, i64 %umax51, !dbg !168
+  %95 = icmp ugt i64 %93, %umax52, !dbg !168
+  %umax53 = select i1 %95, i64 %93, i64 %umax52, !dbg !168
+  %96 = add i64 %umax53, 8, !dbg !168
+  %97 = icmp ult [1200 x double]* %C, %C, !dbg !168
+  %umin54 = select i1 %97, [1200 x double]* %C, [1200 x double]* %C, !dbg !168
+  %98 = icmp ult [1200 x double]* %C, %umin54, !dbg !168
+  %umin55 = select i1 %98, [1200 x double]* %C, [1200 x double]* %umin54, !dbg !168
+  %99 = icmp ult [1200 x double]* %C, %umin55, !dbg !168
+  %umin56 = select i1 %99, [1200 x double]* %C, [1200 x double]* %umin55, !dbg !168
+  %100 = icmp ugt i64 %88, %88, !dbg !168
+  %umax57 = select i1 %100, i64 %88, i64 %88, !dbg !168
+  %101 = icmp ugt i64 %93, %umax57, !dbg !168
+  %umax58 = select i1 %101, i64 %93, i64 %umax57, !dbg !168
+  %102 = icmp ugt i64 %93, %umax58, !dbg !168
+  %umax59 = select i1 %102, i64 %93, i64 %umax58, !dbg !168
+  %103 = add i64 %umax59, 8, !dbg !168
+  %104 = mul i32 1, %smax50, !dbg !168
+  %105 = add i32 1, %104, !dbg !168
+  %106 = mul i32 1, %105, !dbg !168
+  %107 = add i32 0, %106, !dbg !168
+  %108 = ptrtoint [1200 x double]* %umin49 to i64, !dbg !168
+  %109 = sub i64 %96, %108, !dbg !168
+  %110 = icmp ult [1000 x double]* %A, %A, !dbg !168
+  %umin60 = select i1 %110, [1000 x double]* %A, [1000 x double]* %A, !dbg !168
+  %111 = mul i64 8000, %86, !dbg !168
+  %112 = add i64 %A43, %111, !dbg !168
+  %113 = icmp sgt i32 %m, 0, !dbg !168
+  %smax61 = select i1 %113, i32 %m, i32 0, !dbg !168
+  %114 = zext i32 %smax61 to i64, !dbg !168
+  %115 = mul i64 8, %114, !dbg !168
+  %116 = add i64 %112, %115, !dbg !168
+  %117 = add i64 %A43, %115, !dbg !168
+  %118 = mul i64 8000, %91, !dbg !168
+  %119 = add i64 %117, %118, !dbg !168
+  %120 = icmp ugt i64 %119, %116, !dbg !168
+  %umax62 = select i1 %120, i64 %119, i64 %116, !dbg !168
+  %121 = add i64 %umax62, 8, !dbg !168
+  %122 = icmp ult [1000 x double]* %A, %A, !dbg !168
+  %umin63 = select i1 %122, [1000 x double]* %A, [1000 x double]* %A, !dbg !168
+  %123 = icmp ugt i64 %119, %116, !dbg !168
+  %umax64 = select i1 %123, i64 %119, i64 %116, !dbg !168
+  %124 = add i64 %umax64, 8, !dbg !168
+  %125 = icmp ult [1200 x double]* %C, %C, !dbg !168
+  %umin111 = select i1 %125, [1200 x double]* %C, [1200 x double]* %C, !dbg !168
+  %126 = icmp ult [1200 x double]* %C, %umin111, !dbg !168
+  %umin112 = select i1 %126, [1200 x double]* %C, [1200 x double]* %umin111, !dbg !168
+  %127 = icmp ult [1200 x double]* %C, %umin112, !dbg !168
+  %umin113 = select i1 %127, [1200 x double]* %C, [1200 x double]* %umin112, !dbg !168
+  %128 = icmp sgt i32 %n, 0, !dbg !168
+  %smax114 = select i1 %128, i32 %n, i32 0, !dbg !168
+  %129 = zext i32 %smax114 to i64, !dbg !168
+  %130 = mul i64 9600, %129, !dbg !168
+  %131 = add i64 %C32, %130, !dbg !168
+  %132 = icmp ugt i64 %131, %131, !dbg !168
+  %umax115 = select i1 %132, i64 %131, i64 %131, !dbg !168
+  %133 = mul i64 1, %129, !dbg !168
+  %134 = add i64 1, %133, !dbg !168
+  %135 = mul i64 8, %134, !dbg !168
+  %136 = add i64 %131, %135, !dbg !168
+  %137 = icmp ugt i64 %136, %umax115, !dbg !168
+  %umax116 = select i1 %137, i64 %136, i64 %umax115, !dbg !168
+  %138 = icmp ugt i64 %136, %umax116, !dbg !168
+  %umax117 = select i1 %138, i64 %136, i64 %umax116, !dbg !168
+  %139 = add i64 %umax117, 8, !dbg !168
+  %140 = icmp ult [1200 x double]* %C, %C, !dbg !168
+  %umin118 = select i1 %140, [1200 x double]* %C, [1200 x double]* %C, !dbg !168
+  %141 = icmp ult [1200 x double]* %C, %umin118, !dbg !168
+  %umin119 = select i1 %141, [1200 x double]* %C, [1200 x double]* %umin118, !dbg !168
+  %142 = icmp ult [1200 x double]* %C, %umin119, !dbg !168
+  %umin120 = select i1 %142, [1200 x double]* %C, [1200 x double]* %umin119, !dbg !168
+  %143 = icmp ugt i64 %131, %131, !dbg !168
+  %umax121 = select i1 %143, i64 %131, i64 %131, !dbg !168
+  %144 = icmp ugt i64 %136, %umax121, !dbg !168
+  %umax122 = select i1 %144, i64 %136, i64 %umax121, !dbg !168
+  %145 = icmp ugt i64 %136, %umax122, !dbg !168
+  %umax123 = select i1 %145, i64 %136, i64 %umax122, !dbg !168
+  %146 = add i64 %umax123, 8, !dbg !168
+  %147 = mul i32 1, %smax114, !dbg !168
+  %148 = add i32 1, %147, !dbg !168
+  %149 = mul i32 1, %148, !dbg !168
+  %150 = add i32 0, %149, !dbg !168
+  %151 = ptrtoint [1200 x double]* %umin113 to i64, !dbg !168
+  %152 = sub i64 %139, %151, !dbg !168
+  %153 = icmp ult [1000 x double]* %A, %A, !dbg !168
+  %umin124 = select i1 %153, [1000 x double]* %A, [1000 x double]* %A, !dbg !168
+  %154 = mul i64 8000, %129, !dbg !168
+  %155 = add i64 %A43, %154, !dbg !168
+  %156 = icmp sgt i32 %m, 0, !dbg !168
+  %smax125 = select i1 %156, i32 %m, i32 0, !dbg !168
+  %157 = zext i32 %smax125 to i64, !dbg !168
+  %158 = mul i64 8, %157, !dbg !168
+  %159 = add i64 %155, %158, !dbg !168
+  %160 = add i64 %A43, %158, !dbg !168
+  %161 = mul i64 8000, %134, !dbg !168
+  %162 = add i64 %160, %161, !dbg !168
+  %163 = icmp ugt i64 %162, %159, !dbg !168
+  %umax126 = select i1 %163, i64 %162, i64 %159, !dbg !168
+  %164 = add i64 %umax126, 8, !dbg !168
+  %165 = icmp ult [1000 x double]* %A, %A, !dbg !168
+  %umin127 = select i1 %165, [1000 x double]* %A, [1000 x double]* %A, !dbg !168
+  %166 = icmp ugt i64 %162, %159, !dbg !168
+  %umax128 = select i1 %166, i64 %162, i64 %159, !dbg !168
+  %167 = add i64 %umax128, 8, !dbg !168
+  br i1 %cmp2, label %for.body.3, label %for.end, !dbg !168
+
+for.body.3:                                       ; preds = %for.cond.1
+  %idxprom = sext i32 %j.0 to i64, !dbg !169
+  %idxprom4 = sext i32 %i.0 to i64, !dbg !169
+  %arrayidx = getelementptr inbounds [1200 x double], [1200 x double]* %C, i64 %idxprom4, !dbg !169
+  %arrayidx5 = getelementptr inbounds [1200 x double], [1200 x double]* %arrayidx, i32 0, i64 %idxprom, !dbg !169
+  %tmp8 = load double, double* %arrayidx5, align 8, !dbg !170
+  %mul = fmul double %tmp8, %beta, !dbg !170
+  store double %mul, double* %arrayidx5, align 8, !dbg !170
+  br label %for.inc, !dbg !169
+
+for.inc:                                          ; preds = %for.body.3
+  %inc = add nsw i32 %j.0, 1, !dbg !171
+  call void @llvm.dbg.value(metadata i32 %inc, i64 0, metadata !161, metadata !43), !dbg !162
+  br label %for.cond.1, !dbg !172
+
+for.end:                                          ; preds = %for.cond.1
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !173, metadata !43), !dbg !174
+  br label %for.cond.6, !dbg !175
+
+for.cond.6:                                       ; preds = %for.inc.29, %for.end
+  %k.0 = phi i32 [ 0, %for.end ], [ %inc30, %for.inc.29 ]
+  %cmp7 = icmp slt i32 %k.0, %m, !dbg !177
+  %168 = icmp ult [1200 x double]* %C, %C, !dbg !179
+  %umin65 = select i1 %168, [1200 x double]* %C, [1200 x double]* %C, !dbg !179
+  %169 = icmp ult [1200 x double]* %C, %umin65, !dbg !179
+  %umin66 = select i1 %169, [1200 x double]* %C, [1200 x double]* %umin65, !dbg !179
+  %170 = icmp ult [1200 x double]* %C, %umin66, !dbg !179
+  %umin67 = select i1 %170, [1200 x double]* %C, [1200 x double]* %umin66, !dbg !179
+  %171 = icmp sgt i32 %n, 0, !dbg !179
+  %smax68 = select i1 %171, i32 %n, i32 0, !dbg !179
+  %172 = zext i32 %smax68 to i64, !dbg !179
+  %173 = mul i64 9600, %172, !dbg !179
+  %174 = add i64 %C32, %173, !dbg !179
+  %175 = mul i64 1, %172, !dbg !179
+  %176 = add i64 1, %175, !dbg !179
+  %177 = mul i64 8, %176, !dbg !179
+  %178 = add i64 %174, %177, !dbg !179
+  %179 = icmp ugt i64 %178, %178, !dbg !179
+  %umax69 = select i1 %179, i64 %178, i64 %178, !dbg !179
+  %180 = icmp ugt i64 %178, %umax69, !dbg !179
+  %umax70 = select i1 %180, i64 %178, i64 %umax69, !dbg !179
+  %181 = icmp ugt i64 %178, %umax70, !dbg !179
+  %umax71 = select i1 %181, i64 %178, i64 %umax70, !dbg !179
+  %182 = add i64 %umax71, 8, !dbg !179
+  %183 = icmp ult [1200 x double]* %C, %C, !dbg !179
+  %umin72 = select i1 %183, [1200 x double]* %C, [1200 x double]* %C, !dbg !179
+  %184 = icmp ult [1200 x double]* %C, %umin72, !dbg !179
+  %umin73 = select i1 %184, [1200 x double]* %C, [1200 x double]* %umin72, !dbg !179
+  %185 = icmp ult [1200 x double]* %C, %umin73, !dbg !179
+  %umin74 = select i1 %185, [1200 x double]* %C, [1200 x double]* %umin73, !dbg !179
+  %186 = icmp ugt i64 %178, %178, !dbg !179
+  %umax75 = select i1 %186, i64 %178, i64 %178, !dbg !179
+  %187 = icmp ugt i64 %178, %umax75, !dbg !179
+  %umax76 = select i1 %187, i64 %178, i64 %umax75, !dbg !179
+  %188 = icmp ugt i64 %178, %umax76, !dbg !179
+  %umax77 = select i1 %188, i64 %178, i64 %umax76, !dbg !179
+  %189 = add i64 %umax77, 8, !dbg !179
+  %190 = icmp sgt i32 %m, 0, !dbg !179
+  %smax78 = select i1 %190, i32 %m, i32 0, !dbg !179
+  %191 = mul i32 1, %smax78, !dbg !179
+  %192 = add i32 0, %191, !dbg !179
+  %193 = icmp ult [1000 x double]* %A, %A, !dbg !179
+  %umin79 = select i1 %193, [1000 x double]* %A, [1000 x double]* %A, !dbg !179
+  %194 = mul i64 8000, %172, !dbg !179
+  %195 = add i64 %A43, %194, !dbg !179
+  %196 = mul i64 8000, %176, !dbg !179
+  %197 = add i64 %A43, %196, !dbg !179
+  %198 = icmp ugt i64 %197, %195, !dbg !179
+  %umax80 = select i1 %198, i64 %197, i64 %195, !dbg !179
+  %199 = add i64 %umax80, 8, !dbg !179
+  %200 = icmp ult [1000 x double]* %A, %A, !dbg !179
+  %umin81 = select i1 %200, [1000 x double]* %A, [1000 x double]* %A, !dbg !179
+  %201 = icmp ugt i64 %197, %195, !dbg !179
+  %umax82 = select i1 %201, i64 %197, i64 %195, !dbg !179
+  %202 = add i64 %umax82, 8, !dbg !179
+  %203 = ptrtoint [1000 x double]* %umin79 to i64, !dbg !179
+  %204 = sub i64 %199, %203, !dbg !179
+  %205 = icmp ult [1200 x double]* %C, %C, !dbg !179
+  %umin129 = select i1 %205, [1200 x double]* %C, [1200 x double]* %C, !dbg !179
+  %206 = icmp ult [1200 x double]* %C, %umin129, !dbg !179
+  %umin130 = select i1 %206, [1200 x double]* %C, [1200 x double]* %umin129, !dbg !179
+  %207 = icmp ult [1200 x double]* %C, %umin130, !dbg !179
+  %umin131 = select i1 %207, [1200 x double]* %C, [1200 x double]* %umin130, !dbg !179
+  %208 = icmp sgt i32 %n, 0, !dbg !179
+  %smax132 = select i1 %208, i32 %n, i32 0, !dbg !179
+  %209 = zext i32 %smax132 to i64, !dbg !179
+  %210 = mul i64 9600, %209, !dbg !179
+  %211 = add i64 %C32, %210, !dbg !179
+  %212 = mul i64 1, %209, !dbg !179
+  %213 = add i64 1, %212, !dbg !179
+  %214 = mul i64 8, %213, !dbg !179
+  %215 = add i64 %211, %214, !dbg !179
+  %216 = icmp ugt i64 %215, %215, !dbg !179
+  %umax133 = select i1 %216, i64 %215, i64 %215, !dbg !179
+  %217 = icmp ugt i64 %215, %umax133, !dbg !179
+  %umax134 = select i1 %217, i64 %215, i64 %umax133, !dbg !179
+  %218 = icmp ugt i64 %215, %umax134, !dbg !179
+  %umax135 = select i1 %218, i64 %215, i64 %umax134, !dbg !179
+  %219 = add i64 %umax135, 8, !dbg !179
+  %220 = icmp ult [1200 x double]* %C, %C, !dbg !179
+  %umin136 = select i1 %220, [1200 x double]* %C, [1200 x double]* %C, !dbg !179
+  %221 = icmp ult [1200 x double]* %C, %umin136, !dbg !179
+  %umin137 = select i1 %221, [1200 x double]* %C, [1200 x double]* %umin136, !dbg !179
+  %222 = icmp ult [1200 x double]* %C, %umin137, !dbg !179
+  %umin138 = select i1 %222, [1200 x double]* %C, [1200 x double]* %umin137, !dbg !179
+  %223 = icmp ugt i64 %215, %215, !dbg !179
+  %umax139 = select i1 %223, i64 %215, i64 %215, !dbg !179
+  %224 = icmp ugt i64 %215, %umax139, !dbg !179
+  %umax140 = select i1 %224, i64 %215, i64 %umax139, !dbg !179
+  %225 = icmp ugt i64 %215, %umax140, !dbg !179
+  %umax141 = select i1 %225, i64 %215, i64 %umax140, !dbg !179
+  %226 = add i64 %umax141, 8, !dbg !179
+  %227 = icmp sgt i32 %m, 0, !dbg !179
+  %smax142 = select i1 %227, i32 %m, i32 0, !dbg !179
+  %228 = mul i32 1, %smax142, !dbg !179
+  %229 = add i32 0, %228, !dbg !179
+  %230 = icmp ult [1000 x double]* %A, %A, !dbg !179
+  %umin143 = select i1 %230, [1000 x double]* %A, [1000 x double]* %A, !dbg !179
+  %231 = mul i64 8000, %209, !dbg !179
+  %232 = add i64 %A43, %231, !dbg !179
+  %233 = mul i64 8000, %213, !dbg !179
+  %234 = add i64 %A43, %233, !dbg !179
+  %235 = icmp ugt i64 %234, %232, !dbg !179
+  %umax144 = select i1 %235, i64 %234, i64 %232, !dbg !179
+  %236 = add i64 %umax144, 8, !dbg !179
+  %237 = icmp ult [1000 x double]* %A, %A, !dbg !179
+  %umin145 = select i1 %237, [1000 x double]* %A, [1000 x double]* %A, !dbg !179
+  %238 = icmp ugt i64 %234, %232, !dbg !179
+  %umax146 = select i1 %238, i64 %234, i64 %232, !dbg !179
+  %239 = add i64 %umax146, 8, !dbg !179
+  %240 = ptrtoint [1000 x double]* %umin143 to i64, !dbg !179
+  %241 = sub i64 %236, %240, !dbg !179
+  br i1 %cmp7, label %for.body.8, label %for.end.31, !dbg !179
+
+for.body.8:                                       ; preds = %for.cond.6
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !161, metadata !43), !dbg !162
+  br label %for.cond.9, !dbg !180
+
+for.cond.9:                                       ; preds = %for.inc.26, %for.body.8
+  %j.1 = phi i32 [ 0, %for.body.8 ], [ %inc27, %for.inc.26 ]
+  %cmp10 = icmp sle i32 %j.1, %i.0, !dbg !183
+  %242 = icmp ult [1200 x double]* %C, %C, !dbg !185
+  %umin83 = select i1 %242, [1200 x double]* %C, [1200 x double]* %C, !dbg !185
+  %243 = icmp sgt i32 %n, 0, !dbg !185
+  %smax84 = select i1 %243, i32 %n, i32 0, !dbg !185
+  %244 = zext i32 %smax84 to i64, !dbg !185
+  %245 = mul i64 9600, %244, !dbg !185
+  %246 = add i64 %C32, %245, !dbg !185
+  %247 = icmp ugt i64 %246, %246, !dbg !185
+  %umax85 = select i1 %247, i64 %246, i64 %246, !dbg !185
+  %248 = add i64 %umax85, 8, !dbg !185
+  %249 = icmp ult [1200 x double]* %C, %C, !dbg !185
+  %umin86 = select i1 %249, [1200 x double]* %C, [1200 x double]* %C, !dbg !185
+  %250 = icmp ugt i64 %246, %246, !dbg !185
+  %umax87 = select i1 %250, i64 %246, i64 %246, !dbg !185
+  %251 = add i64 %umax87, 8, !dbg !185
+  %252 = mul i32 1, %smax84, !dbg !185
+  %253 = add i32 1, %252, !dbg !185
+  %254 = mul i32 1, %253, !dbg !185
+  %255 = add i32 0, %254, !dbg !185
+  %256 = ptrtoint [1200 x double]* %umin83 to i64, !dbg !185
+  %257 = sub i64 %248, %256, !dbg !185
+  %258 = icmp ult [1000 x double]* %A, %A, !dbg !185
+  %umin88 = select i1 %258, [1000 x double]* %A, [1000 x double]* %A, !dbg !185
+  %259 = mul i64 8000, %244, !dbg !185
+  %260 = add i64 %A43, %259, !dbg !185
+  %261 = icmp sgt i32 %m, 0, !dbg !185
+  %smax89 = select i1 %261, i32 %m, i32 0, !dbg !185
+  %262 = zext i32 %smax89 to i64, !dbg !185
+  %263 = mul i64 8, %262, !dbg !185
+  %264 = add i64 %260, %263, !dbg !185
+  %265 = add i64 %A43, %263, !dbg !185
+  %266 = icmp ugt i64 %265, %264, !dbg !185
+  %umax90 = select i1 %266, i64 %265, i64 %264, !dbg !185
+  %267 = add i64 %umax90, 8, !dbg !185
+  %268 = icmp ult [1000 x double]* %A, %A, !dbg !185
+  %umin91 = select i1 %268, [1000 x double]* %A, [1000 x double]* %A, !dbg !185
+  %269 = icmp ugt i64 %265, %264, !dbg !185
+  %umax92 = select i1 %269, i64 %265, i64 %264, !dbg !185
+  %270 = add i64 %umax92, 8, !dbg !185
+  %271 = ptrtoint [1000 x double]* %umin88 to i64, !dbg !185
+  %272 = sub i64 %267, %271, !dbg !185
+  %273 = icmp ult [1200 x double]* %C, %C, !dbg !185
+  %umin147 = select i1 %273, [1200 x double]* %C, [1200 x double]* %C, !dbg !185
+  %274 = icmp sgt i32 %n, 0, !dbg !185
+  %smax148 = select i1 %274, i32 %n, i32 0, !dbg !185
+  %275 = zext i32 %smax148 to i64, !dbg !185
+  %276 = mul i64 9600, %275, !dbg !185
+  %277 = add i64 %C32, %276, !dbg !185
+  %278 = icmp ugt i64 %277, %277, !dbg !185
+  %umax149 = select i1 %278, i64 %277, i64 %277, !dbg !185
+  %279 = add i64 %umax149, 8, !dbg !185
+  %280 = icmp ult [1200 x double]* %C, %C, !dbg !185
+  %umin150 = select i1 %280, [1200 x double]* %C, [1200 x double]* %C, !dbg !185
+  %281 = icmp ugt i64 %277, %277, !dbg !185
+  %umax151 = select i1 %281, i64 %277, i64 %277, !dbg !185
+  %282 = add i64 %umax151, 8, !dbg !185
+  %283 = mul i32 1, %smax148, !dbg !185
+  %284 = add i32 1, %283, !dbg !185
+  %285 = mul i32 1, %284, !dbg !185
+  %286 = add i32 0, %285, !dbg !185
+  %287 = ptrtoint [1200 x double]* %umin147 to i64, !dbg !185
+  %288 = sub i64 %279, %287, !dbg !185
+  %289 = icmp ult [1000 x double]* %A, %A, !dbg !185
+  %umin152 = select i1 %289, [1000 x double]* %A, [1000 x double]* %A, !dbg !185
+  %290 = mul i64 8000, %275, !dbg !185
+  %291 = add i64 %A43, %290, !dbg !185
+  %292 = icmp sgt i32 %m, 0, !dbg !185
+  %smax153 = select i1 %292, i32 %m, i32 0, !dbg !185
+  %293 = zext i32 %smax153 to i64, !dbg !185
+  %294 = mul i64 8, %293, !dbg !185
+  %295 = add i64 %291, %294, !dbg !185
+  %296 = add i64 %A43, %294, !dbg !185
+  %297 = icmp ugt i64 %296, %295, !dbg !185
+  %umax154 = select i1 %297, i64 %296, i64 %295, !dbg !185
+  %298 = add i64 %umax154, 8, !dbg !185
+  %299 = icmp ult [1000 x double]* %A, %A, !dbg !185
+  %umin155 = select i1 %299, [1000 x double]* %A, [1000 x double]* %A, !dbg !185
+  %300 = icmp ugt i64 %296, %295, !dbg !185
+  %umax156 = select i1 %300, i64 %296, i64 %295, !dbg !185
+  %301 = add i64 %umax156, 8, !dbg !185
+  %302 = ptrtoint [1000 x double]* %umin152 to i64, !dbg !185
+  %303 = sub i64 %298, %302, !dbg !185
+  br i1 %cmp10, label %for.body.11, label %for.end.28, !dbg !185
+
+for.body.11:                                      ; preds = %for.cond.9
+  %idxprom12 = sext i32 %k.0 to i64, !dbg !186
+  %idxprom13 = sext i32 %i.0 to i64, !dbg !186
+  %arrayidx14 = getelementptr inbounds [1000 x double], [1000 x double]* %A, i64 %idxprom13, !dbg !186
+  %arrayidx15 = getelementptr inbounds [1000 x double], [1000 x double]* %arrayidx14, i32 0, i64 %idxprom12, !dbg !186
+  %tmp18 = load double, double* %arrayidx15, align 8, !dbg !186
+  %mul16 = fmul double %alpha, %tmp18, !dbg !187
+  %idxprom17 = sext i32 %k.0 to i64, !dbg !188
+  %idxprom18 = sext i32 %j.1 to i64, !dbg !188
+  %arrayidx19 = getelementptr inbounds [1000 x double], [1000 x double]* %A, i64 %idxprom18, !dbg !188
+  %arrayidx20 = getelementptr inbounds [1000 x double], [1000 x double]* %arrayidx19, i32 0, i64 %idxprom17, !dbg !188
+  %tmp22 = load double, double* %arrayidx20, align 8, !dbg !188
+  %mul21 = fmul double %mul16, %tmp22, !dbg !189
+  %idxprom22 = sext i32 %j.1 to i64, !dbg !190
+  %idxprom23 = sext i32 %i.0 to i64, !dbg !190
+  %arrayidx24 = getelementptr inbounds [1200 x double], [1200 x double]* %C, i64 %idxprom23, !dbg !190
+  %arrayidx25 = getelementptr inbounds [1200 x double], [1200 x double]* %arrayidx24, i32 0, i64 %idxprom22, !dbg !190
+  %tmp26 = load double, double* %arrayidx25, align 8, !dbg !191
+  %add = fadd double %tmp26, %mul21, !dbg !191
+  store double %add, double* %arrayidx25, align 8, !dbg !191
+  br label %for.inc.26, !dbg !190
+
+for.inc.26:                                       ; preds = %for.body.11
+  %inc27 = add nsw i32 %j.1, 1, !dbg !192
+  call void @llvm.dbg.value(metadata i32 %inc27, i64 0, metadata !161, metadata !43), !dbg !162
+  br label %for.cond.9, !dbg !193
+
+for.end.28:                                       ; preds = %for.cond.9
+  br label %for.inc.29, !dbg !194
+
+for.inc.29:                                       ; preds = %for.end.28
+  %inc30 = add nsw i32 %k.0, 1, !dbg !195
+  call void @llvm.dbg.value(metadata i32 %inc30, i64 0, metadata !173, metadata !43), !dbg !174
+  br label %for.cond.6, !dbg !196
+
+for.end.31:                                       ; preds = %for.cond.6
+  br label %for.inc.32, !dbg !197
+
+for.inc.32:                                       ; preds = %for.end.31
+  %inc33 = add nsw i32 %i.0, 1, !dbg !198
+  call void @llvm.dbg.value(metadata i32 %inc33, i64 0, metadata !154, metadata !43), !dbg !155
+  br label %for.cond, !dbg !199
+
+for.end.34:                                       ; preds = %for.cond
+  ret void, !dbg !200
+}
+
+; Function Attrs: nounwind readonly
+declare i32 @strcmp(i8*, i8*) #3
+
+; Function Attrs: nounwind uwtable
+define internal void @print_array(i32 %n, [1200 x double]* %C) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %n, i64 0, metadata !201, metadata !43), !dbg !202
+  call void @llvm.dbg.value(metadata [1200 x double]* %C, i64 0, metadata !203, metadata !43), !dbg !204
+  %tmp = load %struct._IO_FILE*, %struct._IO_FILE** @stderr, align 8, !dbg !205
+  %call = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %tmp, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.1, i32 0, i32 0)), !dbg !205
+  %tmp1 = load %struct._IO_FILE*, %struct._IO_FILE** @stderr, align 8, !dbg !206
+  %call1 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %tmp1, i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str.2, i32 0, i32 0), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.3, i32 0, i32 0)), !dbg !206
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !207, metadata !43), !dbg !208
+  br label %for.cond, !dbg !209
+
+for.cond:                                         ; preds = %for.inc.10, %entry
+  %i.0 = phi i32 [ 0, %entry ], [ %inc11, %for.inc.10 ]
+  %cmp = icmp slt i32 %i.0, %n, !dbg !211
+  br i1 %cmp, label %for.body, label %for.end.12, !dbg !213
+
+for.body:                                         ; preds = %for.cond
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !214, metadata !43), !dbg !215
+  br label %for.cond.2, !dbg !216
+
+for.cond.2:                                       ; preds = %for.inc, %for.body
+  %j.0 = phi i32 [ 0, %for.body ], [ %inc, %for.inc ]
+  %cmp3 = icmp slt i32 %j.0, %n, !dbg !218
+  br i1 %cmp3, label %for.body.4, label %for.end, !dbg !220
+
+for.body.4:                                       ; preds = %for.cond.2
+  %mul = mul nsw i32 %i.0, %n, !dbg !221
+  %add = add nsw i32 %mul, %j.0, !dbg !224
+  %rem = srem i32 %add, 20, !dbg !225
+  %cmp5 = icmp eq i32 %rem, 0, !dbg !226
+  br i1 %cmp5, label %if.then, label %if.end, !dbg !227
+
+if.then:                                          ; preds = %for.body.4
+  %tmp9 = load %struct._IO_FILE*, %struct._IO_FILE** @stderr, align 8, !dbg !228
+  %call6 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %tmp9, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.4, i32 0, i32 0)), !dbg !229
+  br label %if.end, !dbg !229
+
+if.end:                                           ; preds = %if.then, %for.body.4
+  %tmp10 = load %struct._IO_FILE*, %struct._IO_FILE** @stderr, align 8, !dbg !230
+  %idxprom = sext i32 %j.0 to i64, !dbg !231
+  %idxprom7 = sext i32 %i.0 to i64, !dbg !231
+  %arrayidx = getelementptr inbounds [1200 x double], [1200 x double]* %C, i64 %idxprom7, !dbg !231
+  %arrayidx8 = getelementptr inbounds [1200 x double], [1200 x double]* %arrayidx, i32 0, i64 %idxprom, !dbg !231
+  %tmp14 = load double, double* %arrayidx8, align 8, !dbg !231
+  %call9 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %tmp10, i8* getelementptr inbounds ([8 x i8], [8 x i8]* @.str.5, i32 0, i32 0), double %tmp14), !dbg !232
+  br label %for.inc, !dbg !233
+
+for.inc:                                          ; preds = %if.end
+  %inc = add nsw i32 %j.0, 1, !dbg !234
+  call void @llvm.dbg.value(metadata i32 %inc, i64 0, metadata !214, metadata !43), !dbg !215
+  br label %for.cond.2, !dbg !235
+
+for.end:                                          ; preds = %for.cond.2
+  br label %for.inc.10, !dbg !236
+
+for.inc.10:                                       ; preds = %for.end
+  %inc11 = add nsw i32 %i.0, 1, !dbg !237
+  call void @llvm.dbg.value(metadata i32 %inc11, i64 0, metadata !207, metadata !43), !dbg !208
+  br label %for.cond, !dbg !238
+
+for.end.12:                                       ; preds = %for.cond
+  %tmp17 = load %struct._IO_FILE*, %struct._IO_FILE** @stderr, align 8, !dbg !239
+  %call13 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %tmp17, i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.str.6, i32 0, i32 0), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.3, i32 0, i32 0)), !dbg !239
+  %tmp18 = load %struct._IO_FILE*, %struct._IO_FILE** @stderr, align 8, !dbg !240
+  %call14 = call i32 (%struct._IO_FILE*, i8*, ...) @fprintf(%struct._IO_FILE* %tmp18, i8* getelementptr inbounds ([23 x i8], [23 x i8]* @.str.7, i32 0, i32 0)), !dbg !240
+  ret void, !dbg !241
+}
+
+; Function Attrs: nounwind
+declare void @free(i8*) #4
+
+declare i32 @fprintf(%struct._IO_FILE*, i8*, ...) #2
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.value(metadata, i64, metadata, metadata) #1
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { nounwind readonly "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #4 = { nounwind "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #5 = { nounwind readonly }
+attributes #6 = { nounwind }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!39, !40}
+!llvm.ident = !{!41}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, retainedTypes: !3, subprograms: !14)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/PolyBench/linear-algebra/blas/syrk")
+!2 = !{}
+!3 = !{!4, !9, !13, !6}
+!4 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !5, size: 64, align: 64)
+!5 = !DICompositeType(tag: DW_TAG_array_type, baseType: !6, size: 92160000, align: 64, elements: !7)
+!6 = !DIBasicType(name: "double", size: 64, align: 64, encoding: DW_ATE_float)
+!7 = !{!8, !8}
+!8 = !DISubrange(count: 1200)
+!9 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !10, size: 64, align: 64)
+!10 = !DICompositeType(tag: DW_TAG_array_type, baseType: !6, size: 76800000, align: 64, elements: !11)
+!11 = !{!8, !12}
+!12 = !DISubrange(count: 1000)
+!13 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: null, size: 64, align: 64)
+!14 = !{!15, !23, !33, !36}
+!15 = !DISubprogram(name: "main", scope: !16, file: !16, line: 86, type: !17, isLocal: false, isDefinition: true, scopeLine: 86, flags: DIFlagPrototyped, isOptimized: false, function: i32 (i32, i8**)* @main, variables: !2)
+!16 = !DIFile(filename: "/home/gleison/tf/Benchmarks/PolyBench/linear-algebra/blas/syrk/tmp.c", directory: "/home/gleison/tf/Benchmarks/PolyBench/linear-algebra/blas/syrk")
+!17 = !DISubroutineType(types: !18)
+!18 = !{!19, !19, !20}
+!19 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!20 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !21, size: 64, align: 64)
+!21 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !22, size: 64, align: 64)
+!22 = !DIBasicType(name: "char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!23 = !DISubprogram(name: "init_array", scope: !16, file: !16, line: 24, type: !24, isLocal: true, isDefinition: true, scopeLine: 28, flags: DIFlagPrototyped, isOptimized: false, function: void (i32, i32, double*, double*, [1200 x double]*, [1000 x double]*)* @init_array, variables: !2)
+!24 = !DISubroutineType(types: !25)
+!25 = !{null, !19, !19, !26, !26, !27, !30}
+!26 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !6, size: 64, align: 64)
+!27 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !28, size: 64, align: 64)
+!28 = !DICompositeType(tag: DW_TAG_array_type, baseType: !6, size: 76800, align: 64, elements: !29)
+!29 = !{!8}
+!30 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !31, size: 64, align: 64)
+!31 = !DICompositeType(tag: DW_TAG_array_type, baseType: !6, size: 64000, align: 64, elements: !32)
+!32 = !{!12}
+!33 = !DISubprogram(name: "kernel_syrk", scope: !16, file: !16, line: 61, type: !34, isLocal: true, isDefinition: true, scopeLine: 65, flags: DIFlagPrototyped, isOptimized: false, function: void (i32, i32, double, double, [1200 x double]*, [1000 x double]*)* @kernel_syrk, variables: !2)
+!34 = !DISubroutineType(types: !35)
+!35 = !{null, !19, !19, !6, !6, !27, !30}
+!36 = !DISubprogram(name: "print_array", scope: !16, file: !16, line: 43, type: !37, isLocal: true, isDefinition: true, scopeLine: 44, flags: DIFlagPrototyped, isOptimized: false, function: void (i32, [1200 x double]*)* @print_array, variables: !2)
+!37 = !DISubroutineType(types: !38)
+!38 = !{null, !19, !27}
+!39 = !{i32 2, !"Dwarf Version", i32 4}
+!40 = !{i32 2, !"Debug Info Version", i32 3}
+!41 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!42 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "argc", arg: 1, scope: !15, file: !16, line: 86, type: !19)
+!43 = !DIExpression()
+!44 = !DILocation(line: 86, column: 14, scope: !15)
+!45 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "argv", arg: 2, scope: !15, file: !16, line: 86, type: !20)
+!46 = !DILocation(line: 86, column: 27, scope: !15)
+!47 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "n", scope: !15, file: !16, line: 88, type: !19)
+!48 = !DILocation(line: 88, column: 7, scope: !15)
+!49 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "m", scope: !15, file: !16, line: 89, type: !19)
+!50 = !DILocation(line: 89, column: 7, scope: !15)
+!51 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "alpha", scope: !15, file: !16, line: 92, type: !6)
+!52 = !DILocation(line: 92, column: 13, scope: !15)
+!53 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "beta", scope: !15, file: !16, line: 93, type: !6)
+!54 = !DILocation(line: 93, column: 13, scope: !15)
+!55 = !DILocation(line: 94, column: 3, scope: !15)
+!56 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "C", scope: !15, file: !16, line: 94, type: !4)
+!57 = !DILocation(line: 95, column: 3, scope: !15)
+!58 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "A", scope: !15, file: !16, line: 95, type: !9)
+!59 = !DILocation(line: 98, column: 35, scope: !15)
+!60 = !DILocation(line: 98, column: 55, scope: !15)
+!61 = !DILocation(line: 98, column: 3, scope: !15)
+!62 = !DILocation(line: 104, column: 21, scope: !15)
+!63 = !DILocation(line: 104, column: 28, scope: !15)
+!64 = !DILocation(line: 104, column: 34, scope: !15)
+!65 = !DILocation(line: 104, column: 54, scope: !15)
+!66 = !DILocation(line: 104, column: 3, scope: !15)
+!67 = !DILocation(line: 112, column: 3, scope: !68)
+!68 = distinct !DILexicalBlock(scope: !15, file: !16, line: 112, column: 3)
+!69 = !DILocation(line: 112, column: 3, scope: !70)
+!70 = !DILexicalBlockFile(scope: !68, file: !16, discriminator: 1)
+!71 = !DILocation(line: 112, column: 3, scope: !15)
+!72 = !DILocation(line: 112, column: 3, scope: !73)
+!73 = !DILexicalBlockFile(scope: !68, file: !16, discriminator: 2)
+!74 = !DILocation(line: 115, column: 3, scope: !15)
+!75 = !DILocation(line: 116, column: 3, scope: !15)
+!76 = !DILocation(line: 118, column: 3, scope: !15)
+!77 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "n", arg: 1, scope: !23, file: !16, line: 24, type: !19)
+!78 = !DILocation(line: 24, column: 28, scope: !23)
+!79 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "m", arg: 2, scope: !23, file: !16, line: 24, type: !19)
+!80 = !DILocation(line: 24, column: 35, scope: !23)
+!81 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "alpha", arg: 3, scope: !23, file: !16, line: 25, type: !26)
+!82 = !DILocation(line: 25, column: 35, scope: !23)
+!83 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "beta", arg: 4, scope: !23, file: !16, line: 26, type: !26)
+!84 = !DILocation(line: 26, column: 35, scope: !23)
+!85 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "C", arg: 5, scope: !23, file: !16, line: 27, type: !27)
+!86 = !DILocation(line: 27, column: 34, scope: !23)
+!87 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "A", arg: 6, scope: !23, file: !16, line: 28, type: !30)
+!88 = !DILocation(line: 28, column: 34, scope: !23)
+!89 = !DILocation(line: 31, column: 10, scope: !23)
+!90 = !DILocation(line: 32, column: 9, scope: !23)
+!91 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !23, file: !16, line: 29, type: !19)
+!92 = !DILocation(line: 29, column: 7, scope: !23)
+!93 = !DILocation(line: 33, column: 3, scope: !94)
+!94 = distinct !DILexicalBlock(scope: !23, file: !16, line: 33, column: 3)
+!95 = !DILocation(line: 33, column: 8, scope: !94)
+!96 = !DILocation(line: 33, column: 17, scope: !97)
+!97 = distinct !DILexicalBlock(scope: !94, file: !16, line: 33, column: 3)
+!98 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "j", scope: !23, file: !16, line: 29, type: !19)
+!99 = !DILocation(line: 29, column: 10, scope: !23)
+!100 = !DILocation(line: 34, column: 10, scope: !101)
+!101 = distinct !DILexicalBlock(scope: !97, file: !16, line: 34, column: 5)
+!102 = !DILocation(line: 34, column: 19, scope: !103)
+!103 = distinct !DILexicalBlock(scope: !101, file: !16, line: 34, column: 5)
+!104 = !DILocation(line: 34, column: 5, scope: !101)
+!105 = !DILocation(line: 35, column: 32, scope: !103)
+!106 = !DILocation(line: 35, column: 36, scope: !103)
+!107 = !DILocation(line: 35, column: 41, scope: !103)
+!108 = !DILocation(line: 35, column: 17, scope: !103)
+!109 = !DILocation(line: 35, column: 48, scope: !103)
+!110 = !DILocation(line: 35, column: 46, scope: !103)
+!111 = !DILocation(line: 35, column: 7, scope: !103)
+!112 = !DILocation(line: 35, column: 15, scope: !103)
+!113 = !DILocation(line: 34, column: 25, scope: !103)
+!114 = !DILocation(line: 34, column: 5, scope: !103)
+!115 = !DILocation(line: 35, column: 48, scope: !101)
+!116 = !DILocation(line: 33, column: 23, scope: !97)
+!117 = !DILocation(line: 33, column: 3, scope: !97)
+!118 = !DILocation(line: 36, column: 3, scope: !119)
+!119 = distinct !DILexicalBlock(scope: !23, file: !16, line: 36, column: 3)
+!120 = !DILocation(line: 37, column: 5, scope: !121)
+!121 = distinct !DILexicalBlock(scope: !122, file: !16, line: 37, column: 5)
+!122 = distinct !DILexicalBlock(scope: !119, file: !16, line: 36, column: 3)
+!123 = !DILocation(line: 36, column: 8, scope: !119)
+!124 = !DILocation(line: 36, column: 17, scope: !122)
+!125 = !DILocation(line: 37, column: 10, scope: !121)
+!126 = !DILocation(line: 37, column: 19, scope: !127)
+!127 = distinct !DILexicalBlock(scope: !121, file: !16, line: 37, column: 5)
+!128 = !DILocation(line: 38, column: 32, scope: !127)
+!129 = !DILocation(line: 38, column: 36, scope: !127)
+!130 = !DILocation(line: 38, column: 41, scope: !127)
+!131 = !DILocation(line: 38, column: 17, scope: !127)
+!132 = !DILocation(line: 38, column: 48, scope: !127)
+!133 = !DILocation(line: 38, column: 46, scope: !127)
+!134 = !DILocation(line: 38, column: 7, scope: !127)
+!135 = !DILocation(line: 38, column: 15, scope: !127)
+!136 = !DILocation(line: 37, column: 25, scope: !127)
+!137 = !DILocation(line: 37, column: 5, scope: !127)
+!138 = !DILocation(line: 38, column: 48, scope: !121)
+!139 = !DILocation(line: 36, column: 23, scope: !122)
+!140 = !DILocation(line: 36, column: 3, scope: !122)
+!141 = !DILocation(line: 39, column: 1, scope: !23)
+!142 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "n", arg: 1, scope: !33, file: !16, line: 61, type: !19)
+!143 = !DILocation(line: 61, column: 29, scope: !33)
+!144 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "m", arg: 2, scope: !33, file: !16, line: 61, type: !19)
+!145 = !DILocation(line: 61, column: 36, scope: !33)
+!146 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "alpha", arg: 3, scope: !33, file: !16, line: 62, type: !6)
+!147 = !DILocation(line: 62, column: 35, scope: !33)
+!148 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "beta", arg: 4, scope: !33, file: !16, line: 63, type: !6)
+!149 = !DILocation(line: 63, column: 35, scope: !33)
+!150 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "C", arg: 5, scope: !33, file: !16, line: 64, type: !27)
+!151 = !DILocation(line: 64, column: 35, scope: !33)
+!152 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "A", arg: 6, scope: !33, file: !16, line: 65, type: !30)
+!153 = !DILocation(line: 65, column: 35, scope: !33)
+!154 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !33, file: !16, line: 66, type: !19)
+!155 = !DILocation(line: 66, column: 7, scope: !33)
+!156 = !DILocation(line: 75, column: 3, scope: !157)
+!157 = distinct !DILexicalBlock(scope: !33, file: !16, line: 75, column: 3)
+!158 = !DILocation(line: 75, column: 8, scope: !157)
+!159 = !DILocation(line: 75, column: 17, scope: !160)
+!160 = distinct !DILexicalBlock(scope: !157, file: !16, line: 75, column: 3)
+!161 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "j", scope: !33, file: !16, line: 66, type: !19)
+!162 = !DILocation(line: 66, column: 10, scope: !33)
+!163 = !DILocation(line: 76, column: 10, scope: !164)
+!164 = distinct !DILexicalBlock(scope: !165, file: !16, line: 76, column: 5)
+!165 = distinct !DILexicalBlock(scope: !160, file: !16, line: 75, column: 31)
+!166 = !DILocation(line: 76, column: 19, scope: !167)
+!167 = distinct !DILexicalBlock(scope: !164, file: !16, line: 76, column: 5)
+!168 = !DILocation(line: 76, column: 5, scope: !164)
+!169 = !DILocation(line: 77, column: 7, scope: !167)
+!170 = !DILocation(line: 77, column: 15, scope: !167)
+!171 = !DILocation(line: 76, column: 26, scope: !167)
+!172 = !DILocation(line: 76, column: 5, scope: !167)
+!173 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "k", scope: !33, file: !16, line: 66, type: !19)
+!174 = !DILocation(line: 66, column: 13, scope: !33)
+!175 = !DILocation(line: 78, column: 10, scope: !176)
+!176 = distinct !DILexicalBlock(scope: !165, file: !16, line: 78, column: 5)
+!177 = !DILocation(line: 78, column: 19, scope: !178)
+!178 = distinct !DILexicalBlock(scope: !176, file: !16, line: 78, column: 5)
+!179 = !DILocation(line: 78, column: 5, scope: !176)
+!180 = !DILocation(line: 79, column: 12, scope: !181)
+!181 = distinct !DILexicalBlock(scope: !182, file: !16, line: 79, column: 7)
+!182 = distinct !DILexicalBlock(scope: !178, file: !16, line: 78, column: 33)
+!183 = !DILocation(line: 79, column: 21, scope: !184)
+!184 = distinct !DILexicalBlock(scope: !181, file: !16, line: 79, column: 7)
+!185 = !DILocation(line: 79, column: 7, scope: !181)
+!186 = !DILocation(line: 80, column: 28, scope: !184)
+!187 = !DILocation(line: 80, column: 26, scope: !184)
+!188 = !DILocation(line: 80, column: 38, scope: !184)
+!189 = !DILocation(line: 80, column: 36, scope: !184)
+!190 = !DILocation(line: 80, column: 9, scope: !184)
+!191 = !DILocation(line: 80, column: 17, scope: !184)
+!192 = !DILocation(line: 79, column: 28, scope: !184)
+!193 = !DILocation(line: 79, column: 7, scope: !184)
+!194 = !DILocation(line: 81, column: 5, scope: !182)
+!195 = !DILocation(line: 78, column: 29, scope: !178)
+!196 = !DILocation(line: 78, column: 5, scope: !178)
+!197 = !DILocation(line: 82, column: 3, scope: !165)
+!198 = !DILocation(line: 75, column: 27, scope: !160)
+!199 = !DILocation(line: 75, column: 3, scope: !160)
+!200 = !DILocation(line: 84, column: 1, scope: !33)
+!201 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "n", arg: 1, scope: !36, file: !16, line: 43, type: !19)
+!202 = !DILocation(line: 43, column: 29, scope: !36)
+!203 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "C", arg: 2, scope: !36, file: !16, line: 44, type: !27)
+!204 = !DILocation(line: 44, column: 35, scope: !36)
+!205 = !DILocation(line: 47, column: 3, scope: !36)
+!206 = !DILocation(line: 48, column: 3, scope: !36)
+!207 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !36, file: !16, line: 45, type: !19)
+!208 = !DILocation(line: 45, column: 7, scope: !36)
+!209 = !DILocation(line: 49, column: 8, scope: !210)
+!210 = distinct !DILexicalBlock(scope: !36, file: !16, line: 49, column: 3)
+!211 = !DILocation(line: 49, column: 17, scope: !212)
+!212 = distinct !DILexicalBlock(scope: !210, file: !16, line: 49, column: 3)
+!213 = !DILocation(line: 49, column: 3, scope: !210)
+!214 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "j", scope: !36, file: !16, line: 45, type: !19)
+!215 = !DILocation(line: 45, column: 10, scope: !36)
+!216 = !DILocation(line: 50, column: 10, scope: !217)
+!217 = distinct !DILexicalBlock(scope: !212, file: !16, line: 50, column: 5)
+!218 = !DILocation(line: 50, column: 19, scope: !219)
+!219 = distinct !DILexicalBlock(scope: !217, file: !16, line: 50, column: 5)
+!220 = !DILocation(line: 50, column: 5, scope: !217)
+!221 = !DILocation(line: 51, column: 14, scope: !222)
+!222 = distinct !DILexicalBlock(scope: !223, file: !16, line: 51, column: 11)
+!223 = distinct !DILexicalBlock(scope: !219, file: !16, line: 50, column: 29)
+!224 = !DILocation(line: 51, column: 18, scope: !222)
+!225 = !DILocation(line: 51, column: 23, scope: !222)
+!226 = !DILocation(line: 51, column: 28, scope: !222)
+!227 = !DILocation(line: 51, column: 11, scope: !223)
+!228 = !DILocation(line: 52, column: 17, scope: !222)
+!229 = !DILocation(line: 52, column: 9, scope: !222)
+!230 = !DILocation(line: 53, column: 15, scope: !223)
+!231 = !DILocation(line: 53, column: 60, scope: !223)
+!232 = !DILocation(line: 53, column: 7, scope: !223)
+!233 = !DILocation(line: 54, column: 5, scope: !223)
+!234 = !DILocation(line: 50, column: 25, scope: !219)
+!235 = !DILocation(line: 50, column: 5, scope: !219)
+!236 = !DILocation(line: 54, column: 5, scope: !217)
+!237 = !DILocation(line: 49, column: 23, scope: !212)
+!238 = !DILocation(line: 49, column: 3, scope: !212)
+!239 = !DILocation(line: 55, column: 3, scope: !36)
+!240 = !DILocation(line: 56, column: 3, scope: !36)
+!241 = !DILocation(line: 57, column: 1, scope: !36)

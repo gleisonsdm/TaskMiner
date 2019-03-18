@@ -1,0 +1,153 @@
+; ModuleID = 'result.bc'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [40 x i8] c"     NEWTON Called on interval [%g,%g]\0A\00", align 1
+@.str.1 = private unnamed_addr constant [17 x i8] c"     X[%d] = %g\0A\00", align 1
+@DERIV_X = external global double, align 8
+@.str.2 = private unnamed_addr constant [21 x i8] c"ROOT: %g (approx.)\0A\0A\00", align 1
+
+; Function Attrs: nounwind uwtable
+define double @newton(i32 %N, double* %P, double %A, double %B) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %N, i64 0, metadata !14, metadata !15), !dbg !16
+  call void @llvm.dbg.value(metadata double* %P, i64 0, metadata !17, metadata !15), !dbg !18
+  call void @llvm.dbg.value(metadata double %A, i64 0, metadata !19, metadata !15), !dbg !20
+  call void @llvm.dbg.value(metadata double %B, i64 0, metadata !21, metadata !15), !dbg !22
+  call void @llvm.dbg.value(metadata i32 0, i64 0, metadata !23, metadata !15), !dbg !24
+  %cmp = fcmp olt double %B, %A, !dbg !25
+  br i1 %cmp, label %if.then, label %if.end, !dbg !27
+
+if.then:                                          ; preds = %entry
+  call void @llvm.dbg.value(metadata double %A, i64 0, metadata !28, metadata !15), !dbg !29
+  call void @llvm.dbg.value(metadata double %B, i64 0, metadata !19, metadata !15), !dbg !20
+  call void @llvm.dbg.value(metadata double %A, i64 0, metadata !21, metadata !15), !dbg !22
+  br label %if.end, !dbg !30
+
+if.end:                                           ; preds = %if.then, %entry
+  %B.addr.0 = phi double [ %A, %if.then ], [ %B, %entry ]
+  %A.addr.0 = phi double [ %B, %if.then ], [ %A, %entry ]
+  %call = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([40 x i8], [40 x i8]* @.str, i32 0, i32 0), double %A.addr.0, double %B.addr.0), !dbg !32
+  call void @llvm.dbg.value(metadata double %A.addr.0, i64 0, metadata !33, metadata !15), !dbg !34
+  %add = fadd double %A.addr.0, %B.addr.0, !dbg !35
+  %div = fdiv double %add, 2.000000e+00, !dbg !36
+  call void @llvm.dbg.value(metadata double %div, i64 0, metadata !37, metadata !15), !dbg !38
+  br label %while.cond, !dbg !39
+
+while.cond:                                       ; preds = %while.body, %if.end
+  %Xk.0 = phi double [ %A.addr.0, %if.end ], [ %Xk1.0, %while.body ]
+  %Xk1.0 = phi double [ %div, %if.end ], [ %sub10, %while.body ]
+  %K.0 = phi i32 [ 0, %if.end ], [ %inc, %while.body ]
+  %sub = fsub double %Xk1.0, %Xk.0, !dbg !40
+  %call1 = call double @d_abs(double %sub), !dbg !41
+  %call2 = call double @d_abs(double %Xk1.0), !dbg !42
+  %div3 = fdiv double %call1, %call2, !dbg !43
+  %cmp4 = fcmp ogt double %div3, 5.000000e-06, !dbg !44
+  br i1 %cmp4, label %land.rhs, label %land.end, !dbg !45
+
+land.rhs:                                         ; preds = %while.cond
+  %cmp5 = icmp sle i32 %K.0, 40, !dbg !46
+  br label %land.end
+
+land.end:                                         ; preds = %land.rhs, %while.cond
+  %tmp14 = phi i1 [ false, %while.cond ], [ %cmp5, %land.rhs ]
+  br i1 %tmp14, label %while.body, label %while.end, !dbg !47
+
+while.body:                                       ; preds = %land.end
+  %add6 = add nsw i32 %K.0, 1, !dbg !49
+  %call7 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.str.1, i32 0, i32 0), i32 %add6, double %Xk1.0), !dbg !51
+  call void @llvm.dbg.value(metadata double %Xk1.0, i64 0, metadata !33, metadata !15), !dbg !34
+  %call8 = call double @HORNERS(i32 %N, double* %P, double %Xk1.0), !dbg !52
+  %tmp22 = load double, double* @DERIV_X, align 8, !dbg !53
+  %div9 = fdiv double %call8, %tmp22, !dbg !54
+  %sub10 = fsub double %Xk1.0, %div9, !dbg !55
+  call void @llvm.dbg.value(metadata double %sub10, i64 0, metadata !37, metadata !15), !dbg !38
+  %inc = add nsw i32 %K.0, 1, !dbg !56
+  call void @llvm.dbg.value(metadata i32 %inc, i64 0, metadata !23, metadata !15), !dbg !24
+  br label %while.cond, !dbg !39
+
+while.end:                                        ; preds = %land.end
+  %Xk1.0.lcssa = phi double [ %Xk1.0, %land.end ]
+  %call11 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([21 x i8], [21 x i8]* @.str.2, i32 0, i32 0), double %Xk1.0.lcssa), !dbg !57
+  ret double %Xk1.0.lcssa, !dbg !58
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+declare i32 @printf(i8*, ...) #2
+
+declare double @d_abs(double) #2
+
+declare double @HORNERS(i32, double*, double) #2
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.value(metadata, i64, metadata, metadata) #1
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!11, !12}
+!llvm.ident = !{!13}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, subprograms: !3)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/allroots")
+!2 = !{}
+!3 = !{!4}
+!4 = !DISubprogram(name: "newton", scope: !5, file: !5, line: 5, type: !6, isLocal: false, isDefinition: true, scopeLine: 5, flags: DIFlagPrototyped, isOptimized: false, function: double (i32, double*, double, double)* @newton, variables: !2)
+!5 = !DIFile(filename: "/home/gleison/tf/Benchmarks/Prolangs-C/allroots/tmp.c", directory: "/home/gleison/tf/Benchmarks/Prolangs-C/allroots")
+!6 = !DISubroutineType(types: !7)
+!7 = !{!8, !9, !10, !8, !8}
+!8 = !DIBasicType(name: "double", size: 64, align: 64, encoding: DW_ATE_float)
+!9 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!10 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !8, size: 64, align: 64)
+!11 = !{i32 2, !"Dwarf Version", i32 4}
+!12 = !{i32 2, !"Debug Info Version", i32 3}
+!13 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!14 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "N", arg: 1, scope: !4, file: !5, line: 5, type: !9)
+!15 = !DIExpression()
+!16 = !DILocation(line: 5, column: 19, scope: !4)
+!17 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "P", arg: 2, scope: !4, file: !5, line: 5, type: !10)
+!18 = !DILocation(line: 5, column: 29, scope: !4)
+!19 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "A", arg: 3, scope: !4, file: !5, line: 5, type: !8)
+!20 = !DILocation(line: 5, column: 41, scope: !4)
+!21 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "B", arg: 4, scope: !4, file: !5, line: 5, type: !8)
+!22 = !DILocation(line: 5, column: 51, scope: !4)
+!23 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "K", scope: !4, file: !5, line: 8, type: !9)
+!24 = !DILocation(line: 8, column: 7, scope: !4)
+!25 = !DILocation(line: 11, column: 9, scope: !26)
+!26 = distinct !DILexicalBlock(scope: !4, file: !5, line: 11, column: 7)
+!27 = !DILocation(line: 11, column: 7, scope: !4)
+!28 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "T_DOUBLE", scope: !4, file: !5, line: 6, type: !8)
+!29 = !DILocation(line: 6, column: 10, scope: !4)
+!30 = !DILocation(line: 15, column: 3, scope: !31)
+!31 = distinct !DILexicalBlock(scope: !26, file: !5, line: 11, column: 14)
+!32 = !DILocation(line: 17, column: 3, scope: !4)
+!33 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "Xk", scope: !4, file: !5, line: 7, type: !8)
+!34 = !DILocation(line: 7, column: 10, scope: !4)
+!35 = !DILocation(line: 19, column: 12, scope: !4)
+!36 = !DILocation(line: 19, column: 17, scope: !4)
+!37 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "Xk1", scope: !4, file: !5, line: 7, type: !8)
+!38 = !DILocation(line: 7, column: 14, scope: !4)
+!39 = !DILocation(line: 21, column: 3, scope: !4)
+!40 = !DILocation(line: 21, column: 21, scope: !4)
+!41 = !DILocation(line: 21, column: 11, scope: !4)
+!42 = !DILocation(line: 21, column: 29, scope: !4)
+!43 = !DILocation(line: 21, column: 27, scope: !4)
+!44 = !DILocation(line: 21, column: 40, scope: !4)
+!45 = !DILocation(line: 21, column: 54, scope: !4)
+!46 = !DILocation(line: 21, column: 59, scope: !4)
+!47 = !DILocation(line: 21, column: 3, scope: !48)
+!48 = !DILexicalBlockFile(scope: !4, file: !5, discriminator: 3)
+!49 = !DILocation(line: 22, column: 35, scope: !50)
+!50 = distinct !DILexicalBlock(scope: !4, file: !5, line: 21, column: 69)
+!51 = !DILocation(line: 22, column: 5, scope: !50)
+!52 = !DILocation(line: 24, column: 17, scope: !50)
+!53 = !DILocation(line: 24, column: 38, scope: !50)
+!54 = !DILocation(line: 24, column: 36, scope: !50)
+!55 = !DILocation(line: 24, column: 15, scope: !50)
+!56 = !DILocation(line: 25, column: 6, scope: !50)
+!57 = !DILocation(line: 27, column: 3, scope: !4)
+!58 = !DILocation(line: 28, column: 3, scope: !4)

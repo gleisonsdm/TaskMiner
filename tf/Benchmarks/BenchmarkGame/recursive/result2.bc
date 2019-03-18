@@ -1,0 +1,338 @@
+; ModuleID = 'result.bc'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@.str = private unnamed_addr constant [15 x i8] c"Ack(3,%d): %d\0A\00", align 1
+@.str.1 = private unnamed_addr constant [17 x i8] c"Fib(%.1f): %.1f\0A\00", align 1
+@.str.2 = private unnamed_addr constant [19 x i8] c"Tak(%d,%d,%d): %d\0A\00", align 1
+@.str.3 = private unnamed_addr constant [12 x i8] c"Fib(3): %d\0A\00", align 1
+@.str.4 = private unnamed_addr constant [24 x i8] c"Tak(3.0,2.0,1.0): %.1f\0A\00", align 1
+
+; Function Attrs: nounwind uwtable
+define i32 @ack(i32 %x, i32 %y) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %x, i64 0, metadata !31, metadata !32), !dbg !33
+  call void @llvm.dbg.value(metadata i32 %y, i64 0, metadata !34, metadata !32), !dbg !35
+  %cmp = icmp eq i32 %x, 0, !dbg !36
+  br i1 %cmp, label %if.then, label %if.end, !dbg !38
+
+if.then:                                          ; preds = %entry
+  %add = add nsw i32 %y, 1, !dbg !39
+  br label %return, !dbg !41
+
+if.end:                                           ; preds = %entry
+  %sub = sub nsw i32 %x, 1, !dbg !42
+  %tobool = icmp ne i32 %y, 0, !dbg !43
+  br i1 %tobool, label %cond.true, label %cond.false, !dbg !44
+
+cond.true:                                        ; preds = %if.end
+  %sub1 = sub nsw i32 %y, 1, !dbg !45
+  %call = call i32 @ack(i32 %x, i32 %sub1), !dbg !46
+  br label %cond.end, !dbg !44
+
+cond.false:                                       ; preds = %if.end
+  br label %cond.end, !dbg !47
+
+cond.end:                                         ; preds = %cond.false, %cond.true
+  %cond = phi i32 [ %call, %cond.true ], [ 1, %cond.false ], !dbg !44
+  %call2 = call i32 @ack(i32 %sub, i32 %cond), !dbg !49
+  br label %return, !dbg !52
+
+return:                                           ; preds = %cond.end, %if.then
+  %retval.0 = phi i32 [ %add, %if.then ], [ %call2, %cond.end ]
+  ret i32 %retval.0, !dbg !53
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind uwtable
+define i32 @fib(i32 %n) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %n, i64 0, metadata !54, metadata !32), !dbg !55
+  %cmp = icmp slt i32 %n, 2, !dbg !56
+  br i1 %cmp, label %if.then, label %if.end, !dbg !58
+
+if.then:                                          ; preds = %entry
+  br label %return, !dbg !59
+
+if.end:                                           ; preds = %entry
+  %sub = sub nsw i32 %n, 2, !dbg !61
+  %call = call i32 @fib(i32 %sub), !dbg !62
+  %sub1 = sub nsw i32 %n, 1, !dbg !63
+  %call2 = call i32 @fib(i32 %sub1), !dbg !64
+  %add = add nsw i32 %call, %call2, !dbg !65
+  br label %return, !dbg !66
+
+return:                                           ; preds = %if.end, %if.then
+  %retval.0 = phi i32 [ 1, %if.then ], [ %add, %if.end ]
+  ret i32 %retval.0, !dbg !67
+}
+
+; Function Attrs: nounwind uwtable
+define double @fibFP(double %n) #0 {
+entry:
+  call void @llvm.dbg.value(metadata double %n, i64 0, metadata !68, metadata !32), !dbg !69
+  %cmp = fcmp olt double %n, 2.000000e+00, !dbg !70
+  br i1 %cmp, label %if.then, label %if.end, !dbg !72
+
+if.then:                                          ; preds = %entry
+  br label %return, !dbg !73
+
+if.end:                                           ; preds = %entry
+  %sub = fsub double %n, 2.000000e+00, !dbg !75
+  %call = call double @fibFP(double %sub), !dbg !76
+  %sub1 = fsub double %n, 1.000000e+00, !dbg !77
+  %call2 = call double @fibFP(double %sub1), !dbg !78
+  %add = fadd double %call, %call2, !dbg !79
+  br label %return, !dbg !80
+
+return:                                           ; preds = %if.end, %if.then
+  %retval.0 = phi double [ 1.000000e+00, %if.then ], [ %add, %if.end ]
+  ret double %retval.0, !dbg !81
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @tak(i32 %x, i32 %y, i32 %z) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %x, i64 0, metadata !82, metadata !32), !dbg !83
+  call void @llvm.dbg.value(metadata i32 %y, i64 0, metadata !84, metadata !32), !dbg !85
+  call void @llvm.dbg.value(metadata i32 %z, i64 0, metadata !86, metadata !32), !dbg !87
+  %cmp = icmp slt i32 %y, %x, !dbg !88
+  br i1 %cmp, label %if.then, label %if.end, !dbg !90
+
+if.then:                                          ; preds = %entry
+  %sub = sub nsw i32 %x, 1, !dbg !91
+  %call = call i32 @tak(i32 %sub, i32 %y, i32 %z), !dbg !93
+  %sub1 = sub nsw i32 %y, 1, !dbg !94
+  %call2 = call i32 @tak(i32 %sub1, i32 %z, i32 %x), !dbg !95
+  %sub3 = sub nsw i32 %z, 1, !dbg !96
+  %call4 = call i32 @tak(i32 %sub3, i32 %x, i32 %y), !dbg !97
+  %call5 = call i32 @tak(i32 %call, i32 %call2, i32 %call4), !dbg !98
+  br label %return, !dbg !99
+
+if.end:                                           ; preds = %entry
+  br label %return, !dbg !100
+
+return:                                           ; preds = %if.end, %if.then
+  %retval.0 = phi i32 [ %call5, %if.then ], [ %z, %if.end ]
+  ret i32 %retval.0, !dbg !101
+}
+
+; Function Attrs: nounwind uwtable
+define double @takFP(double %x, double %y, double %z) #0 {
+entry:
+  call void @llvm.dbg.value(metadata double %x, i64 0, metadata !102, metadata !32), !dbg !103
+  call void @llvm.dbg.value(metadata double %y, i64 0, metadata !104, metadata !32), !dbg !105
+  call void @llvm.dbg.value(metadata double %z, i64 0, metadata !106, metadata !32), !dbg !107
+  %cmp = fcmp olt double %y, %x, !dbg !108
+  br i1 %cmp, label %if.then, label %if.end, !dbg !110
+
+if.then:                                          ; preds = %entry
+  %sub = fsub double %x, 1.000000e+00, !dbg !111
+  %call = call double @takFP(double %sub, double %y, double %z), !dbg !112
+  %sub1 = fsub double %y, 1.000000e+00, !dbg !113
+  %call2 = call double @takFP(double %sub1, double %z, double %x), !dbg !114
+  %sub3 = fsub double %z, 1.000000e+00, !dbg !115
+  %call4 = call double @takFP(double %sub3, double %x, double %y), !dbg !116
+  %call5 = call double @takFP(double %call, double %call2, double %call4), !dbg !117
+  br label %return, !dbg !118
+
+if.end:                                           ; preds = %entry
+  br label %return, !dbg !119
+
+return:                                           ; preds = %if.end, %if.then
+  %retval.0 = phi double [ %call5, %if.then ], [ %z, %if.end ]
+  ret double %retval.0, !dbg !120
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @main(i32 %argc, i8** %argv) #0 {
+entry:
+  call void @llvm.dbg.value(metadata i32 %argc, i64 0, metadata !121, metadata !32), !dbg !122
+  call void @llvm.dbg.value(metadata i8** %argv, i64 0, metadata !123, metadata !32), !dbg !124
+  call void @llvm.dbg.value(metadata i32 10, i64 0, metadata !125, metadata !32), !dbg !126
+  %add = add nsw i32 10, 1, !dbg !127
+  %add1 = add nsw i32 10, 1, !dbg !128
+  %call = call i32 @ack(i32 3, i32 %add1), !dbg !129
+  %call2 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([15 x i8], [15 x i8]* @.str, i32 0, i32 0), i32 %add, i32 %call), !dbg !130
+  %conv = sitofp i32 10 to double, !dbg !131
+  %add3 = fadd double 2.800000e+01, %conv, !dbg !132
+  %conv4 = sitofp i32 10 to double, !dbg !133
+  %add5 = fadd double 2.800000e+01, %conv4, !dbg !134
+  %call6 = call double @fibFP(double %add5), !dbg !135
+  %call7 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([17 x i8], [17 x i8]* @.str.1, i32 0, i32 0), double %add3, double %call6), !dbg !136
+  %mul = mul nsw i32 3, 10, !dbg !137
+  %mul8 = mul nsw i32 2, 10, !dbg !138
+  %mul9 = mul nsw i32 3, 10, !dbg !139
+  %mul10 = mul nsw i32 2, 10, !dbg !140
+  %call11 = call i32 @tak(i32 %mul9, i32 %mul10, i32 10), !dbg !141
+  %call12 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([19 x i8], [19 x i8]* @.str.2, i32 0, i32 0), i32 %mul, i32 %mul8, i32 10, i32 %call11), !dbg !142
+  %call13 = call i32 @fib(i32 3), !dbg !143
+  %call14 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([12 x i8], [12 x i8]* @.str.3, i32 0, i32 0), i32 %call13), !dbg !144
+  %call15 = call double @takFP(double 3.000000e+00, double 2.000000e+00, double 1.000000e+00), !dbg !145
+  %call16 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([24 x i8], [24 x i8]* @.str.4, i32 0, i32 0), double %call15), !dbg !146
+  ret i32 0, !dbg !147
+}
+
+declare i32 @printf(i8*, ...) #2
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.value(metadata, i64, metadata, metadata) #1
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!28, !29}
+!llvm.ident = !{!30}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, subprograms: !3)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/BenchmarkGame/recursive")
+!2 = !{}
+!3 = !{!4, !9, !12, !16, !19, !22}
+!4 = !DISubprogram(name: "ack", scope: !5, file: !5, line: 10, type: !6, isLocal: false, isDefinition: true, scopeLine: 10, flags: DIFlagPrototyped, isOptimized: false, function: i32 (i32, i32)* @ack, variables: !2)
+!5 = !DIFile(filename: "/home/gleison/tf/Benchmarks/BenchmarkGame/recursive/tmp.c", directory: "/home/gleison/tf/Benchmarks/BenchmarkGame/recursive")
+!6 = !DISubroutineType(types: !7)
+!7 = !{!8, !8, !8}
+!8 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!9 = !DISubprogram(name: "fib", scope: !5, file: !5, line: 18, type: !10, isLocal: false, isDefinition: true, scopeLine: 18, flags: DIFlagPrototyped, isOptimized: false, function: i32 (i32)* @fib, variables: !2)
+!10 = !DISubroutineType(types: !11)
+!11 = !{!8, !8}
+!12 = !DISubprogram(name: "fibFP", scope: !5, file: !5, line: 25, type: !13, isLocal: false, isDefinition: true, scopeLine: 25, flags: DIFlagPrototyped, isOptimized: false, function: double (double)* @fibFP, variables: !2)
+!13 = !DISubroutineType(types: !14)
+!14 = !{!15, !15}
+!15 = !DIBasicType(name: "double", size: 64, align: 64, encoding: DW_ATE_float)
+!16 = !DISubprogram(name: "tak", scope: !5, file: !5, line: 32, type: !17, isLocal: false, isDefinition: true, scopeLine: 32, flags: DIFlagPrototyped, isOptimized: false, function: i32 (i32, i32, i32)* @tak, variables: !2)
+!17 = !DISubroutineType(types: !18)
+!18 = !{!8, !8, !8, !8}
+!19 = !DISubprogram(name: "takFP", scope: !5, file: !5, line: 39, type: !20, isLocal: false, isDefinition: true, scopeLine: 39, flags: DIFlagPrototyped, isOptimized: false, function: double (double, double, double)* @takFP, variables: !2)
+!20 = !DISubroutineType(types: !21)
+!21 = !{!15, !15, !15, !15}
+!22 = !DISubprogram(name: "main", scope: !5, file: !5, line: 45, type: !23, isLocal: false, isDefinition: true, scopeLine: 45, flags: DIFlagPrototyped, isOptimized: false, function: i32 (i32, i8**)* @main, variables: !2)
+!23 = !DISubroutineType(types: !24)
+!24 = !{!8, !8, !25}
+!25 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !26, size: 64, align: 64)
+!26 = !DIDerivedType(tag: DW_TAG_pointer_type, baseType: !27, size: 64, align: 64)
+!27 = !DIBasicType(name: "char", size: 8, align: 8, encoding: DW_ATE_signed_char)
+!28 = !{i32 2, !"Dwarf Version", i32 4}
+!29 = !{i32 2, !"Debug Info Version", i32 3}
+!30 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!31 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "x", arg: 1, scope: !4, file: !5, line: 10, type: !8)
+!32 = !DIExpression()
+!33 = !DILocation(line: 10, column: 13, scope: !4)
+!34 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "y", arg: 2, scope: !4, file: !5, line: 10, type: !8)
+!35 = !DILocation(line: 10, column: 20, scope: !4)
+!36 = !DILocation(line: 11, column: 9, scope: !37)
+!37 = distinct !DILexicalBlock(scope: !4, file: !5, line: 11, column: 7)
+!38 = !DILocation(line: 11, column: 7, scope: !4)
+!39 = !DILocation(line: 12, column: 14, scope: !40)
+!40 = distinct !DILexicalBlock(scope: !37, file: !5, line: 11, column: 15)
+!41 = !DILocation(line: 12, column: 5, scope: !40)
+!42 = !DILocation(line: 15, column: 16, scope: !4)
+!43 = !DILocation(line: 15, column: 25, scope: !4)
+!44 = !DILocation(line: 15, column: 22, scope: !4)
+!45 = !DILocation(line: 15, column: 41, scope: !4)
+!46 = !DILocation(line: 15, column: 32, scope: !4)
+!47 = !DILocation(line: 15, column: 22, scope: !48)
+!48 = !DILexicalBlockFile(scope: !4, file: !5, discriminator: 2)
+!49 = !DILocation(line: 15, column: 10, scope: !50)
+!50 = !DILexicalBlockFile(scope: !51, file: !5, discriminator: 4)
+!51 = !DILexicalBlockFile(scope: !4, file: !5, discriminator: 3)
+!52 = !DILocation(line: 15, column: 3, scope: !4)
+!53 = !DILocation(line: 16, column: 1, scope: !4)
+!54 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "n", arg: 1, scope: !9, file: !5, line: 18, type: !8)
+!55 = !DILocation(line: 18, column: 13, scope: !9)
+!56 = !DILocation(line: 19, column: 9, scope: !57)
+!57 = distinct !DILexicalBlock(scope: !9, file: !5, line: 19, column: 7)
+!58 = !DILocation(line: 19, column: 7, scope: !9)
+!59 = !DILocation(line: 20, column: 5, scope: !60)
+!60 = distinct !DILexicalBlock(scope: !57, file: !5, line: 19, column: 14)
+!61 = !DILocation(line: 22, column: 16, scope: !9)
+!62 = !DILocation(line: 22, column: 10, scope: !9)
+!63 = !DILocation(line: 22, column: 29, scope: !9)
+!64 = !DILocation(line: 22, column: 23, scope: !9)
+!65 = !DILocation(line: 22, column: 21, scope: !9)
+!66 = !DILocation(line: 22, column: 3, scope: !9)
+!67 = !DILocation(line: 23, column: 1, scope: !9)
+!68 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "n", arg: 1, scope: !12, file: !5, line: 25, type: !15)
+!69 = !DILocation(line: 25, column: 21, scope: !12)
+!70 = !DILocation(line: 26, column: 9, scope: !71)
+!71 = distinct !DILexicalBlock(scope: !12, file: !5, line: 26, column: 7)
+!72 = !DILocation(line: 26, column: 7, scope: !12)
+!73 = !DILocation(line: 27, column: 5, scope: !74)
+!74 = distinct !DILexicalBlock(scope: !71, file: !5, line: 26, column: 16)
+!75 = !DILocation(line: 29, column: 18, scope: !12)
+!76 = !DILocation(line: 29, column: 10, scope: !12)
+!77 = !DILocation(line: 29, column: 35, scope: !12)
+!78 = !DILocation(line: 29, column: 27, scope: !12)
+!79 = !DILocation(line: 29, column: 25, scope: !12)
+!80 = !DILocation(line: 29, column: 3, scope: !12)
+!81 = !DILocation(line: 30, column: 1, scope: !12)
+!82 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "x", arg: 1, scope: !16, file: !5, line: 32, type: !8)
+!83 = !DILocation(line: 32, column: 13, scope: !16)
+!84 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "y", arg: 2, scope: !16, file: !5, line: 32, type: !8)
+!85 = !DILocation(line: 32, column: 20, scope: !16)
+!86 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "z", arg: 3, scope: !16, file: !5, line: 32, type: !8)
+!87 = !DILocation(line: 32, column: 27, scope: !16)
+!88 = !DILocation(line: 33, column: 9, scope: !89)
+!89 = distinct !DILexicalBlock(scope: !16, file: !5, line: 33, column: 7)
+!90 = !DILocation(line: 33, column: 7, scope: !16)
+!91 = !DILocation(line: 34, column: 22, scope: !92)
+!92 = distinct !DILexicalBlock(scope: !89, file: !5, line: 33, column: 14)
+!93 = !DILocation(line: 34, column: 16, scope: !92)
+!94 = !DILocation(line: 34, column: 40, scope: !92)
+!95 = !DILocation(line: 34, column: 34, scope: !92)
+!96 = !DILocation(line: 34, column: 58, scope: !92)
+!97 = !DILocation(line: 34, column: 52, scope: !92)
+!98 = !DILocation(line: 34, column: 12, scope: !92)
+!99 = !DILocation(line: 34, column: 5, scope: !92)
+!100 = !DILocation(line: 36, column: 3, scope: !16)
+!101 = !DILocation(line: 37, column: 1, scope: !16)
+!102 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "x", arg: 1, scope: !19, file: !5, line: 39, type: !15)
+!103 = !DILocation(line: 39, column: 21, scope: !19)
+!104 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "y", arg: 2, scope: !19, file: !5, line: 39, type: !15)
+!105 = !DILocation(line: 39, column: 31, scope: !19)
+!106 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "z", arg: 3, scope: !19, file: !5, line: 39, type: !15)
+!107 = !DILocation(line: 39, column: 41, scope: !19)
+!108 = !DILocation(line: 40, column: 9, scope: !109)
+!109 = distinct !DILexicalBlock(scope: !19, file: !5, line: 40, column: 7)
+!110 = !DILocation(line: 40, column: 7, scope: !19)
+!111 = !DILocation(line: 41, column: 26, scope: !109)
+!112 = !DILocation(line: 41, column: 18, scope: !109)
+!113 = !DILocation(line: 41, column: 48, scope: !109)
+!114 = !DILocation(line: 41, column: 40, scope: !109)
+!115 = !DILocation(line: 41, column: 70, scope: !109)
+!116 = !DILocation(line: 41, column: 62, scope: !109)
+!117 = !DILocation(line: 41, column: 12, scope: !109)
+!118 = !DILocation(line: 41, column: 5, scope: !109)
+!119 = !DILocation(line: 42, column: 3, scope: !19)
+!120 = !DILocation(line: 43, column: 1, scope: !19)
+!121 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "argc", arg: 1, scope: !22, file: !5, line: 45, type: !8)
+!122 = !DILocation(line: 45, column: 14, scope: !22)
+!123 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "argv", arg: 2, scope: !22, file: !5, line: 45, type: !25)
+!124 = !DILocation(line: 45, column: 27, scope: !22)
+!125 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "n", scope: !22, file: !5, line: 46, type: !8)
+!126 = !DILocation(line: 46, column: 7, scope: !22)
+!127 = !DILocation(line: 48, column: 31, scope: !22)
+!128 = !DILocation(line: 48, column: 45, scope: !22)
+!129 = !DILocation(line: 48, column: 36, scope: !22)
+!130 = !DILocation(line: 48, column: 3, scope: !22)
+!131 = !DILocation(line: 49, column: 38, scope: !22)
+!132 = !DILocation(line: 49, column: 36, scope: !22)
+!133 = !DILocation(line: 49, column: 54, scope: !22)
+!134 = !DILocation(line: 49, column: 52, scope: !22)
+!135 = !DILocation(line: 49, column: 41, scope: !22)
+!136 = !DILocation(line: 49, column: 3, scope: !22)
+!137 = !DILocation(line: 50, column: 35, scope: !22)
+!138 = !DILocation(line: 50, column: 42, scope: !22)
+!139 = !DILocation(line: 50, column: 56, scope: !22)
+!140 = !DILocation(line: 50, column: 63, scope: !22)
+!141 = !DILocation(line: 50, column: 50, scope: !22)
+!142 = !DILocation(line: 50, column: 3, scope: !22)
+!143 = !DILocation(line: 51, column: 26, scope: !22)
+!144 = !DILocation(line: 51, column: 3, scope: !22)
+!145 = !DILocation(line: 52, column: 38, scope: !22)
+!146 = !DILocation(line: 52, column: 3, scope: !22)
+!147 = !DILocation(line: 54, column: 3, scope: !22)

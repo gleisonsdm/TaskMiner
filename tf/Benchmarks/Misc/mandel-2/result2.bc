@@ -1,0 +1,432 @@
+; ModuleID = 'result.bc'
+target datalayout = "e-m:e-i64:64-f80:128-n8:16:32:64-S128"
+target triple = "x86_64-unknown-linux-gnu"
+
+@max_i = global i32 65536, align 4
+@.str = private unnamed_addr constant [2 x i8] c"*\00", align 1
+@.str.1 = private unnamed_addr constant [2 x i8] c" \00", align 1
+@.str.2 = private unnamed_addr constant [2 x i8] c"\0A\00", align 1
+
+; Function Attrs: nounwind uwtable
+define double @sqr(double %x) #0 {
+entry:
+  call void @llvm.dbg.value(metadata double %x, i64 0, metadata !25, metadata !26), !dbg !27
+  %mul = fmul double %x, %x, !dbg !28
+  ret double %mul, !dbg !29
+}
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.declare(metadata, metadata, metadata) #1
+
+; Function Attrs: nounwind uwtable
+define double @cnorm2(double %z.coerce0, double %z.coerce1) #0 {
+entry:
+  %z = alloca { double, double }, align 8
+  %tmp = getelementptr { double, double }, { double, double }* %z, i32 0, i32 0
+  store double %z.coerce0, double* %tmp
+  %tmp1 = getelementptr { double, double }, { double, double }* %z, i32 0, i32 1
+  store double %z.coerce1, double* %tmp1
+  call void @llvm.dbg.declare(metadata { double, double }* %z, metadata !30, metadata !26), !dbg !31
+  %z.realp = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 0, !dbg !32
+  %z.real = load double, double* %z.realp, align 8, !dbg !32
+  %z.imagp = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 1, !dbg !32
+  %z.imag = load double, double* %z.imagp, align 8, !dbg !32
+  %call = call double @sqr(double %z.real), !dbg !33
+  %z.realp1 = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 0, !dbg !34
+  %z.real2 = load double, double* %z.realp1, align 8, !dbg !34
+  %z.imagp3 = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 1, !dbg !34
+  %z.imag4 = load double, double* %z.imagp3, align 8, !dbg !34
+  %call5 = call double @sqr(double %z.imag4), !dbg !35
+  %add = fadd double %call, %call5, !dbg !36
+  ret double %add, !dbg !37
+}
+
+; Function Attrs: nounwind uwtable
+define i32 @loop(double %c.coerce0, double %c.coerce1) #0 {
+entry:
+  %c = alloca { double, double }, align 8
+  %z = alloca { double, double }, align 8
+  %z12 = bitcast { double, double }* %z to double*
+  %coerce = alloca { double, double }, align 8
+  %coerce19 = bitcast { double, double }* %coerce to double*
+  %tmp = getelementptr { double, double }, { double, double }* %c, i32 0, i32 0
+  store double %c.coerce0, double* %tmp
+  %tmp1 = getelementptr { double, double }, { double, double }* %c, i32 0, i32 1
+  store double %c.coerce1, double* %tmp1
+  call void @llvm.dbg.declare(metadata { double, double }* %c, metadata !38, metadata !26), !dbg !39
+  call void @llvm.dbg.declare(metadata { double, double }* %z, metadata !40, metadata !26), !dbg !41
+  %c.realp = getelementptr inbounds { double, double }, { double, double }* %c, i32 0, i32 0, !dbg !42
+  %c.real = load double, double* %c.realp, align 8, !dbg !42
+  %c.imagp = getelementptr inbounds { double, double }, { double, double }* %c, i32 0, i32 1, !dbg !42
+  %c.imag = load double, double* %c.imagp, align 8, !dbg !42
+  %real = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 0, !dbg !41
+  %imag = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 1, !dbg !41
+  store double %c.real, double* %real, align 8, !dbg !41
+  store double %c.imag, double* %imag, align 8, !dbg !41
+  call void @llvm.dbg.value(metadata i32 1, i64 0, metadata !43, metadata !26), !dbg !44
+  %scevgep = getelementptr { double, double }, { double, double }* %z, i64 0, i32 1, !dbg !45
+  %scevgep13 = getelementptr { double, double }, { double, double }* %z, i64 0, i32 1, !dbg !45
+  %scevgep18 = getelementptr { double, double }, { double, double }* %coerce, i64 0, i32 1, !dbg !45
+  %scevgep25 = getelementptr { double, double }, { double, double }* %coerce, i64 0, i32 1, !dbg !45
+  %scevgep43 = getelementptr { double, double }, { double, double }* %z, i64 0, i32 1, !dbg !45
+  %scevgep45 = getelementptr { double, double }, { double, double }* %z, i64 0, i32 1, !dbg !45
+  %scevgep51 = getelementptr { double, double }, { double, double }* %coerce, i64 0, i32 1, !dbg !45
+  %scevgep57 = getelementptr { double, double }, { double, double }* %coerce, i64 0, i32 1, !dbg !45
+  br label %while.cond, !dbg !45
+
+while.cond:                                       ; preds = %complex_mul_cont, %entry
+  %i.0 = phi i32 [ 1, %entry ], [ %i.1, %complex_mul_cont ]
+  %z.realp = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 0, !dbg !46
+  %z.real = load double, double* %z.realp, align 8, !dbg !46
+  %z.imagp = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 1, !dbg !46
+  %z.imag = load double, double* %z.imagp, align 8, !dbg !46
+  %real1 = getelementptr inbounds { double, double }, { double, double }* %coerce, i32 0, i32 0, !dbg !49
+  %imag2 = getelementptr inbounds { double, double }, { double, double }* %coerce, i32 0, i32 1, !dbg !49
+  store double %z.real, double* %real1, align 8, !dbg !49
+  store double %z.imag, double* %imag2, align 8, !dbg !49
+  %tmp2 = getelementptr { double, double }, { double, double }* %coerce, i32 0, i32 0, !dbg !49
+  %tmp3 = load double, double* %tmp2, align 1, !dbg !49
+  %tmp4 = getelementptr { double, double }, { double, double }* %coerce, i32 0, i32 1, !dbg !49
+  %tmp5 = load double, double* %tmp4, align 1, !dbg !49
+  %call = call double @cnorm2(double %tmp3, double %tmp5), !dbg !49
+  %cmp = fcmp ole double %call, 4.000000e+00, !dbg !50
+  %0 = icmp ult double* %scevgep, %z12, !dbg !51
+  %umin = select i1 %0, double* %scevgep, double* %z12, !dbg !51
+  %1 = icmp ugt double* %scevgep13, %z12, !dbg !51
+  %umax = select i1 %1, double* %scevgep13, double* %z12, !dbg !51
+  %umax14 = ptrtoint double* %umax to i64
+  %2 = add i64 %umax14, 16, !dbg !51
+  %3 = icmp ult double* %scevgep, %z12, !dbg !51
+  %umin15 = select i1 %3, double* %scevgep, double* %z12, !dbg !51
+  %4 = icmp ugt double* %scevgep13, %z12, !dbg !51
+  %umax16 = select i1 %4, double* %scevgep13, double* %z12, !dbg !51
+  %umax1617 = ptrtoint double* %umax16 to i64
+  %5 = add i64 %umax1617, 16, !dbg !51
+  %6 = icmp ult double* %scevgep18, %coerce19, !dbg !51
+  %umin20 = select i1 %6, double* %scevgep18, double* %coerce19, !dbg !51
+  %umin2021 = bitcast double* %umin20 to { double, double }*
+  %7 = icmp ult { double, double }* %coerce, %umin2021, !dbg !51
+  %umin22 = select i1 %7, { double, double }* %coerce, { double, double }* %umin2021, !dbg !51
+  %umin2223 = bitcast { double, double }* %umin22 to double*
+  %8 = icmp ult double* %scevgep18, %umin2223, !dbg !51
+  %umin24 = select i1 %8, double* %scevgep18, double* %umin2223, !dbg !51
+  %9 = icmp ugt double* %scevgep25, %coerce19, !dbg !51
+  %umax26 = select i1 %9, double* %scevgep25, double* %coerce19, !dbg !51
+  %umax2627 = bitcast double* %umax26 to { double, double }*
+  %10 = icmp ugt { double, double }* %coerce, %umax2627, !dbg !51
+  %umax28 = select i1 %10, { double, double }* %coerce, { double, double }* %umax2627, !dbg !51
+  %umax2829 = bitcast { double, double }* %umax28 to double*
+  %11 = icmp ugt double* %scevgep25, %umax2829, !dbg !51
+  %umax30 = select i1 %11, double* %scevgep25, double* %umax2829, !dbg !51
+  %umax3031 = ptrtoint double* %umax30 to i64
+  %12 = add i64 %umax3031, 16, !dbg !51
+  %13 = icmp ult double* %scevgep18, %coerce19, !dbg !51
+  %umin32 = select i1 %13, double* %scevgep18, double* %coerce19, !dbg !51
+  %umin3233 = bitcast double* %umin32 to { double, double }*
+  %14 = icmp ult { double, double }* %coerce, %umin3233, !dbg !51
+  %umin34 = select i1 %14, { double, double }* %coerce, { double, double }* %umin3233, !dbg !51
+  %umin3435 = bitcast { double, double }* %umin34 to double*
+  %15 = icmp ult double* %scevgep18, %umin3435, !dbg !51
+  %umin36 = select i1 %15, double* %scevgep18, double* %umin3435, !dbg !51
+  %16 = icmp ugt double* %scevgep25, %coerce19, !dbg !51
+  %umax37 = select i1 %16, double* %scevgep25, double* %coerce19, !dbg !51
+  %umax3738 = bitcast double* %umax37 to { double, double }*
+  %17 = icmp ugt { double, double }* %coerce, %umax3738, !dbg !51
+  %umax39 = select i1 %17, { double, double }* %coerce, { double, double }* %umax3738, !dbg !51
+  %umax3940 = bitcast { double, double }* %umax39 to double*
+  %18 = icmp ugt double* %scevgep25, %umax3940, !dbg !51
+  %umax41 = select i1 %18, double* %scevgep25, double* %umax3940, !dbg !51
+  %umax4142 = ptrtoint double* %umax41 to i64
+  %19 = add i64 %umax4142, 16, !dbg !51
+  %20 = icmp ult double* %scevgep43, %z12, !dbg !51
+  %umin44 = select i1 %20, double* %scevgep43, double* %z12, !dbg !51
+  %21 = icmp ugt double* %scevgep45, %z12, !dbg !51
+  %umax46 = select i1 %21, double* %scevgep45, double* %z12, !dbg !51
+  %umax4647 = ptrtoint double* %umax46 to i64
+  %22 = add i64 %umax4647, 16, !dbg !51
+  %23 = icmp ult double* %scevgep43, %z12, !dbg !51
+  %umin48 = select i1 %23, double* %scevgep43, double* %z12, !dbg !51
+  %24 = icmp ugt double* %scevgep45, %z12, !dbg !51
+  %umax49 = select i1 %24, double* %scevgep45, double* %z12, !dbg !51
+  %umax4950 = ptrtoint double* %umax49 to i64
+  %25 = add i64 %umax4950, 16, !dbg !51
+  %26 = icmp ult double* %scevgep51, %coerce19, !dbg !51
+  %umin52 = select i1 %26, double* %scevgep51, double* %coerce19, !dbg !51
+  %umin5253 = bitcast double* %umin52 to { double, double }*
+  %27 = icmp ult { double, double }* %coerce, %umin5253, !dbg !51
+  %umin54 = select i1 %27, { double, double }* %coerce, { double, double }* %umin5253, !dbg !51
+  %umin5455 = bitcast { double, double }* %umin54 to double*
+  %28 = icmp ult double* %scevgep51, %umin5455, !dbg !51
+  %umin56 = select i1 %28, double* %scevgep51, double* %umin5455, !dbg !51
+  %29 = icmp ugt double* %scevgep57, %coerce19, !dbg !51
+  %umax58 = select i1 %29, double* %scevgep57, double* %coerce19, !dbg !51
+  %umax5859 = bitcast double* %umax58 to { double, double }*
+  %30 = icmp ugt { double, double }* %coerce, %umax5859, !dbg !51
+  %umax60 = select i1 %30, { double, double }* %coerce, { double, double }* %umax5859, !dbg !51
+  %umax6061 = bitcast { double, double }* %umax60 to double*
+  %31 = icmp ugt double* %scevgep57, %umax6061, !dbg !51
+  %umax62 = select i1 %31, double* %scevgep57, double* %umax6061, !dbg !51
+  %umax6263 = ptrtoint double* %umax62 to i64
+  %32 = add i64 %umax6263, 16, !dbg !51
+  %33 = icmp ult double* %scevgep51, %coerce19, !dbg !51
+  %umin64 = select i1 %33, double* %scevgep51, double* %coerce19, !dbg !51
+  %umin6465 = bitcast double* %umin64 to { double, double }*
+  %34 = icmp ult { double, double }* %coerce, %umin6465, !dbg !51
+  %umin66 = select i1 %34, { double, double }* %coerce, { double, double }* %umin6465, !dbg !51
+  %umin6667 = bitcast { double, double }* %umin66 to double*
+  %35 = icmp ult double* %scevgep51, %umin6667, !dbg !51
+  %umin68 = select i1 %35, double* %scevgep51, double* %umin6667, !dbg !51
+  %36 = icmp ugt double* %scevgep57, %coerce19, !dbg !51
+  %umax69 = select i1 %36, double* %scevgep57, double* %coerce19, !dbg !51
+  %umax6970 = bitcast double* %umax69 to { double, double }*
+  %37 = icmp ugt { double, double }* %coerce, %umax6970, !dbg !51
+  %umax71 = select i1 %37, { double, double }* %coerce, { double, double }* %umax6970, !dbg !51
+  %umax7172 = bitcast { double, double }* %umax71 to double*
+  %38 = icmp ugt double* %scevgep57, %umax7172, !dbg !51
+  %umax73 = select i1 %38, double* %scevgep57, double* %umax7172, !dbg !51
+  %umax7374 = ptrtoint double* %umax73 to i64
+  %39 = add i64 %umax7374, 16, !dbg !51
+  br i1 %cmp, label %land.rhs, label %land.end, !dbg !51
+
+land.rhs:                                         ; preds = %while.cond
+  %inc = add nsw i32 %i.0, 1, !dbg !52
+  call void @llvm.dbg.value(metadata i32 %inc, i64 0, metadata !43, metadata !26), !dbg !44
+  %tmp7 = load i32, i32* @max_i, align 4, !dbg !54
+  %cmp3 = icmp slt i32 %i.0, %tmp7, !dbg !55
+  br label %land.end
+
+land.end:                                         ; preds = %land.rhs, %while.cond
+  %i.1 = phi i32 [ %inc, %land.rhs ], [ %i.0, %while.cond ]
+  %tmp8 = phi i1 [ false, %while.cond ], [ %cmp3, %land.rhs ]
+  br i1 %tmp8, label %while.body, label %while.end, !dbg !56
+
+while.body:                                       ; preds = %land.end
+  %z.realp4 = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 0, !dbg !58
+  %z.real5 = load double, double* %z.realp4, align 8, !dbg !58
+  %z.imagp6 = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 1, !dbg !58
+  %z.imag7 = load double, double* %z.imagp6, align 8, !dbg !58
+  %z.realp8 = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 0, !dbg !59
+  %z.real9 = load double, double* %z.realp8, align 8, !dbg !59
+  %z.imagp10 = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 1, !dbg !59
+  %z.imag11 = load double, double* %z.imagp10, align 8, !dbg !59
+  %mul_ac = fmul double %z.real5, %z.real9, !dbg !60
+  %mul_bd = fmul double %z.imag7, %z.imag11, !dbg !60
+  %mul_ad = fmul double %z.real5, %z.imag11, !dbg !60
+  %mul_bc = fmul double %z.imag7, %z.real9, !dbg !60
+  %mul_r = fsub double %mul_ac, %mul_bd, !dbg !60
+  %mul_i = fadd double %mul_ad, %mul_bc, !dbg !60
+  %isnan_cmp = fcmp uno double %mul_r, %mul_r, !dbg !60
+  br i1 %isnan_cmp, label %complex_mul_imag_nan, label %complex_mul_cont, !dbg !60, !prof !61
+
+complex_mul_imag_nan:                             ; preds = %while.body
+  %isnan_cmp12 = fcmp uno double %mul_i, %mul_i, !dbg !62
+  br i1 %isnan_cmp12, label %complex_mul_libcall, label %complex_mul_cont, !dbg !62, !prof !61
+
+complex_mul_libcall:                              ; preds = %complex_mul_imag_nan
+  %call13 = call { double, double } @__muldc3(double %z.real5, double %z.imag7, double %z.real9, double %z.imag11) #3, !dbg !63
+  %tmp9 = extractvalue { double, double } %call13, 0, !dbg !63
+  %tmp10 = extractvalue { double, double } %call13, 1, !dbg !63
+  br label %complex_mul_cont, !dbg !63
+
+complex_mul_cont:                                 ; preds = %complex_mul_libcall, %complex_mul_imag_nan, %while.body
+  %real_mul_phi = phi double [ %mul_r, %while.body ], [ %mul_r, %complex_mul_imag_nan ], [ %tmp9, %complex_mul_libcall ], !dbg !60
+  %imag_mul_phi = phi double [ %mul_i, %while.body ], [ %mul_i, %complex_mul_imag_nan ], [ %tmp10, %complex_mul_libcall ], !dbg !60
+  %c.realp14 = getelementptr inbounds { double, double }, { double, double }* %c, i32 0, i32 0, !dbg !64
+  %c.real15 = load double, double* %c.realp14, align 8, !dbg !64
+  %c.imagp16 = getelementptr inbounds { double, double }, { double, double }* %c, i32 0, i32 1, !dbg !64
+  %c.imag17 = load double, double* %c.imagp16, align 8, !dbg !64
+  %add.r = fadd double %real_mul_phi, %c.real15, !dbg !67
+  %add.i = fadd double %imag_mul_phi, %c.imag17, !dbg !67
+  %real18 = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 0, !dbg !68
+  %imag19 = getelementptr inbounds { double, double }, { double, double }* %z, i32 0, i32 1, !dbg !68
+  store double %add.r, double* %real18, align 8, !dbg !68
+  store double %add.i, double* %imag19, align 8, !dbg !68
+  br label %while.cond, !dbg !45
+
+while.end:                                        ; preds = %land.end
+  %i.1.lcssa = phi i32 [ %i.1, %land.end ]
+  ret i32 %i.1.lcssa, !dbg !69
+}
+
+declare { double, double } @__muldc3(double, double, double, double)
+
+; Function Attrs: nounwind uwtable
+define i32 @main() #0 {
+entry:
+  %coerce = alloca { double, double }, align 8
+  call void @llvm.dbg.value(metadata i32 -39, i64 0, metadata !70, metadata !26), !dbg !71
+  br label %for.cond, !dbg !72
+
+for.cond:                                         ; preds = %for.inc.10, %entry
+  %j.0 = phi i32 [ -39, %entry ], [ %inc11, %for.inc.10 ]
+  %cmp = icmp slt i32 %j.0, 39, !dbg !74
+  br i1 %cmp, label %for.body, label %for.end.12, !dbg !76
+
+for.body:                                         ; preds = %for.cond
+  call void @llvm.dbg.value(metadata i32 -39, i64 0, metadata !77, metadata !26), !dbg !78
+  br label %for.cond.1, !dbg !79
+
+for.cond.1:                                       ; preds = %for.inc, %for.body
+  %i.0 = phi i32 [ -39, %for.body ], [ %inc, %for.inc ]
+  %cmp2 = icmp slt i32 %i.0, 39, !dbg !82
+  br i1 %cmp2, label %for.body.3, label %for.end, !dbg !84
+
+for.body.3:                                       ; preds = %for.cond.1
+  %conv = sitofp i32 %j.0 to double, !dbg !85
+  %div = fdiv double %conv, 4.000000e+01, !dbg !86
+  %sub = fsub double %div, 5.000000e-01, !dbg !87
+  %conv4 = sitofp i32 %i.0 to double, !dbg !88
+  %div5 = fdiv double %conv4, 4.000000e+01, !dbg !89
+  %mul.rl = fmul double %div5, 0.000000e+00, !dbg !90
+  %mul.ir = fmul double %div5, 1.000000e+00, !dbg !90
+  %add.r = fadd double %sub, %mul.rl, !dbg !91
+  %real = getelementptr inbounds { double, double }, { double, double }* %coerce, i32 0, i32 0, !dbg !92
+  %imag = getelementptr inbounds { double, double }, { double, double }* %coerce, i32 0, i32 1, !dbg !92
+  store double %add.r, double* %real, align 8, !dbg !92
+  store double %mul.ir, double* %imag, align 8, !dbg !92
+  %tmp4 = getelementptr { double, double }, { double, double }* %coerce, i32 0, i32 0, !dbg !92
+  %tmp5 = load double, double* %tmp4, align 1, !dbg !92
+  %tmp6 = getelementptr { double, double }, { double, double }* %coerce, i32 0, i32 1, !dbg !92
+  %tmp7 = load double, double* %tmp6, align 1, !dbg !92
+  %call = call i32 @loop(double %tmp5, double %tmp7), !dbg !92
+  %tmp8 = load i32, i32* @max_i, align 4, !dbg !93
+  %cmp6 = icmp sgt i32 %call, %tmp8, !dbg !94
+  %cond = select i1 %cmp6, i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str, i32 0, i32 0), i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.1, i32 0, i32 0), !dbg !92
+  %call8 = call i32 (i8*, ...) @printf(i8* %cond), !dbg !95
+  br label %for.inc, !dbg !95
+
+for.inc:                                          ; preds = %for.body.3
+  %inc = add nsw i32 %i.0, 1, !dbg !96
+  call void @llvm.dbg.value(metadata i32 %inc, i64 0, metadata !77, metadata !26), !dbg !78
+  br label %for.cond.1, !dbg !97
+
+for.end:                                          ; preds = %for.cond.1
+  %call9 = call i32 (i8*, ...) @printf(i8* getelementptr inbounds ([2 x i8], [2 x i8]* @.str.2, i32 0, i32 0)), !dbg !98
+  br label %for.inc.10, !dbg !99
+
+for.inc.10:                                       ; preds = %for.end
+  %inc11 = add nsw i32 %j.0, 1, !dbg !100
+  call void @llvm.dbg.value(metadata i32 %inc11, i64 0, metadata !70, metadata !26), !dbg !71
+  br label %for.cond, !dbg !101
+
+for.end.12:                                       ; preds = %for.cond
+  ret i32 0, !dbg !102
+}
+
+declare i32 @printf(i8*, ...) #2
+
+; Function Attrs: nounwind readnone
+declare void @llvm.dbg.value(metadata, i64, metadata, metadata) #1
+
+attributes #0 = { nounwind uwtable "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #1 = { nounwind readnone }
+attributes #2 = { "disable-tail-calls"="false" "less-precise-fpmad"="false" "no-frame-pointer-elim"="true" "no-frame-pointer-elim-non-leaf" "no-infs-fp-math"="false" "no-nans-fp-math"="false" "stack-protector-buffer-size"="8" "target-cpu"="x86-64" "target-features"="+sse,+sse2" "unsafe-fp-math"="false" "use-soft-float"="false" }
+attributes #3 = { nounwind }
+
+!llvm.dbg.cu = !{!0}
+!llvm.module.flags = !{!22, !23}
+!llvm.ident = !{!24}
+
+!0 = distinct !DICompileUnit(language: DW_LANG_C99, file: !1, producer: "clang version 3.7.0 (tags/RELEASE_370/rc3)", isOptimized: false, runtimeVersion: 0, emissionKind: 1, enums: !2, subprograms: !3, globals: !20)
+!1 = !DIFile(filename: "tmp.c", directory: "/home/gleison/tf/Benchmarks/Misc/mandel-2")
+!2 = !{}
+!3 = !{!4, !9, !13, !17}
+!4 = !DISubprogram(name: "sqr", scope: !5, file: !5, line: 7, type: !6, isLocal: false, isDefinition: true, scopeLine: 7, flags: DIFlagPrototyped, isOptimized: false, function: double (double)* @sqr, variables: !2)
+!5 = !DIFile(filename: "/home/gleison/tf/Benchmarks/Misc/mandel-2/tmp.c", directory: "/home/gleison/tf/Benchmarks/Misc/mandel-2")
+!6 = !DISubroutineType(types: !7)
+!7 = !{!8, !8}
+!8 = !DIBasicType(name: "double", size: 64, align: 64, encoding: DW_ATE_float)
+!9 = !DISubprogram(name: "cnorm2", scope: !5, file: !5, line: 9, type: !10, isLocal: false, isDefinition: true, scopeLine: 9, flags: DIFlagPrototyped, isOptimized: false, function: double (double, double)* @cnorm2, variables: !2)
+!10 = !DISubroutineType(types: !11)
+!11 = !{!8, !12}
+!12 = !DIBasicType(name: "complex", size: 128, align: 64, encoding: DW_ATE_complex_float)
+!13 = !DISubprogram(name: "loop", scope: !5, file: !5, line: 11, type: !14, isLocal: false, isDefinition: true, scopeLine: 11, flags: DIFlagPrototyped, isOptimized: false, function: i32 (double, double)* @loop, variables: !2)
+!14 = !DISubroutineType(types: !15)
+!15 = !{!16, !12}
+!16 = !DIBasicType(name: "int", size: 32, align: 32, encoding: DW_ATE_signed)
+!17 = !DISubprogram(name: "main", scope: !5, file: !5, line: 19, type: !18, isLocal: false, isDefinition: true, scopeLine: 19, isOptimized: false, function: i32 ()* @main, variables: !2)
+!18 = !DISubroutineType(types: !19)
+!19 = !{!16}
+!20 = !{!21}
+!21 = !DIGlobalVariable(name: "max_i", scope: !0, file: !5, line: 5, type: !16, isLocal: false, isDefinition: true, variable: i32* @max_i)
+!22 = !{i32 2, !"Dwarf Version", i32 4}
+!23 = !{i32 2, !"Debug Info Version", i32 3}
+!24 = !{!"clang version 3.7.0 (tags/RELEASE_370/rc3)"}
+!25 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "x", arg: 1, scope: !4, file: !5, line: 7, type: !8)
+!26 = !DIExpression()
+!27 = !DILocation(line: 7, column: 19, scope: !4)
+!28 = !DILocation(line: 7, column: 33, scope: !4)
+!29 = !DILocation(line: 7, column: 24, scope: !4)
+!30 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "z", arg: 1, scope: !9, file: !5, line: 9, type: !12)
+!31 = !DILocation(line: 9, column: 23, scope: !9)
+!32 = !DILocation(line: 9, column: 45, scope: !9)
+!33 = !DILocation(line: 9, column: 35, scope: !9)
+!34 = !DILocation(line: 9, column: 61, scope: !9)
+!35 = !DILocation(line: 9, column: 51, scope: !9)
+!36 = !DILocation(line: 9, column: 49, scope: !9)
+!37 = !DILocation(line: 9, column: 28, scope: !9)
+!38 = !DILocalVariable(tag: DW_TAG_arg_variable, name: "c", arg: 1, scope: !13, file: !5, line: 11, type: !12)
+!39 = !DILocation(line: 11, column: 18, scope: !13)
+!40 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "z", scope: !13, file: !5, line: 12, type: !12)
+!41 = !DILocation(line: 12, column: 11, scope: !13)
+!42 = !DILocation(line: 12, column: 15, scope: !13)
+!43 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !13, file: !5, line: 13, type: !16)
+!44 = !DILocation(line: 13, column: 7, scope: !13)
+!45 = !DILocation(line: 14, column: 3, scope: !13)
+!46 = !DILocation(line: 14, column: 17, scope: !47)
+!47 = !DILexicalBlockFile(scope: !48, file: !5, discriminator: 4)
+!48 = !DILexicalBlockFile(scope: !13, file: !5, discriminator: 1)
+!49 = !DILocation(line: 14, column: 10, scope: !13)
+!50 = !DILocation(line: 14, column: 20, scope: !13)
+!51 = !DILocation(line: 14, column: 27, scope: !13)
+!52 = !DILocation(line: 14, column: 31, scope: !53)
+!53 = !DILexicalBlockFile(scope: !13, file: !5, discriminator: 2)
+!54 = !DILocation(line: 14, column: 36, scope: !13)
+!55 = !DILocation(line: 14, column: 34, scope: !13)
+!56 = !DILocation(line: 14, column: 3, scope: !57)
+!57 = !DILexicalBlockFile(scope: !13, file: !5, discriminator: 3)
+!58 = !DILocation(line: 15, column: 9, scope: !13)
+!59 = !DILocation(line: 15, column: 13, scope: !13)
+!60 = !DILocation(line: 15, column: 11, scope: !13)
+!61 = !{!"branch_weights", i32 1, i32 1048575}
+!62 = !DILocation(line: 15, column: 11, scope: !48)
+!63 = !DILocation(line: 15, column: 11, scope: !57)
+!64 = !DILocation(line: 15, column: 17, scope: !65)
+!65 = !DILexicalBlockFile(scope: !66, file: !5, discriminator: 5)
+!66 = !DILexicalBlockFile(scope: !53, file: !5, discriminator: 4)
+!67 = !DILocation(line: 15, column: 15, scope: !13)
+!68 = !DILocation(line: 15, column: 7, scope: !13)
+!69 = !DILocation(line: 16, column: 3, scope: !13)
+!70 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "j", scope: !17, file: !5, line: 20, type: !16)
+!71 = !DILocation(line: 20, column: 10, scope: !17)
+!72 = !DILocation(line: 21, column: 8, scope: !73)
+!73 = distinct !DILexicalBlock(scope: !17, file: !5, line: 21, column: 3)
+!74 = !DILocation(line: 21, column: 19, scope: !75)
+!75 = distinct !DILexicalBlock(scope: !73, file: !5, line: 21, column: 3)
+!76 = !DILocation(line: 21, column: 3, scope: !73)
+!77 = !DILocalVariable(tag: DW_TAG_auto_variable, name: "i", scope: !17, file: !5, line: 20, type: !16)
+!78 = !DILocation(line: 20, column: 7, scope: !17)
+!79 = !DILocation(line: 22, column: 10, scope: !80)
+!80 = distinct !DILexicalBlock(scope: !81, file: !5, line: 22, column: 5)
+!81 = distinct !DILexicalBlock(scope: !75, file: !5, line: 21, column: 30)
+!82 = !DILocation(line: 22, column: 21, scope: !83)
+!83 = distinct !DILexicalBlock(scope: !80, file: !5, line: 22, column: 5)
+!84 = !DILocation(line: 22, column: 5, scope: !80)
+!85 = !DILocation(line: 23, column: 19, scope: !83)
+!86 = !DILocation(line: 23, column: 21, scope: !83)
+!87 = !DILocation(line: 23, column: 28, scope: !83)
+!88 = !DILocation(line: 23, column: 36, scope: !83)
+!89 = !DILocation(line: 23, column: 38, scope: !83)
+!90 = !DILocation(line: 23, column: 45, scope: !83)
+!91 = !DILocation(line: 23, column: 34, scope: !83)
+!92 = !DILocation(line: 23, column: 14, scope: !83)
+!93 = !DILocation(line: 23, column: 52, scope: !83)
+!94 = !DILocation(line: 23, column: 50, scope: !83)
+!95 = !DILocation(line: 23, column: 7, scope: !83)
+!96 = !DILocation(line: 22, column: 27, scope: !83)
+!97 = !DILocation(line: 22, column: 5, scope: !83)
+!98 = !DILocation(line: 24, column: 5, scope: !81)
+!99 = !DILocation(line: 25, column: 3, scope: !81)
+!100 = !DILocation(line: 21, column: 25, scope: !75)
+!101 = !DILocation(line: 21, column: 3, scope: !75)
+!102 = !DILocation(line: 26, column: 3, scope: !17)
