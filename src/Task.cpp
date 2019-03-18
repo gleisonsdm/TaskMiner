@@ -13,18 +13,22 @@ std::set<BasicBlock*> Task::getbbs() const { return bbs; }
 
 bool Task::isSafeForAnnotation() const
 {
-	for (auto bb : bbs)
+/*	for (auto bb : bbs)
 	{
 		for (BasicBlock::iterator inst = bb->begin(); inst != bb->end(); inst++)
 		{
-			if (GetElementPtrInst* GEPI = dyn_cast<GetElementPtrInst>(inst))
-			{
-				if (isGlobal(GEPI))
-					return false;
-			}
+//			if (GetElementPtrInst* GEPI = dyn_cast<GetElementPtrInst>(inst))
+//			{
+//				if (isGlobal(GEPI))
+//					return false;
+//			}
+      if (StoreInst *ST = dyn_cast<StoreInst>(inst)) {
+        if (isGlobal(ST)) 
+          return false;
+      }
 		}
 	}
-
+*/
 	return true;
 }
 

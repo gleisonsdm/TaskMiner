@@ -49,6 +49,8 @@ using namespace lge;
 
 #define DEBUG_TYPE "writeInFile"
 
+STATISTIC(numFC , "Number of function calls");
+
 static cl::opt<bool> ClEmitGPU("Emit-GPU",
 cl::Hidden, cl::desc("Analyse just 'GPU__' functions."));
 
@@ -123,6 +125,7 @@ std::string Line = std::string();
 std::error_code EC; 
 sys::fs::OpenFlags Flags = sys::fs::F_RW;
 raw_fd_ostream File(Output.c_str(), EC, Flags);
+errs() << "\nWriting file : " << Input << "\n";
 errs() << "\nWriting output to file " << Output << "\n";
 
 unsigned LineNo = 1;
@@ -184,18 +187,33 @@ std::string WriteInFile::generateOutputName (std::string fileName) {
 }
 
 bool WriteInFile::findModuleFileName (Module &M) {
-for (auto F = M.begin(), FE = M.end(); F != FE; ++F)
-  for (auto B = F->begin(), BE = F->end(); B != BE; ++B)
-    for (auto I = B->begin(), IE = B->end(); I != IE; ++I) {
-      InputFile = getFileName(&(*I));
-      if(!InputFile.empty())
-        return true;
+  bool ret = false;
+  bool containsFunc = false;
+
+  NamedMDNode *MD = M.getNamedMetadata("llvm.dbg.cu");
+  if (MD == nullptr)
+    return false;
+  for (NamedMDNode::op_iterator Op = MD->op_begin(), Ope = MD->op_end();
+       Op != Ope; ++Op) {
+    MDNode* ND = *(Op);
+    if (DICompileUnit *CU = dyn_cast<DICompileUnit>(ND)) {
+        InputFile = CU->getFile()->getFilename();
+      ret = true;
     }
-  if (M.begin() ==  M.end()) {
-    InputFile = M.getName();
-    return true;
   }
-return false;
+
+  std::string tmpInpFile = std::string();
+  for (auto F = M.begin(), FE = M.end(); F != FE; ++F)
+    for (auto B = F->begin(), BE = F->end(); B != BE; ++B)
+      for (auto I = B->begin(), IE = B->end(); I != IE; ++I) {
+        tmpInpFile = getFileName(&(*I));
+        if (!tmpInpFile.empty())
+          if (tmpInpFile == InputFile) 
+            containsFunc = true;
+      }
+  if ((ret == true) && (containsFunc == false))
+    printToFile(InputFile, generateOutputName(InputFile));    
+  return ret;
 }
 
 bool WriteInFile::findFunctionFileName (Function &F) {
@@ -205,12 +223,31 @@ bool WriteInFile::findFunctionFileName (Function &F) {
       if(!InputFile.empty())
         return true;
     }
-return false;
+  return false;
 }
 
 bool WriteInFile::runOnModule (Module &M) {
 if (!findModuleFileName(M))
   return false;
+
+errs() << "Name found " << InputFile << "\n";
+
+for (auto F = M.begin(), FE = M.end(); F != FE; ++F) {
+  for (auto B = F->begin(), BE = F->end(); B != BE; ++B) {
+    for (auto I = B->begin(), IE = B->end(); I != IE; ++I) {
+      if (CallInst *CI =dyn_cast<CallInst>(I)) {
+        if (Function *FF = dyn_cast<Function>(CI->getCalledValue())) {
+         if (FF->getName() == "llvm.dbg.declare" ||
+             FF->getName() == "llvm.dbg.value" || 
+             FF->getName() == "llvm.memcpy.p0i8.p0i8.i32" || 
+             FF->getName() == "llvm.memcpy.p0i8.p0i8.i64")
+          continue;
+          numFC++;
+        }
+      }
+    }
+  }
+}
 
 this->ptrATy = &getAnalysis<PtrAccessTypeAnalysis>();
 std::list<Task*> tasksList;

@@ -164,13 +164,16 @@ bool TaskMiner::isRecursive(Function &F, CallGraph &CG)
 std::map<Function*, RegionTree*> TaskMiner::getAllRegionTrees(Module &M)
 {
 	std::map<Function*, RegionTree*> RTs;
+  errs() << "T1.1\n"; 
 	for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
 		if (!F || F->isDeclaration() || F->isIntrinsic() ||
         F->hasAvailableExternallyLinkage())
 			continue;
+    errs() << "T1.2 : " << F->getName() << "\n"; 
 		DepAnalysis* DP = &(getAnalysis<DepAnalysis>(*F));
 		RTs[F] = std::move((DP->getRegionTree()));
 	}
+  errs() << "T1.3\n"; 
 	return RTs;
 }
 
@@ -189,17 +192,21 @@ void TaskMiner::printRegionInfo()
 
 RegionTree* TaskMiner::gettaskGraph(Module &M)
 {
+
+  errs() << "T0\n";
 	//0: Get all region graphs for each function.
 	taskGraph = new RegionTree();
 	if (RTs.empty()) 
 		RTs = getAllRegionTrees(M);
 
+  errs() << "T1\n"; 
 	//1: Merge all the region graphs into a single one 
 	//that will be our task graph
 	for (auto RT = RTs.begin(), RTE = RTs.end(); RT != RTE; RT++) {
 		taskGraph->mergeWith(RT->second);
 	}
 
+  errs() << "T2\n"; 
 	//2: GET ALL RECURSIVE EDGES AND COPY A HUB FOR EACH.
 	//WE'LL HAVE ALL THE RT'S HUBS AND THEIR DESIGNED EDGES->SRC().
 	//FOR EACH EDGE->SRC() WE'LL CONNECT THEM TO THE TOP LEVEL OF THE HUB (GET TOP LEVEL() REGION TREE METHOD)
@@ -213,7 +220,8 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 			recToHub[e] = recHub;
 		}
 	}
-
+  
+  errs() << "T3\n"; 
 	//Remove recursive edges before merging ? (maybe)
 
 	//3: Now we merge each hub into the taskGraph
@@ -222,6 +230,7 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 		taskGraph->mergeWith(pair.second);
 	}
 
+  errs() << "T4\n"; 
 	//Now add fcall edges
 
 	//THIS SHOULD BE THE LAST THING:
@@ -262,6 +271,7 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 		}
 	}
 
+  errs() << "T5\n"; 
 	//And add Fcall for recursive hubs
 	for (auto pair : recToHub)
 	{
@@ -272,6 +282,7 @@ RegionTree* TaskMiner::gettaskGraph(Module &M)
 		  continue;
 		taskGraph->addEdge(pair.first->getSrc(), dstHub, EdgeDepType::FCALL);
 	}
+  errs() << "T6\n"; 
 
 	return taskGraph;
 }
