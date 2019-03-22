@@ -16,6 +16,7 @@ Here is a list of benchmarks available in this repo:
 - ASC_Sequoia
 - BenchmarkGame
 - BitBench
+- bots
 - CoyoteBench
 - ~~cpu2006~~ (**not available yet**)
 - Dhrystone
