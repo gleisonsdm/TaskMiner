@@ -29,14 +29,18 @@
 #include "PtrRelativeRangeAnalysis.h"
 #include "recoverFunctionCall.h"
 
+#include <iostream>
+
 using namespace llvm;
 using namespace std;
 using namespace lge;
 
 bool PtrRRangeAnalysis::canSelectInfo(Loop *L) {
-  if (info.count(L) && (hasFullSideEffectInfo.count(L) == 0))
+//  errs() << "DBG1 = " << info.count(L) << "\n";
+//  errs() << "DBG2 = " << hasFullSideEffectInfo.count(L) << "\n";
+//  if (info.count(L) && (hasFullSideEffectInfo.count(L) == 0))
     return true;
-  return false;
+//  return false;
 }
 
 PtrRRangeAnalysis::ptrData PtrRRangeAnalysis::selectInfo(Loop *L) {
@@ -99,7 +103,7 @@ bool PtrRRangeAnalysis::isValidPtr (Value *V) {
 
 std::pair<Value *, Value *> PtrRRangeAnalysis::findLoopItRange(Loop *L,
                                                                SCEVRangeBuilder *rangeBuilder) {
-  PHINode *PHI = rangeBuilder->getInductionVariable(L);
+  PHINode *PHI = getInductionVariable(L);
   if (!PHI) {
     hasFullSideEffectInfo[L] = false;
     return std::make_pair(nullptr, nullptr);
@@ -135,15 +139,18 @@ void PtrRRangeAnalysis::findBounds(Loop *L) {
   SCEVRangeBuilder rangeBuilder(se, DT, aa, li, dt, r, insertPt);
   InsertPt = insertPt;
   rangeBuilder.setLoop(L);
+  rangeBuilder.setAnalysisMode(true);
   for (auto &pair : ptrRa->RegionsRangeData[r].BasePtrsData) {
     //if (RPM.pointerDclInsideLoop(L,pair.first))
     //  continue;
     if (!isValidPtr(pair.first)) {
+      pair.first->dump();
       hasFullSideEffectInfo[L] = false;
       return;
     }
-    rangeBuilder.setPPtr(pair.first);
     rangeBuilder.setRelAnalysisMode(true);
+    rangeBuilder.setPPtr(pair.first);
+
     Value *low = rangeBuilder.getULowerBound(pair.second.AccessFunctions);
     //if (rangeBuilder.isLoopUsed())
     //  low = rangeBuilder.addSymbExp(LParent, low, false);
@@ -152,24 +159,31 @@ void PtrRRangeAnalysis::findBounds(Loop *L) {
     //if (rangeBuilder.isLoopUsed())
     //  up = rangeBuilder.addSymbExp(LParent, up, true);
     ptr[pair.first].constBounds = std::make_pair(low, up);
-    rangeBuilder.setRelAnalysisMode(false);
+//    rangeBuilder.setRelAnalysisMode(true);
     low = rangeBuilder.getULowerBound(pair.second.AccessFunctions);
     up = rangeBuilder.getUUpperBound(pair.second.AccessFunctions);
     up = rangeBuilder.stretchPtrUpperBound(pair.first, up);
+
     ptr[pair.first].bounds = std::make_pair(low, up);
     ptr[pair.first].basePtr = pair.first;
 
-    rangeBuilder.setPPtr(rangeBuilder.getInductionVariable(L));
-    ptr[pair.first].step =
-        std::make_pair(rangeBuilder.findStep(L, pair.first, false),
-                       rangeBuilder.findStep(L, pair.first, true));
+    //rangeBuilder.setPPtr(rangeBuilder.getInductionVariable(L));
+    errs() << "Finding Step to : ";
+    pair.first->dump();
+    ptr[pair.first].step = std::make_pair(rangeBuilder.StepVal ,nullptr);
+ //       std::make_pair(rangeBuilder.findStep(L, pair.first, false),
+ //                      rangeBuilder.findStep(L, pair.first, true));
+
+    rangeBuilder.setRelAnalysisMode(false);
+
     ptr[pair.first].itRange = findLoopItRange(L, &rangeBuilder);
 //    rangeBuilder.setPPtr(pair.first);
 
     rangeBuilder.setRelAnalysisMode(true);
+ 
+    calculatePtrRangeToLoop(L, pair.first, &rangeBuilder);
 
     updateInfo(L, ptr);
-    calculatePtrRangeToLoop(L, pair.first, &rangeBuilder);
     ptr = selectInfo(L);
   }
 }
@@ -247,9 +261,11 @@ void PtrRRangeAnalysis::calculatePtrRangeToLoop(Loop *L, Value *Ptr,
   std::map<Value *, PtrLoopInfo> ptr = selectInfo(L);
   // Finding the Lower and Upper bounds to the Loop's PHI Node.
   Value *PHILower = ptr[Ptr].itRange.first;
-  Value *PHI = rangeBuilder->getInductionVariable(L);
+  Value *PHI = getInductionVariable(L);
   if (!PHI || !ptr[Ptr].step.first) {
     hasFullSideEffectInfo[L] = false;
+    errs() << "Error to find : ";
+    Ptr->dump();
     return;
   } 
   Type *Ty = Type::getInt64Ty(PHI->getContext());
@@ -353,7 +369,7 @@ bool PtrRRangeAnalysis::runOnFunction(Function &F) {
   this->st = &getAnalysis<ScopeTree>();
   this->ptrRa = &getAnalysis<PtrRangeAnalysis>();
 
-  findAllAccessWindows(&F);
+//  findAllAccessWindows(&F);
 
   return true;
 }

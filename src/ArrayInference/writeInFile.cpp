@@ -251,11 +251,12 @@ for (auto F = M.begin(), FE = M.end(); F != FE; ++F) {
 
 this->ptrATy = &getAnalysis<PtrAccessTypeAnalysis>();
 std::list<Task*> tasksList;
-std::set<CallInst*> tasksCall;
+std::vector<CallInst*> tasksCall;
 if (ClRun) {
   this->tm = &getAnalysis<TaskMiner>();
   tasksList = this->tm->getTasks();
-  tasksCall = this->tm->getTopLevelRecCalls();
+  for (auto &I : this->tm->getTopLevelRecCalls())
+    tasksCall.push_back(I);
 }
 
 std::string lInputFile = InputFile;
@@ -267,11 +268,11 @@ for (Module::iterator F = M.begin(), FE = M.end(); F != FE; ++F) {
       continue;
   }
 
-  /*if (F->isDeclaration() || F->isIntrinsic()) {
+  if (F->isDeclaration() || F->isIntrinsic()) {
      continue;
-  }*/
-  if (F->empty())
-    continue;
+  }
+  //if (F->empty())
+  //  continue;
 
   if (!findFunctionFileName(*F))
     continue;

@@ -69,7 +69,7 @@ class RecoverExpressions : public FunctionPass {
 
   std::map<CallInst*, bool> isFCall;
 
-  std::set<CallInst*> tasksCalls;
+  std::vector<CallInst*> tasksCalls;
 
   std::map<Loop*, bool> mapped;
   //===---------------------------------------------------------------------===
@@ -200,7 +200,7 @@ public:
  
   void setTasksList(std::list<Task*> taskList);
 
-  void setTasksCalls(std::set<CallInst*> taskCalls);
+  void setTasksCalls(std::vector<CallInst*> taskCalls);
 
   void getRegionFromRegionTask(RegionTask *RT);
  

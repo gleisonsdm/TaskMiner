@@ -77,16 +77,12 @@ class PtrRRangeAnalysis : public FunctionPass {
 
   PHINode *getInductionVariable(Loop *L);
   
-  void findBounds (Loop *L);
-
   Value *getBaseGlobalPtr(Value *V, SCEVRangeBuilder *rangeBuilder);
 
   Value *convertToInt(Value *V, SCEVRangeBuilder *rangeBuilder);
 
   std::pair<Value*, Value*> findLoopItRange (Loop *L,
                                              SCEVRangeBuilder *rangeBuilder);
-
-  void findAllAccessWindows (Function *F);
 
 public:
 
@@ -99,6 +95,10 @@ public:
   static char ID;
 
   PtrRRangeAnalysis() : FunctionPass(ID) {};
+
+  void findAllAccessWindows (Function *F);
+
+  void findBounds (Loop *L);
  
   // We need to insert the Instructions for each source file.
   virtual bool runOnFunction(Function &F) override;

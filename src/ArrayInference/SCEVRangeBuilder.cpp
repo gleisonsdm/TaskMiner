@@ -265,6 +265,8 @@ Value *SCEVRangeBuilder::findStep(const SCEVAddRecExpr *Expr, Value *Ptr, bool U
   Value *Step = expand(StepSCEV, Upper);
   Step = InsertNoopCastOfTo(Step, OpTy);
   Start = InsertNoopCastOfTo(Start, OpTy);
+  if (!Start || (Start == DUMMY_VAL))
+    return Step;
   if (Constant *C = dyn_cast<Constant>(Start))
     if (C->isZeroValue()) {
       Type *Ty = Ptr->getType();
@@ -412,11 +414,10 @@ Value *SCEVRangeBuilder::visitAddRecExpr(const SCEVAddRecExpr *Expr,
   // But the correct result is (((n-1) * n) / 2)
   Loop *L = const_cast<Loop*>(Expr->getLoop());
 //  Expr->dump();
-  if (PPtr)
+  if (PPtr) {
+    StepVal = findStep(Expr, PPtr, Upper);
     addLExpr(L, PPtr, Expr);
-  if (getInductionVariable(L))
-    addLExpr(L, getInductionVariable(L), Expr);
-  //lExpr[L] = Expr;
+  }
   if (Expr->isQuadratic())
     return nullptr;
 
@@ -747,7 +748,7 @@ Value *SCEVRangeBuilder::getAddRectULowerOrUpperBound(
   while (It != ExprList->end()) {
     Expr = *It;
     Value *NewBound = expand(Expr, false);
-//    NewBound = InsertCast(Instruction::PtrToInt, NewBound, ITy);
+    //NewBound = InsertCast(Instruction::PtrToInt, NewBound, ITy);
     //Step = findStep(maddr[Expr], false);
     //if (NewBound->getType() != Step->getType()) 
     //  NewBound = InsertNoopCastOfTo(NewBound, Step->getType());
@@ -759,10 +760,8 @@ Value *SCEVRangeBuilder::getAddRectULowerOrUpperBound(
       return nullptr;
     // The old bound is promoted on type conflicts.
     if (BestBound->getType() != NewBound->getType()) {
-      BestBound->getType()->dump();
-      NewBound->getType()->dump();
-      if (NewBound->getType()->getTypeID() == Type::PointerTyID)
-        return nullptr;
+//      if (NewBound->getType()->getTypeID() == Type::PointerTyID)
+//        return nullptr;
       NewBound = InsertNoopCastOfTo(NewBound, BestBound->getType());
     }
 

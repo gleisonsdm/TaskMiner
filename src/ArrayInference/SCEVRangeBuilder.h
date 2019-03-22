@@ -30,6 +30,8 @@
 #include <map>
 #include <set>
 
+#include <iostream>
+
 using namespace llvm;
 
 namespace llvm {
@@ -64,16 +66,15 @@ class SCEVRangeBuilder : private SCEVExpander {
   bool relAnalysisMode;
   Value *PPtr;
 
-  typedef std::map<Value*, std::vector<const SCEVAddRecExpr *> > dataExp;
+  typedef std::map<Value*, std::vector<const SCEVAddRecExpr *> > dataExp;  
 
   std::map<Loop*, dataExp> lExpr;
+
   //std::map<Loop*, const SCEVAddRecExpr *> lExpr;
 
   void addLExpr (Loop *L, Value *Ptr, const SCEVAddRecExpr *Exp);
 
   bool isLoppUsed();
-
-  void setAnalysisMode(bool Val) { AnalysisMode = Val; }
 
   void setArtificialBECounts(
       std::map<const Loop *, const SCEV *> ArtificialBECounts) {
@@ -179,6 +180,10 @@ public:
     LL = nullptr;
   }
 
+  void setAnalysisMode(bool Val) { AnalysisMode = Val; }
+
+  Value* StepVal;
+
   const SCEVAddRecExpr* getScevTo(Loop *L) {
         if (!L || !getInductionVariable(L) || !lExpr.count(L))
           return nullptr;
@@ -186,6 +191,12 @@ public:
   }
 
   const SCEVAddRecExpr* getScevTo(Loop *L, Value *Ptr) {
+        for (auto I = lExpr[L].begin(), IE = lExpr[L].end(); I != IE; I++) {
+          I->first->dump();
+          for (int i = 0, ie = I->second.size(); i != ie; i++) {
+            I->second[i]->dump();
+          }
+        }
         if (!L || !Ptr || !lExpr.count(L) || !lExpr[L].count(Ptr))
           return nullptr;
         return lExpr[L][Ptr][0];
@@ -222,7 +233,7 @@ public:
                  return findStep(getScevTo(L, Ptr), Ptr, Upper); }
 
   Value *findStep(Loop *L, bool Upper) { return findStep(getScevTo(L),
-                                   L->getCanonicalInductionVariable(), Upper); }
+                                      getInductionVariable(L), Upper); }
 
   Value *getAddRectULowerOrUpperBound(std::vector<const SCEVAddRecExpr*> vct,
          bool Upper);
