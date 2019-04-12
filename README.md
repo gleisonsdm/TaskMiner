@@ -16,6 +16,7 @@ These libraries can be built separately from the main compiler.
 However, an existing LLVM build (compiled using cmake) is necessary to build
 our code. 
 
+
 1. Extract [LLVM 3.7](http://llvm.org/releases/3.7.0/llvm-3.7.0.src.tar.xz) into
 llvm
 
@@ -68,7 +69,7 @@ llvm/tools/clang.
 We have written a [script](https://github.com/gleisonsdm/TaskMiner/blob/master/src/run.sh) to run TaskMiner.
 To use it, adjust its flags to your environment, and then do:
  
-  	./run.sh <path-to-llvm-build-bin-folder> <TaskMiner/lib> <Source_Code> <op1> <op2> <op3>
+  	./run.sh <path-to-llvm-build-bin-folder> <TaskMiner/lib> <Source_Code> <op1>
 
 The following parameters are customizable:
 
@@ -76,5 +77,3 @@ The following parameters are customizable:
 * TaskMiner/lib: location of the TaskMiner libraries (.so files). 
 * Source-Code: input files that will be analyzed. 
 * op1: integer specifying the acceptable runtime cost.
-* op2: flag "-debug-only=print-tasks", used to print tasks (optional).
-* op3: flag "-stats", used to debug the analysis (optional).
