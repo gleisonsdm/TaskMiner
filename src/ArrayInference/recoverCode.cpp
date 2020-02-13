@@ -377,6 +377,7 @@ std::string RecoverCode::getNameExp (Value *V, std::string name, int *var,
 
   *var = -1;
   RecoverNames::VarNames nameF = rn->getNameofValue(V);
+
   context[V] = nameF;
   if (!isa<GetElementPtrInst>(V)) {
     if (name == nameF.nameInFile)

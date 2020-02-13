@@ -414,8 +414,6 @@ std::string RecoverExpressions::analyzeCallInst(CallInst *CI,
       output += "," + valuesInOut[i]; 
     output += ")";
  }
- errs() << "OUTPUT = " << output << "\n";
-  // HERE
   if (output == std::string()) {
     if (hasTaskWait) {
       std::string wait = "#pragma omp taskwait\n";

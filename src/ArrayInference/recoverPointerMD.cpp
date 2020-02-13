@@ -271,6 +271,8 @@ std::string RecoverPointerMD::recoverGEPMD (Value *V, std::string name, int *var
     long long int value = 0;
     bool isOfStruct = false;
     if (ty->getTypeID() == Type::StructTyID) {
+      return std::string();
+      /*
       if(isa<DICompositeType>(dity)) {
         if (Constant *C = dyn_cast<Constant>(GEP->getOperand(i))) {
           ConstantsSimplify CS;
@@ -284,7 +286,7 @@ std::string RecoverPointerMD::recoverGEPMD (Value *V, std::string name, int *var
           result += tmpRes;
           isOfStruct = true;
         }
-      }
+      }*/
     }
     if (!isOfStruct) {
       result += "[";
