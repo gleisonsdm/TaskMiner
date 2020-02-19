@@ -16,7 +16,7 @@ if [ "${VERIFICATION}" == "" ]; then
     cp -r ../TaskMiner/TaskMiner-Installer/* .
   fi
   CURR_SCRIPT=$(pwd)
-  (exec "${CURR_SCRIPT}/install.sh" & exit 0)
+  ((exec "sudo ${CURR_SCRIPT}/install.sh") ; (exit 0))
 fi
 if [ -d "../TaskMiner" ]; then
   rm -r "../TaskMiner"
