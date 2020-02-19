@@ -4,7 +4,7 @@ set -e
 # Create a directory to install TaskMiner and its test framework
 THIS_INSTALL=$(pwd)
 VERIFICATION=$(pwd | grep "TaskMiner-Installer")
-if [ "${VERIFICATION}" == "" ]; then 
+if [ "${VERIFICATION}" != "" ]; then 
   if [ ! -d "../../TaskMiner_Dir" ]; then
     mkdir ../../TaskMiner_Dir
   fi
