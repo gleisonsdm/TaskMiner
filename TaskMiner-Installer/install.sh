@@ -15,9 +15,11 @@ if [ "${VERIFICATION}" == "" ]; then
   if [ ! -f "install.sh" ]; then
     cp -r ../TaskMiner/TaskMiner-Installer/* .
   fi
-  rm -r ../TaskMiner
   CURR_SCRIPT=$(pwd)
   (exec "${CURR_SCRIPT}/install.sh" & exit 0)
+fi
+if [ -d "../TaskMiner" ]; then
+  rm -r "../TaskMiner"
 fi
 
 #You need wget, tar, unzip, cmake and a toolchain to use this script
