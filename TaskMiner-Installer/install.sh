@@ -1,27 +1,6 @@
 #!/bin/bash
 set -e 
 
-# Create a directory to install TaskMiner and its test framework
-THIS_INSTALL=$(pwd)
-VERIFICATION=$(pwd | grep "TaskMiner-Installer")
-if [ "${VERIFICATION}" != "" ]; then 
-  if [ ! -d "../../TaskMiner_Dir" ]; then
-    mkdir ../../TaskMiner_Dir
-  fi
-  cd ../../TaskMiner_Dir
-  if [ ! -d "TaskMiner" ]; then
-    cp -r ../TaskMiner .
-  fi
-  if [ ! -f "install.sh" ]; then
-    cp -r ../TaskMiner/TaskMiner-Installer/* .
-  fi
-  CURR_SCRIPT=$(pwd)
-  ((exec "sudo ${CURR_SCRIPT}/install.sh") & (exit 0))
-fi
-if [ -d "../TaskMiner" ]; then
-  rm -r "../TaskMiner"
-fi
-
 #You need wget, tar, unzip, cmake and a toolchain to use this script
 #Put this on a root folder, than it will download all tarballs required and build
 #After running, you will have something like
