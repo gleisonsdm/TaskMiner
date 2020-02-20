@@ -10,6 +10,55 @@ publicly available through an [on-line interface](http://cuda.dcc.ufmg.br/taskmi
 
 ## Installating
 
+### Automatic Installating
+
+This project contains scripts build Taskminer on unix systems. It was designed to install this compiler on Ubuntu. It is possible to use those scripts on different operating systems in case the user adapts them.
+
+#### Warning
+
+This project contains scripts to install software and update your system. Please, take a look at the bash scripts before running it, case you wanna customize the installation process.
+
+### How to install TaskMiner using the scripts
+
+Firstly, define the TaskMiner path into your system. Notice that you need to replace <path to taskminer>
+with the directory you want to install TaskMiner. 
+
+```sh
+export TASKMINER_DEST=<path of taskminer>
+```
+
+After that, type the following commands:
+
+```sh
+git clone https://github.com/gleisonsdm/TaskMiner.git
+cd TaskMiner/TaskMiner-Installer
+cp install.sh TASKMINER_DEST/.
+cp execute_tests.sh TASKMINER_DEST/.
+cd ../../
+rm -r TaskMiner
+cd TASKMINER_DEST
+sudo bash install.sh
+```
+
+#### How to use TaskMiner test framework to annotate programs:
+
+
+Firstly, define the TaskMiner path into your system. Notice that you need to replace <path to taskminer>
+with the directory you want to install TaskMiner. 
+
+```sh
+export TASKMINER_DEST=<path of taskminer>
+```
+
+After that, type the following commands:
+
+```sh
+cd TASKMINER_DEST
+sudo bash execute_tests.sh
+```
+
+### Manual Installating
+
 The project is structured as a set of dynamically loaded libraries/passes for
 LLVM.
 These libraries can be built separately from the main compiler.
