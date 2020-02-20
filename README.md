@@ -18,7 +18,7 @@ This project contains scripts build Taskminer on unix systems. It was designed t
 
 This project contains scripts to install software and update your system. Please, take a look at the bash scripts before running it, case you wanna customize the installation process.
 
-### How to install TaskMiner using the scripts
+#### How to install TaskMiner using the scripts
 
 Firstly, define the TaskMiner path into your system. Notice that you need to replace <path to taskminer>
 with the directory you want to install TaskMiner. 
